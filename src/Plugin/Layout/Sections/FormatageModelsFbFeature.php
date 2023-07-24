@@ -75,6 +75,9 @@ use Drupal\formatage_models\FormatageModelsThemes;
  *     "desc_blocl6" = {
  *       "label" = @Translation("Desc blocl6"),
  *     },
+ *     "data_center" = {
+ *       "label" = @Translation("data_center"),
+ *     },
  *   }
  * )
  */
