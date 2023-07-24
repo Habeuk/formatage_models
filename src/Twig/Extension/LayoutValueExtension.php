@@ -182,13 +182,24 @@ class LayoutValueExtension extends AbstractExtension {
    * Retoune true si l'element n'est pas vide et false sinon.
    */
   public function hasLayoutValues($build) {
-    if (!empty($build)) {
-      $hasValue = true;
-    }
-    else
-      $hasValue = false;
+    $hasValue = false;
     if (is_array($build)) {
-      $hasValue = Element::children($build) ? true : false;
+      if ($kyes = Element::children($build)) {
+        foreach ($kyes as $key) {
+          // on doit ignorer si le contenu est juste #cache ( mais reste à
+          // verifier pour les sites en mode prod).
+          if (!empty($build[$key])) {
+            $data = $build[$key];
+            if (count($data) == 1 && isset($data['#cache'])) {
+              $hasValue = false;
+            }
+            else {
+              $hasValue = true;
+              break;
+            }
+          }
+        }
+      }
     }
     return $hasValue;
   }
