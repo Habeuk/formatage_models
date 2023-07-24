@@ -1,7 +1,6 @@
 {% if content %}
-	<link rel="stylesheet" href="https://preview.uideck.com/items/fusion/assets/css/animate.css"/>
-	<section class="section-padding fub-features space_bottom">
-		<div class="container">
+	<section {{attributes.addClass('fub-features') }}>
+		<div {% if settings.config_section %} class="{{ settings.config_section.type_container }} {{ settings.config_section.container_class }}" {% else %} class="container" {% endif %}>
 			{% if content.title|has_value %}
 				<div class="section-header text-center">
 					<h2 class="section-title wow fadeInDown animated" data-wow-delay="0.3s" style="visibility: visible;-webkit-animation-delay: 0.3s;-moz-animation-delay: 0.3s; ">
@@ -13,6 +12,7 @@
 			<div class="row row-handler align-items-center">
 				<div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
 					<div class="content-left">
+						{% if content.title_blocl1|has_value or content.desc_blocl1|has_value %}
 						<div class="box-item wow fadeInLeft animated" data-wow-delay="0.3s" style="  visibility: visible; -webkit-animation-delay: 0.3s;-moz-animation-delay: 0.3s; animation-delay: 0.3s; ">
 							<span class="icon">
 								<i class="">{{content.svg_blocl1}}</i>
@@ -28,6 +28,8 @@
 								{% endif %}
 							</div>
 						</div>
+						{% endif %}
+						{% if content.title_blocl2|has_value or content.desc_blocl2|has_value %}
 						<div class="box-item wow fadeInLeft animated" data-wow-delay="0.6s" style="  visibility: visible;-webkit-animation-delay: 0.6s; -moz-animation-delay: 0.6s; animation-delay: 0.6s;  ">
 							<span class="icon">
 								<i class="">{{content.svg_blocl2}}</i>
@@ -43,6 +45,8 @@
 								{% endif %}
 							</div>
 						</div>
+						{% endif %}
+						{% if content.title_blocl3|has_value or content.desc_blocl3|has_value %}
 						<div class="box-item wow fadeInLeft animated" data-wow-delay="0.9s" style=" visibility: visible;-webkit-animation-delay: 0.9s; -moz-animation-delay: 0.9s; animation-delay: 0.9s; ">
 							<span class="icon">
 								<i class="">{{content.svg_blocl3}}</i>
@@ -58,15 +62,19 @@
 								{% endif %}
 							</div>
 						</div>
+						{% endif %}
 					</div>
 				</div>
 				<div class="col-lg-4 img-handler col-md-12 col-sm-12 col-xs-12">
+					{% if content.data_center %}
 					<div class="show-box wow fadeInUp animated" data-wow-delay="0.3s" style="  visibility: visible; -webkit-animation-delay: 0.3s; -moz-animation-delay: 0.3s; animation-delay: 0.3s; ">
-						<img src="https://preview.uideck.com/items/fusion/assets/img/feature/intro-mobile.png" alt=""/>
+						{{ content.data_center }}
 					</div>
+					{% endif %}
 				</div>
 				<div class="col-lg-4 right-content-handler col-md-12 col-sm-12 col-xs-12">
 					<div class="content-right">
+						{% if content.title_blocl4|has_value or content.desc_blocl4|has_value %}
 						<div class="box-item wow fadeInRight animated" data-wow-delay="0.3s" style=" visibility: visible; -webkit-animation-delay: 0.3s;-moz-animation-delay: 0.3s; animation-delay: 0.3s; ">
 							<span class="icon">
 								<i class="">{{ content.svg_blocl4 }}</i>
@@ -82,6 +90,8 @@
 								{% endif %}
 							</div>
 						</div>
+						{% endif %}
+						{% if content.title_blocl5|has_value or content.desc_blocl5|has_value %}
 						<div class="box-item wow fadeInRight animated" data-wow-delay="0.6s" style=" visibility: visible; -webkit-animation-delay: 0.6s; -moz-animation-delay: 0.6s; animation-delay: 0.6s; ">
 							<span class="icon">
 								<i class="">
@@ -99,6 +109,8 @@
 								{% endif %}
 							</div>
 						</div>
+						{% endif %}
+						{% if content.title_blocl6|has_value or content.desc_blocl6|has_value %}
 						<div class="box-item wow fadeInRight animated" data-wow-delay="0.9s" style=" visibility: visible; -webkit-animation-delay: 0.9s;  -moz-animation-delay: 0.9s;  animation-delay: 0.9s;  ">
 							<span class="icon">
 								<i class="">{{content.svg_blocl6}}</i>
@@ -114,6 +126,7 @@
 								{% endif %}
 							</div>
 						</div>
+						{% endif %}
 					</div>
 				</div>
 			</div>

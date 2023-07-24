@@ -104,7 +104,7 @@ class FormatageModelsFbFeature extends FormatageModelsSection {
   }
   
   public function defaultConfiguration() {
-    return parent::defaultConfiguration() + [
+    return [
       'css' => '',
       'region_tag_title' => 'h2',
       'sf1' => [
@@ -291,7 +291,7 @@ class FormatageModelsFbFeature extends FormatageModelsSection {
           ]
         ]
       ]
-    ];
+    ] + parent::defaultConfiguration();
   }
   
 }
