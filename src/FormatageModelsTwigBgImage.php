@@ -79,7 +79,7 @@ trait FormatageModelsTwigBgImage {
     $responsive_image_style = \Drupal\responsive_image\Entity\ResponsiveImageStyle::load($responsive_image_style_id);
     if ($responsive_image_style) {
       $image_style_mappings = $responsive_image_style->getImageStyleMappings();
-      // $FallbackImageStyle = $responsive_image_style->getFallbackImageStyle();
+      $FallbackImageStyle = $responsive_image_style->getFallbackImageStyle();
       /**
        *
        * @var \Drupal\breakpoint\BreakpointManagerInterface $breakpointManager
@@ -117,6 +117,17 @@ trait FormatageModelsTwigBgImage {
                 $dataBgset .= $urlImage . ' [(' . $mediaQuery . ')]';
               else
                 $dataBgset .= $urlImage;
+            }
+          }
+          // on ajoute l'image par defaut.
+          if ($FallbackImageStyle) {
+            $urlImage = \Drupal\image\Entity\ImageStyle::load($image_style_mapping['image_mapping'])->buildUrl($file->getFileUri());
+            if (!$dataBgset) {
+              $dataBgset .= $urlImage;
+            }
+            else {
+              $dataBgset .= ' | ';
+              $dataBgset .= $urlImage;
             }
           }
         }
