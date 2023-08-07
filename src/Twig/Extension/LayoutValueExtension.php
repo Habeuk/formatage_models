@@ -149,6 +149,7 @@ class LayoutValueExtension extends AbstractExtension {
     // defaut si on est en administration.
     if (is_array($build) && !isset($build['layout_builder_add_block'])) {
       foreach ($build as $key => $value) {
+        
         if (is_array($value) && !empty($value)) {
           if (!empty($value['#theme']) && $value['#theme'] == 'block' && !empty($value['content'])) {
             if ($keySearch !== null) {
