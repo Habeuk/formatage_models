@@ -29,7 +29,7 @@ use Drupal\formatage_models\Plugin\Layout\FormatageModels;
  * )
  */
 class FormatageModelsMenu01 extends FormatageModels {
-
+  
   /**
    *
    * {@inheritdoc}
@@ -40,7 +40,7 @@ class FormatageModelsMenu01 extends FormatageModels {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->pluginDefinition->set('icon', drupal_get_path('module', 'formatage_models') . "/icones/menus/formatage-models-menu01.png");
   }
-
+  
   public function build($regions) {
     $build = parent::build($regions);
     // $build['logo'] = [
@@ -51,20 +51,20 @@ class FormatageModelsMenu01 extends FormatageModels {
     $this->formatRegionMenu($build);
     return $build;
   }
-
+  
   /**
-   * Permet de formatter les blocks de menu contenus dans ma region de menu.
+   * Permet de formatter les blocks de menu contenus dans la region de menu.
    *
    * @param array $build
    */
   protected function formatRegionMenu(array &$build) {
     if (!empty($build['menu'])) {
       foreach ($build['menu'] as $k => $value) {
-        if (isset($value['#base_plugin_id']) && $value['#base_plugin_id'] == 'system_menu_block') {
+        if (isset($value['#base_plugin_id']) && ($value['#base_plugin_id'] == 'system_menu_block' | $value['#base_plugin_id'] == 'field_block')) {
           $build['menu'][$k]['content']['#attributes']['class'][] = 'navbar-nav mr-auto';
         }
       }
     }
   }
-
+  
 }
