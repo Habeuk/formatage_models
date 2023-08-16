@@ -5,3 +5,12 @@ formatage_models.example:
     _controller: '\Drupal\formatage_models\Controller\FormatageModelsController::SaveEntity'
   requirements:
     _permission: 'access content'
+formatage_models.config_vuejs_edit_form:
+  path: '/admin/config/formatage_models/configvuejsedit'
+  defaults:
+    _form: '\Drupal\formatage_models\Form\ConfigVuejsEditForm'
+    _title: 'ConfigVuejsEditForm'
+  requirements:
+    _permission: 'access administration pages'
+  options:
+    _admin_route: TRUE

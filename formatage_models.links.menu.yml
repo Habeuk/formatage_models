@@ -1,0 +1,6 @@
+formatage_models.config_vuejs_edit_form:
+  title: 'ConfigVuejsEditForm'
+  route_name: formatage_models.config_vuejs_edit_form
+  description: 'A description for the menu entry'
+  parent: system.admin_config_system
+  weight: 99
