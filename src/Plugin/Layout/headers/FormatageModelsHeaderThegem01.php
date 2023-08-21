@@ -28,7 +28,10 @@ use Drupal\bootstrap_styles\StylesGroup\StylesGroupManager;
  *       "label" = @Translation("socials_rx"),
  *     }, *
  *     "button_f1" = {
- *       "label" = @Translation("button_f1"),
+ *       "label" = @Translation("items"),
+ *     },
+ *     "button_f2" = {
+ *       "label" = @Translation("button_f2"),
  *     },
  *     "user_compact" = {
  *       "label" = @Translation(" User compact "),
