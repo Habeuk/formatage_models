@@ -3,7 +3,7 @@ type: module
 description: Permet de formatter les modeles tels que les champs
 package: Custom
 core: 8.x
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^9 || ^10
 dependencies:
   - drupal:layout_builder
   - drupal:bootstrap_layout_builder
