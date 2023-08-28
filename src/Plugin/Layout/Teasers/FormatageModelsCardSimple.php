@@ -31,7 +31,7 @@ use Drupal\formatage_models\FormatageModelsThemes;
  * )
  */
 class FormatageModelsCardSimple extends FormatageModelsTeasers {
-  
+
   /**
    *
    * {@inheritdoc}
@@ -40,9 +40,9 @@ class FormatageModelsCardSimple extends FormatageModelsTeasers {
   public function __construct(array $configuration, $plugin_id, $plugin_definition, StylesGroupManager $styles_group_manager) {
     // TODO Auto-generated method stub
     parent::__construct($configuration, $plugin_id, $plugin_definition, $styles_group_manager);
-    $this->pluginDefinition->set('icon', drupal_get_path('module', 'formatage_models') . "/icones/teasers/formatage-models-cardsimple.png");
+    $this->pluginDefinition->set('icon', $this->pathResolver->getPath('module', 'formatage_models') . "/icones/teasers/formatage-models-cardsimple.png");
   }
-  
+
   /**
    *
    * {@inheritdoc}
@@ -54,7 +54,7 @@ class FormatageModelsCardSimple extends FormatageModelsTeasers {
     // FormatageModelsThemes::formatSettingValues($build);
     return $build;
   }
-  
+
   function defaultConfiguration() {
     return [
       'load_libray' => true,
@@ -99,7 +99,7 @@ class FormatageModelsCardSimple extends FormatageModelsTeasers {
       ]
     ] + parent::defaultConfiguration();
   }
-  
+
   /**
    *
    * {@inheritdoc}
@@ -121,7 +121,7 @@ class FormatageModelsCardSimple extends FormatageModelsTeasers {
     // $this->Layouts->buildConfigurationForm($form);
     return $form;
   }
-  
+
   /**
    *
    * {@inheritdoc}
@@ -131,5 +131,4 @@ class FormatageModelsCardSimple extends FormatageModelsTeasers {
     $this->configuration['limit_text_desc'] = $form_state->getValue('limit_text_desc');
     $this->configuration['limit_text_title'] = $form_state->getValue('limit_text_title');
   }
-  
 }

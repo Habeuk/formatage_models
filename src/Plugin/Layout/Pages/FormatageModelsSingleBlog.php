@@ -48,7 +48,7 @@ use Drupal\formatage_models\FormatageModelsThemes;
  * )
  */
 class FormatageModelsSingleBlog extends FormatageModelsPages {
-  
+
   /**
    *
    * {@inheritdoc}
@@ -57,9 +57,9 @@ class FormatageModelsSingleBlog extends FormatageModelsPages {
   public function __construct(array $configuration, $plugin_id, $plugin_definition, StylesGroupManager $styles_group_manager) {
     // TODO Auto-generated method stub
     parent::__construct($configuration, $plugin_id, $plugin_definition, $styles_group_manager);
-    $this->pluginDefinition->set('icon', drupal_get_path('module', 'formatage_models') . "/icones/formatage-models-single-blog.png");
+    $this->pluginDefinition->set('icon', $this->pathResolver->getPath('module', 'formatage_models') . "/icones/formatage-models-single-blog.png");
   }
-  
+
   /**
    *
    * {@inheritdoc}
@@ -71,5 +71,4 @@ class FormatageModelsSingleBlog extends FormatageModelsPages {
     FormatageModelsThemes::formatSettingValues($build);
     return $build;
   }
-  
 }

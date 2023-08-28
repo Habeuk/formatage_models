@@ -50,7 +50,7 @@ use Drupal\Core\Url;
  * )
  */
 class FormatageModelsheader1 extends FormatageModelsSection {
-  
+
   /**
    *
    * {@inheritdoc}
@@ -59,9 +59,9 @@ class FormatageModelsheader1 extends FormatageModelsSection {
   public function __construct(array $configuration, $plugin_id, $plugin_definition, StylesGroupManager $styles_group_manager) {
     // TODO Auto-generated method stub
     parent::__construct($configuration, $plugin_id, $plugin_definition, $styles_group_manager);
-    $this->pluginDefinition->set('icon', drupal_get_path('module', 'formatage_models') . "/icones/formatage_models_header1.png");
+    $this->pluginDefinition->set('icon', $this->pathResolver->getPath('module', 'formatage_models') . "/icones/formatage_models_header1.png");
   }
-  
+
   public function build(array $regions) {
     $build = parent::build($regions);
     $build['#settings']['front'] = Url::fromRoute('<front>', [], [
@@ -71,13 +71,13 @@ class FormatageModelsheader1 extends FormatageModelsSection {
     FormatageModelsThemes::formatSettingValues($build);
     return $build;
   }
-  
+
   public function buildConfigurationForm($form, $form_state) {
     $form = parent::buildConfigurationForm($form, $form_state);
     // dump($this->configuration);
     return $form;
   }
-  
+
   public function defaultConfiguration() {
     // $SiteConfig = $this->configFactory->getEditable("site.config");
     return parent::defaultConfiguration() + [
@@ -144,5 +144,4 @@ class FormatageModelsheader1 extends FormatageModelsSection {
       ]
     ];
   }
-  
 }

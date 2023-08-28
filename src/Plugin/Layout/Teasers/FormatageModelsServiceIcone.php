@@ -1,4 +1,5 @@
 <?php
+
 namespace Drupal\formatage_models\Plugin\Layout\Teasers;
 
 use Drupal\formatage_models\Plugin\Layout\FormatageModels;
@@ -27,27 +28,24 @@ use Drupal\formatage_models\Plugin\Layout\FormatageModels;
  *   }
  * )
  */
-class FormatageModelsServiceIcone extends FormatageModels
-{
+class FormatageModelsServiceIcone extends FormatageModels {
 
     /**
      *
      * {@inheritdoc}
      * @see \Drupal\formatage_models\Plugin\Layout\FormatageModels::__construct()
      */
-    public function __construct(array $configuration, $plugin_id, $plugin_definition)
-    {
+    public function __construct(array $configuration, $plugin_id, $plugin_definition) {
         // TODO Auto-generated method stub
         parent::__construct($configuration, $plugin_id, $plugin_definition);
-        $this->pluginDefinition->set('icon', drupal_get_path('module', 'formatage_models') . "/icones/formatage-models-service-icone.png");
+        $this->pluginDefinition->set('icon', $this->pathResolver->getPath('module', 'formatage_models') . "/icones/formatage-models-service-icone.png");
     }
 
     /**
      *
      * {@inheritdoc}
      */
-    public function defaultConfiguration()
-    {
+    public function defaultConfiguration() {
         return [
             'load_libray' => true,
             'css' => '',

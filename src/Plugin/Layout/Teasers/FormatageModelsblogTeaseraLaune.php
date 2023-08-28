@@ -33,7 +33,7 @@ use Drupal\Core\Form\FormStateInterface;
  * )
  */
 class FormatageModelsblogTeaseraLaune extends FormatageModels {
-  
+
   /**
    *
    * {@inheritdoc}
@@ -42,9 +42,9 @@ class FormatageModelsblogTeaseraLaune extends FormatageModels {
   public function __construct(array $configuration, $plugin_id, $plugin_definition) {
     // TODO Auto-generated method stub
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->pluginDefinition->set('icon', drupal_get_path('module', 'formatage_models') . "/icones/teasers/formatage_models_teaser_a_la_une.png");
+    $this->pluginDefinition->set('icon', $this->pathResolver->getPath('module', 'formatage_models') . "/icones/teasers/formatage_models_teaser_a_la_une.png");
   }
-  
+
   /**
    *
    * {@inheritdoc}
@@ -54,7 +54,7 @@ class FormatageModelsblogTeaseraLaune extends FormatageModels {
       'css' => ''
     ];
   }
-  
+
   /**
    *
    * {@inheritdoc}
@@ -69,14 +69,14 @@ class FormatageModelsblogTeaseraLaune extends FormatageModels {
     ];
     return $form;
   }
-  
+
   /**
    *
    * {@inheritdoc}
    */
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
   }
-  
+
   /**
    *
    * {@inheritdoc}
@@ -85,5 +85,4 @@ class FormatageModelsblogTeaseraLaune extends FormatageModels {
     parent::submitConfigurationForm($form, $form_state);
     $this->configuration['css'] = $form_state->getValue('css');
   }
-  
 }

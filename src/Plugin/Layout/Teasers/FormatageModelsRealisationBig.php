@@ -35,7 +35,7 @@ use Drupal\formatage_models\Plugin\Layout\FormatageModels;
  * )
  */
 class FormatageModelsRealisationBig extends FormatageModels {
-  
+
   /**
    *
    * {@inheritdoc}
@@ -44,7 +44,6 @@ class FormatageModelsRealisationBig extends FormatageModels {
   public function __construct(array $configuration, $plugin_id, $plugin_definition) {
     // TODO Auto-generated method stub
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->pluginDefinition->set('icon', drupal_get_path('module', 'formatage_models') . "/icones/formatage-models-realisation-big.png");
+    $this->pluginDefinition->set('icon', $this->pathResolver->getPath('module', 'formatage_models') . "/icones/formatage-models-realisation-big.png");
   }
-  
 }

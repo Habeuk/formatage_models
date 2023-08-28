@@ -28,7 +28,7 @@ use Drupal\Core\Form\FormStateInterface;
  * )
  */
 class FormatageModelsHeroSliderPopup extends FormatageModelsSection {
-  
+
   /**
    *
    * {@inheritdoc}
@@ -37,9 +37,9 @@ class FormatageModelsHeroSliderPopup extends FormatageModelsSection {
   public function __construct(array $configuration, $plugin_id, $plugin_definition, StylesGroupManager $styles_group_manager) {
     // TODO Auto-generated method stub
     parent::__construct($configuration, $plugin_id, $plugin_definition, $styles_group_manager);
-    $this->pluginDefinition->set('icon', drupal_get_path('module', 'formatage_models') . "/icones/sections/formatage-models-hero-slider-popup.png");
+    $this->pluginDefinition->set('icon', $this->pathResolver->getPath('module', 'formatage_models') . "/icones/sections/formatage-models-hero-slider-popup.png");
   }
-  
+
   function defaultConfiguration() {
     return [
       'load_libray' => false,
@@ -48,7 +48,7 @@ class FormatageModelsHeroSliderPopup extends FormatageModelsSection {
       'img_style_small' => 'medium'
     ] + parent::defaultConfiguration();
   }
-  
+
   public function buildConfigurationForm($form, $form_state) {
     $options = $this->getImagesStyles();
     $form = parent::buildConfigurationForm($form, $form_state);
@@ -72,14 +72,14 @@ class FormatageModelsHeroSliderPopup extends FormatageModelsSection {
     ];
     return $form;
   }
-  
+
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     parent::submitConfigurationForm($form, $form_state);
     $this->configuration['img_style_big'] = $form_state->getValue('img_style_big');
     $this->configuration['img_style_big_popup'] = $form_state->getValue('img_style_big_popup');
     $this->configuration['img_style_small'] = $form_state->getValue('img_style_small');
   }
-  
+
   /**
    *
    * {@inheritdoc}
@@ -91,7 +91,7 @@ class FormatageModelsHeroSliderPopup extends FormatageModelsSection {
     FormatageModelsThemes::formatSettingValues($build);
     return $build;
   }
-  
+
   protected function getImagesStyles() {
     $values = [
       '' => 'Image par defaut'
@@ -102,5 +102,4 @@ class FormatageModelsHeroSliderPopup extends FormatageModelsSection {
     }
     return $values;
   }
-  
 }

@@ -39,7 +39,7 @@ class FormatageModelsServicesSliders extends FormatageModelsSection {
    * @var \Stephane888\HtmlBootstrap\ThemeUtility
    */
   protected $ThemeUtility;
-  
+
   /**
    *
    * {@inheritdoc}
@@ -48,10 +48,10 @@ class FormatageModelsServicesSliders extends FormatageModelsSection {
   public function __construct(array $configuration, $plugin_id, $plugin_definition, StylesGroupManager $styles_group_manager) {
     // TODO Auto-generated method stub
     parent::__construct($configuration, $plugin_id, $plugin_definition, $styles_group_manager);
-    $this->pluginDefinition->set('icon', drupal_get_path('module', 'formatage_models') . "/icones/sections/formatage-models-services-sliders.png");
+    $this->pluginDefinition->set('icon', $this->pathResolver->getPath('module', 'formatage_models') . "/icones/sections/formatage-models-services-sliders.png");
     $this->ThemeUtility = \Drupal::service('formatage_models.theme-utility');
   }
-  
+
   /**
    *
    * {@inheritdoc}
@@ -84,7 +84,7 @@ class FormatageModelsServicesSliders extends FormatageModelsSection {
       ]
     ];
   }
-  
+
   /**
    *
    * {@inheritdoc}
@@ -107,10 +107,10 @@ class FormatageModelsServicesSliders extends FormatageModelsSection {
       '#default_value' => $this->configuration['bgimage']['fid'],
       '#upload_location' => 'public://layouts'
     ];
-    
+
     return $form;
   }
-  
+
   /**
    *
    * {@inheritdoc}
@@ -126,5 +126,4 @@ class FormatageModelsServicesSliders extends FormatageModelsSection {
     ];
     $this->Layouts->saveFilePermanent($form_state->getValue('bgimage'));
   }
-  
 }

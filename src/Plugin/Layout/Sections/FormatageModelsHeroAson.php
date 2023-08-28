@@ -40,7 +40,7 @@ use Drupal\Core\Form\FormStateInterface;
  * )
  */
 class FormatageModelsHeroAson extends FormatageModelsSection {
-  
+
   /**
    *
    * {@inheritdoc}
@@ -49,9 +49,9 @@ class FormatageModelsHeroAson extends FormatageModelsSection {
   public function __construct(array $configuration, $plugin_id, $plugin_definition, StylesGroupManager $styles_group_manager) {
     // TODO Auto-generated method stub
     parent::__construct($configuration, $plugin_id, $plugin_definition, $styles_group_manager);
-    $this->pluginDefinition->set('icon', drupal_get_path('module', 'formatage_models') . "/icones/sections/formatage-models-hero-ason.png");
+    $this->pluginDefinition->set('icon', $this->pathResolver->getPath('module', 'formatage_models') . "/icones/sections/formatage-models-hero-ason.png");
   }
-  
+
   /**
    *
    * {@inheritdoc}
@@ -63,7 +63,7 @@ class FormatageModelsHeroAson extends FormatageModelsSection {
     FormatageModelsThemes::formatSettingValues($build);
     return $build;
   }
-  
+
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildConfigurationForm($form, $form_state);
     $form['css_left'] = [
@@ -78,13 +78,13 @@ class FormatageModelsHeroAson extends FormatageModelsSection {
     ];
     return $form;
   }
-  
+
   public function submitConfigurationForm(array &$form, $form_state) {
     parent::submitConfigurationForm($form, $form_state);
     $this->configuration['css_left'] = $form_state->getValue('css_left');
     $this->configuration['css_right'] = $form_state->getValue('css_right');
   }
-  
+
   public function defaultConfiguration() {
     return parent::defaultConfiguration() + [
       'css' => '',
@@ -141,5 +141,4 @@ class FormatageModelsHeroAson extends FormatageModelsSection {
       ]
     ];
   }
-  
 }

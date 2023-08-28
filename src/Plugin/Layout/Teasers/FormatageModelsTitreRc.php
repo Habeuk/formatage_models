@@ -24,7 +24,7 @@ use Drupal\formatage_models\FormatageModelsThemes;
  * )
  */
 class FormatageModelsTitreRc extends FormatageModelsTeasers {
-  
+
   /**
    *
    * {@inheritdoc}
@@ -33,9 +33,9 @@ class FormatageModelsTitreRc extends FormatageModelsTeasers {
   public function __construct(array $configuration, $plugin_id, $plugin_definition, StylesGroupManager $styles_group_manager) {
     // TODO Auto-generated method stub
     parent::__construct($configuration, $plugin_id, $plugin_definition, $styles_group_manager);
-    $this->pluginDefinition->set('icon', drupal_get_path('module', 'formatage_models') . "/icones/teasers/formatage-models-titre-rc.png");
+    $this->pluginDefinition->set('icon', $this->pathResolver->getPath('module', 'formatage_models') . "/icones/teasers/formatage-models-titre-rc.png");
   }
-  
+
   /**
    *
    * {@inheritdoc}
@@ -47,7 +47,7 @@ class FormatageModelsTitreRc extends FormatageModelsTeasers {
     FormatageModelsThemes::formatSettingValues($build);
     return $build;
   }
-  
+
   /**
    *
    * {@inheritdoc}
@@ -73,6 +73,4 @@ class FormatageModelsTitreRc extends FormatageModelsTeasers {
       ]
     ];
   }
-  
 }
-

@@ -1,4 +1,5 @@
 <?php
+
 namespace Drupal\formatage_models\Plugin\Layout\Teasers;
 
 use Drupal\bootstrap_styles\StylesGroup\StylesGroupManager;
@@ -27,23 +28,20 @@ use Drupal\bootstrap_styles\StylesGroup\StylesGroupManager;
  *   }
  * )
  */
-class FormatageModelsTextHover extends FormatageModelsTeasers
-{
+class FormatageModelsTextHover extends FormatageModelsTeasers {
 
     /**
      *
      * {@inheritdoc}
      * @see \Drupal\formatage_models\Plugin\Layout\FormatageModels::__construct()
      */
-    public function __construct(array $configuration, $plugin_id, $plugin_definition, StylesGroupManager $styles_group_manager)
-    {
+    public function __construct(array $configuration, $plugin_id, $plugin_definition, StylesGroupManager $styles_group_manager) {
         // TODO Auto-generated method stub
         parent::__construct($configuration, $plugin_id, $plugin_definition, $styles_group_manager);
-        $this->pluginDefinition->set('icon', drupal_get_path('module', 'formatage_models') . "/icones/teasers/formatage-models-text-hover.png");
+        $this->pluginDefinition->set('icon', $this->pathResolver->getPath('module', 'formatage_models') . "/icones/teasers/formatage-models-text-hover.png");
     }
 
-    function defaultConfiguration()
-    {
+    function defaultConfiguration() {
         return parent::defaultConfiguration() + [
             'load_libray' => true,
             "css" => 'container',

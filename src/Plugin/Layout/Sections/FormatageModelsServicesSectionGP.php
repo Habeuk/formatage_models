@@ -56,7 +56,7 @@ use Drupal\bootstrap_styles\StylesGroup\StylesGroupManager;
  * )
  */
 class FormatageModelsServicesSectionGP extends FormatageModelsSection {
-  
+
   /**
    *
    * {@inheritdoc}
@@ -65,9 +65,9 @@ class FormatageModelsServicesSectionGP extends FormatageModelsSection {
   public function __construct(array $configuration, $plugin_id, $plugin_definition, StylesGroupManager $styles_group_manager) {
     // TODO Auto-generated method stub
     parent::__construct($configuration, $plugin_id, $plugin_definition, $styles_group_manager);
-    $this->pluginDefinition->set('icon', drupal_get_path('module', 'formatage_models') . "/icones/sections/formatage-models-features-section.png");
+    $this->pluginDefinition->set('icon', $this->pathResolver->getPath('module', 'formatage_models') . "/icones/sections/formatage-models-features-section.png");
   }
-  
+
   public function defaultConfiguration() {
     return parent::defaultConfiguration() + [
       'css' => '',
@@ -184,5 +184,4 @@ class FormatageModelsServicesSectionGP extends FormatageModelsSection {
       ]
     ];
   }
-  
 }

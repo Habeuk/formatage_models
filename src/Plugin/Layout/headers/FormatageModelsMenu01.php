@@ -29,7 +29,7 @@ use Drupal\formatage_models\Plugin\Layout\FormatageModels;
  * )
  */
 class FormatageModelsMenu01 extends FormatageModels {
-  
+
   /**
    *
    * {@inheritdoc}
@@ -38,9 +38,9 @@ class FormatageModelsMenu01 extends FormatageModels {
   public function __construct(array $configuration, $plugin_id, $plugin_definition) {
     // TODO Auto-generated method stub
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->pluginDefinition->set('icon', drupal_get_path('module', 'formatage_models') . "/icones/menus/formatage-models-menu01.png");
+    $this->pluginDefinition->set('icon', $this->pathResolver->getPath('module', 'formatage_models') . "/icones/menus/formatage-models-menu01.png");
   }
-  
+
   public function build($regions) {
     $build = parent::build($regions);
     // $build['logo'] = [
@@ -51,7 +51,7 @@ class FormatageModelsMenu01 extends FormatageModels {
     $this->formatRegionMenu($build);
     return $build;
   }
-  
+
   /**
    * Permet de formatter les blocks de menu contenus dans la region de menu.
    *
@@ -66,5 +66,4 @@ class FormatageModelsMenu01 extends FormatageModels {
       }
     }
   }
-  
 }

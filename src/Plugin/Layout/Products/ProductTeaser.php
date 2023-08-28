@@ -42,18 +42,16 @@ use Drupal\formatage_models\Plugin\Layout\FormatageModels;
  *   }
  * )
  */
-class ProductTeaser extends FormatageModels
-{
+class ProductTeaser extends FormatageModels {
 
 	/**
 	 *
 	 * {@inheritdoc}
 	 * @see \Drupal\formatage_models\Plugin\Layout\FormatageModels::__construct()
 	 */
-	public function __construct(array $configuration, $plugin_id, $plugin_definition)
-	{
+	public function __construct(array $configuration, $plugin_id, $plugin_definition) {
 		// TODO Auto-generated method stub
 		parent::__construct($configuration, $plugin_id, $plugin_definition);
-		$this->pluginDefinition->set('icon', drupal_get_path('module', 'formatage_models') . "/icones/formatage-models-product-teaser.png");
+		$this->pluginDefinition->set('icon', $this->pathResolver->getPath('module', 'formatage_models') . "/icones/formatage-models-product-teaser.png");
 	}
 }

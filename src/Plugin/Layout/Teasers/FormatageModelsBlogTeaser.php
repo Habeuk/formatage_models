@@ -40,7 +40,7 @@ use Drupal\Core\Form\FormStateInterface;
  * )
  */
 class FormatageModelsBlogTeaser extends FormatageModelsTeasers {
-  
+
   /**
    *
    * {@inheritdoc}
@@ -49,9 +49,9 @@ class FormatageModelsBlogTeaser extends FormatageModelsTeasers {
   public function __construct(array $configuration, $plugin_id, $plugin_definition, StylesGroupManager $styles_group_manager) {
     // TODO Auto-generated method stub
     parent::__construct($configuration, $plugin_id, $plugin_definition, $styles_group_manager);
-    $this->pluginDefinition->set('icon', drupal_get_path('module', 'formatage_models') . "/icones/teasers/formatage-models-teaser.png");
+    $this->pluginDefinition->set('icon', $this->pathResolver->getPath('module', 'formatage_models') . "/icones/teasers/formatage-models-teaser.png");
   }
-  
+
   /**
    *
    * {@inheritdoc}
@@ -63,7 +63,7 @@ class FormatageModelsBlogTeaser extends FormatageModelsTeasers {
     FormatageModelsThemes::formatSettingValues($build);
     return $build;
   }
-  
+
   /**
    *
    * {@inheritdoc}
@@ -82,7 +82,7 @@ class FormatageModelsBlogTeaser extends FormatageModelsTeasers {
       ]
     ];
   }
-  
+
   /**
    *
    * {@inheritdoc}
@@ -97,7 +97,7 @@ class FormatageModelsBlogTeaser extends FormatageModelsTeasers {
     ];
     return $form;
   }
-  
+
   /**
    *
    * {@inheritdoc}
@@ -106,6 +106,4 @@ class FormatageModelsBlogTeaser extends FormatageModelsTeasers {
     parent::submitConfigurationForm($form, $form_state);
     $this->configuration['height'] = $form_state->getValue('height');
   }
-  
 }
-

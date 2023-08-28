@@ -35,7 +35,7 @@ class FormatageModelsmenu1 extends FormatageModelsSection {
   public function __construct(array $configuration, $plugin_id, $plugin_definition, StylesGroupManager $styles_group_manager) {
     // TODO Auto-generated method stub
     parent::__construct($configuration, $plugin_id, $plugin_definition, $styles_group_manager);
-    $this->pluginDefinition->set('icon', drupal_get_path('module', 'formatage_models') . "/icones/menus/formatage-models-menu1.png");
+    $this->pluginDefinition->set('icon', $this->pathResolver->getPath('module', 'formatage_models') . "/icones/menus/formatage-models-menu1.png");
   }
 
   public function build(array $regions) {
@@ -60,8 +60,7 @@ class FormatageModelsmenu1 extends FormatageModelsSection {
         ];
         if (!empty($region[$k]['content']['#items']))
           $this->formatListMenus($region[$k]['content']['#items']);
-      }
-      elseif (isset($m['#base_plugin_id']) && $m['#base_plugin_id'] === 'field_block') {
+      } elseif (isset($m['#base_plugin_id']) && $m['#base_plugin_id'] === 'field_block') {
         // set new theme.
         $region[$k]['content']['#theme'] = 'layoutmenu_formatage_models_menu1';
 
@@ -73,8 +72,7 @@ class FormatageModelsmenu1 extends FormatageModelsSection {
         ];
         if (!empty($region[$k]['content'][0]['#items']))
           $this->formatListMenus($region[$k]['content'][0]['#items']);
-      }
-      elseif (isset($m['#plugin_id']) && str_contains($m['#plugin_id'], ":menus")) {
+      } elseif (isset($m['#plugin_id']) && str_contains($m['#plugin_id'], ":menus")) {
         $elements = Element::children($region[$k]['content']);
         foreach ($elements as $delta) {
           $region[$k]['content'][$delta]['#theme'] = 'layoutmenu_formatage_models_menu1';
@@ -133,5 +131,4 @@ class FormatageModelsmenu1 extends FormatageModelsSection {
       'region_css_site_main_menu' => ''
     ] + parent::defaultConfiguration();
   }
-
 }

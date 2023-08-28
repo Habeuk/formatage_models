@@ -29,7 +29,7 @@ use Drupal\formatage_models\FormatageModelsThemes;
  * )
  */
 class FormatageModelsArticleHeader extends FormatageModelsSection {
-  
+
   /**
    *
    * {@inheritdoc}
@@ -38,9 +38,9 @@ class FormatageModelsArticleHeader extends FormatageModelsSection {
   public function __construct(array $configuration, $plugin_id, $plugin_definition, StylesGroupManager $styles_group_manager) {
     // TODO Auto-generated method stub
     parent::__construct($configuration, $plugin_id, $plugin_definition, $styles_group_manager);
-    $this->pluginDefinition->set('icon', drupal_get_path('module', 'formatage_models') . "/icones/sections/formatage-models-article-header.png");
+    $this->pluginDefinition->set('icon', $this->pathResolver->getPath('module', 'formatage_models') . "/icones/sections/formatage-models-article-header.png");
   }
-  
+
   /**
    *
    * {@inheritdoc}
@@ -50,7 +50,7 @@ class FormatageModelsArticleHeader extends FormatageModelsSection {
       'class_col' => 'col-md-8'
     ];
   }
-  
+
   /**
    *
    * {@inheritdoc}
@@ -62,14 +62,14 @@ class FormatageModelsArticleHeader extends FormatageModelsSection {
     FormatageModelsThemes::formatSettingValues($build);
     return $build;
   }
-  
+
   /**
    *
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildConfigurationForm($form, $form_state);
-    
+
     $form['class_col'] = [
       '#type' => 'textfield',
       '#title' => $this->t('class_col'),
@@ -77,7 +77,7 @@ class FormatageModelsArticleHeader extends FormatageModelsSection {
     ];
     return $form;
   }
-  
+
   /**
    *
    * {@inheritdoc}
@@ -86,5 +86,4 @@ class FormatageModelsArticleHeader extends FormatageModelsSection {
     parent::submitConfigurationForm($form, $form_state);
     $this->configuration['class_col'] = $form_state->getValue('class_col');
   }
-  
 }
