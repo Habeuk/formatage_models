@@ -18,12 +18,12 @@ use Twig\Extension\AbstractExtension;
  *        
  */
 class LayoutValueExtension extends AbstractExtension {
-  
+
   use FormatageModelsTwigImg;
   use FormatageModelsTwigBgImage;
   use ManageStyleCss;
   use ArrayElements;
-  
+
   /**
    *
    * {@inheritdoc}
@@ -37,7 +37,7 @@ class LayoutValueExtension extends AbstractExtension {
       ])
     ];
   }
-  
+
   /**
    *
    * @param integer $block_id
@@ -50,7 +50,7 @@ class LayoutValueExtension extends AbstractExtension {
       $block_content = \Drupal::entityTypeManager()->getViewBuilder('block_content')->view($block);
     return $block_content;
   }
-  
+
   /**
    * On charge les filtres.
    * on peut utiliser \Twig\TwigFilter ou \Twig_SimpleFilter
@@ -67,7 +67,7 @@ class LayoutValueExtension extends AbstractExtension {
         $this,
         'getFieldValue'
       ]),
-      new \Twig_SimpleFilter('layout_raw', [
+      new \Twig\TwigFilter('layout_raw', [
         $this,
         'getLayoutRawValues'
       ]),
@@ -114,7 +114,7 @@ class LayoutValueExtension extends AbstractExtension {
       ])
     ];
   }
-  
+
   public function getLayoutTermsValues(array $build, $keySearch = null) {
     $vals = [];
     $key = 0;
@@ -125,8 +125,7 @@ class LayoutValueExtension extends AbstractExtension {
             if ($key === $keySearch) {
               return $this->getFieldValueTerms($value['content'], $keySearch);
             }
-          }
-          else {
+          } else {
             $vals[] = $this->getFieldValueTerms($value['content']);
           }
         }
@@ -135,7 +134,7 @@ class LayoutValueExtension extends AbstractExtension {
     }
     return $vals;
   }
-  
+
   /**
    * Renvoit une valeur qui a été formaté ou null au cas contraire.
    *
@@ -149,7 +148,7 @@ class LayoutValueExtension extends AbstractExtension {
     // defaut si on est en administration.
     if (is_array($build) && !isset($build['layout_builder_add_block'])) {
       foreach ($build as $key => $value) {
-        
+
         if (is_array($value) && !empty($value)) {
           if (!empty($value['#theme']) && $value['#theme'] == 'block' && !empty($value['content'])) {
             if ($keySearch !== null) {
@@ -160,24 +159,21 @@ class LayoutValueExtension extends AbstractExtension {
             // si on a un rendu retarder, on l'ignore.
             elseif (isset($value['content']['#lazy_builder'])) {
               $vals[$key] = $value;
-            }
-            else {
+            } else {
               $vals[] = $this->getFieldValue($value['content']);
             }
-          }
-          else {
+          } else {
             // la clee est important, car certains elments comme #attributes ne
             // doivent pas etre rendu.
             $vals[$key] = $value;
           }
         }
       }
-    }
-    else
+    } else
       return $build;
     return $vals;
   }
-  
+
   /**
    * verifie si le contenus dispose d'une valeur.
    * Retoune true si l'element n'est pas vide et false sinon.
@@ -193,8 +189,7 @@ class LayoutValueExtension extends AbstractExtension {
             $data = $build[$key];
             if (count($data) == 1 && isset($data['#cache'])) {
               $hasValue = false;
-            }
-            else {
+            } else {
               $hasValue = true;
               break;
             }
@@ -204,7 +199,7 @@ class LayoutValueExtension extends AbstractExtension {
     }
     return $hasValue;
   }
-  
+
   public function getLayoutRawValues($build, $keySearch = null) {
     $vals = [];
     $key = 0;
@@ -217,8 +212,7 @@ class LayoutValueExtension extends AbstractExtension {
             if ($key === $keySearch) {
               return $this->getFieldRawValues($value['content'], $keySearch);
             }
-          }
-          else {
+          } else {
             $vals[] = $this->getFieldRawValues($value['content']);
           }
         }
@@ -227,7 +221,7 @@ class LayoutValueExtension extends AbstractExtension {
     }
     return $vals;
   }
-  
+
   /**
    * Twig filter callback: Return specific field item(s) value.
    *
@@ -247,24 +241,23 @@ class LayoutValueExtension extends AbstractExtension {
     if (!isset($build['#items']) || !($build['#items'] instanceof TypedDataInterface)) {
       return NULL;
     }
-    
+
     $item_values = $build['#items']->getValue();
     if (empty($item_values)) {
       return NULL;
     }
-    
+
     $raw_values = [];
     foreach ($item_values as $delta => $values) {
       if ($key === $delta) {
         return $values;
-      }
-      else {
+      } else {
         $raw_values[$delta] = $values;
       }
     }
     return $raw_values;
   }
-  
+
   /**
    * Twig filter callback: Only return a field's value(s).
    *
@@ -301,24 +294,24 @@ class LayoutValueExtension extends AbstractExtension {
       }
       return NULL;
     }
-    
+
     $elements = Element::children($build);
     if (empty($elements)) {
       return NULL;
     }
-    
+
     $items = [];
     foreach ($elements as $delta) {
       $items[$delta] = $build[$delta];
     }
     return $items;
   }
-  
+
   public function getFieldValueTerms($build) {
     if (!$this->isFieldRenderArray($build)) {
       return NULL;
     }
-    
+
     $elements = Element::children($build);
     if (empty($elements)) {
       return NULL;
@@ -341,11 +334,11 @@ class LayoutValueExtension extends AbstractExtension {
     }
     return $items;
   }
-  
+
   function getParentTerms(\Drupal\Core\Field\EntityReferenceFieldItemList $items) {
     return $items->getValue();
   }
-  
+
   /**
    * Checks whether the render array is a field's render array.
    *
@@ -357,5 +350,4 @@ class LayoutValueExtension extends AbstractExtension {
   protected function isFieldRenderArray($build) {
     return isset($build['#theme']) && $build['#theme'] == 'field';
   }
-  
 }
