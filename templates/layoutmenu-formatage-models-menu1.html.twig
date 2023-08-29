@@ -16,7 +16,7 @@
 	{% endif %}
 	<div class="{{classMenu}}">		
 		<ul class=" menu menu-level-{{ items|first.menu_level }} navbar">
-			{% for key, item in items if key|first != '#' %}
+			{% for key, item in items %}
 {% if key|first != '#' %}
     
 								{% 
