@@ -16,8 +16,10 @@
 	{% endif %}
 	<div class="{{classMenu}}">		
 		<ul class=" menu menu-level-{{ items|first.menu_level }} navbar">
-			{% for key, item in items if key|first != '#' %}
-				{% 
+			{% for key, item in items %}
+{% if key|first != '#' %}
+    
+								{% 
             set menuId = 'item-id-' ~ item.entity.id()
         %}
 				{% set menu_item_classes = [
@@ -49,6 +51,7 @@
 						</div>
 					{% endif %}
 				</li>
+			{% endif %}
 			{% endfor %}
 		</ul>
 	</div>

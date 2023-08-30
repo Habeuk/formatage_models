@@ -1,10 +1,11 @@
 <?php
+
 namespace Drupal\formatage_models\EventSubscriber;
 
 use Drupal\Core\Messenger\MessengerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
@@ -32,20 +33,20 @@ class FormatageModelsSubscriber implements EventSubscriberInterface {
 	/**
 	 * Kernel request event handler.
 	 *
-	 * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+	 * @param \Symfony\Component\HttpKernel\Event\RequestEvent $event
 	 *        	Response event.
 	 */
-	public function onKernelRequest(GetResponseEvent $event) {
+	public function onKernelRequest(RequestEvent $event) {
 		// $this->messenger->addStatus(__FUNCTION__);
 	}
 
 	/**
 	 * Kernel response event handler.
 	 *
-	 * @param \Symfony\Component\HttpKernel\Event\FilterResponseEvent $event
+	 * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
 	 *        	Response event.
 	 */
-	public function onKernelResponse(FilterResponseEvent $event) {
+	public function onKernelResponse(ResponseEvent $event) {
 		// $this->messenger->addStatus(__FUNCTION__);
 	}
 
@@ -55,7 +56,7 @@ class FormatageModelsSubscriber implements EventSubscriberInterface {
 	 */
 	public static function getSubscribedEvents() {
 		return [ // KernelEvents::REQUEST => ['onKernelRequest'],
-		          // KernelEvents::RESPONSE => ['onKernelResponse'],
+			// KernelEvents::RESPONSE => ['onKernelResponse'],
 		];
 	}
 }
