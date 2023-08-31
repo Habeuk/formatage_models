@@ -348,6 +348,6 @@ class LayoutValueExtension extends AbstractExtension {
    * @return bool True if $build is a field render array.
    */
   protected function isFieldRenderArray($build) {
-    return isset($build['#theme']) && $build['#theme'] == 'field';
+    return isset($build[0]['#theme']) && $build[0]['#theme'] == 'field';
   }
 }

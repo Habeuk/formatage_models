@@ -54,7 +54,6 @@ trait FormatageModelsTwigBgImage {
     if (!$this->isFieldRenderArray($build)) {
       return NULL;
     }
-    // dump($build);
     $elements = Element::children($build);
     if (empty($elements)) {
       return NULL;
@@ -67,6 +66,8 @@ trait FormatageModelsTwigBgImage {
       elseif ($build[$delta]['#theme'] == 'responsive_image_formatter') {
         $Attribute->addClass('lazyload');
         return $Attribute->setAttribute('data-bgset', $this->renderResponssiveImage($build[$delta]['#item'], $build[$delta]['#responsive_image_style_id']));
+      } elseif (!empty($build[$delta][0]["#markup"])) {
+        return $Attribute->setAttribute('style', 'background-image:url(' . $build[$delta][0]["#markup"] . ');');
       }
       else {
         \Drupal::messenger()->addWarning(" Le type de formatage doit etre image_url ");
