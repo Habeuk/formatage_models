@@ -49,6 +49,11 @@ function formatage_models_field_formatter_third_party_settings_form(FormatterInt
     '#title' => t('Field value class'),
     '#default_value' => $classes['value']
   ];
+  $element['classes']['item'] = [
+      '#type' => 'textfield',
+      '#title' => t('Class for each item'),
+      '#default_value' => $classes['item']
+  ];
   //
   if (\Drupal::moduleHandler()->moduleExists('token')) {
     $element['token_help'] = [
@@ -74,7 +79,8 @@ function formatage_models_preprocess_field(&$variables) {
     $classContainer = $variables['element']['#third_party_settings']['formatage_models']['classes']['container'];
     $classTitle = $variables['element']['#third_party_settings']['formatage_models']['classes']['title'];
     $classValue = $variables['element']['#third_party_settings']['formatage_models']['classes']['value'];
-
+    $classItem = !empty($variables['element']['#third_party_settings']['formatage_models']['classes']['item'])?$variables['element']['#third_party_settings']['formatage_models']['classes']['item']:'';
+    
     /** @var \Drupal\Core\Utility\Token $token */
     $token = \Drupal::service('token');
     /** @var \Drupal\Core\Entity\EntityInterface $object */
@@ -109,10 +115,19 @@ function formatage_models_preprocess_field(&$variables) {
     foreach ($classValue as $thisClass) {
       $variables['content_attributes']['class'][] = Html::escape($thisClass);
     }
-    if (!empty($classValue)) {
-      // \Stephane888\Debug\debugLog::kintDebugDrupal($variables,
-      // 'formatage_models_preprocess_field--', true);
+    //
+    if(!empty($variables['items'])){
+        $classItem = explode(' ', $classItem);
+        foreach ($variables['items'] as &$value) {
+            $value['attributes']->addClass($classItem);
+        }
     }
+    
+    
+//     if (!empty($classValue)) {
+//       // \Stephane888\Debug\debugLog::kintDebugDrupal($variables,
+//       // 'formatage_models_preprocess_field--', true);
+//     }
   }
 }
 
