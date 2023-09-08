@@ -42,6 +42,14 @@
     right: 7px !important;
 }
 
+#drupal-off-canvas .description, 
+#drupal-off-canvas .form-item .description, 
+#drupal-off-canvas .details-description{
+	font-size: 1.2rem !important;
+	display: block !important;
+	font-style: italic !important;
+}
+
 #drupal-off-canvas textarea, 
 #drupal-off-canvas select, 
 #drupal-off-canvas input,
