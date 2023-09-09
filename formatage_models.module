@@ -26,7 +26,8 @@ function formatage_models_field_formatter_third_party_settings_form(FormatterInt
   $classes = $plugin->getThirdPartySetting('formatage_models', 'classes', [
     'container' => '',
     'title' => '',
-    'value' => ''
+    'value' => '',
+    'item'  => ''
   ]);
   $element['classes'] = [
     '#type' => 'details',
