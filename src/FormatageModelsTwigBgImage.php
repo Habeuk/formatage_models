@@ -26,7 +26,6 @@ trait FormatageModelsTwigBgImage {
       if (is_array($value) && !empty($value)) {
         if (!empty($value['#theme'])) {
           if ($value['#theme'] == 'block' && !empty($value['content'])) {
-            
             if (!empty($vals['#configuration']))
               $conf = $vals['#configuration'];
             return $this->getFieldImgBg($value['content'], $conf);
@@ -54,10 +53,12 @@ trait FormatageModelsTwigBgImage {
     if (!$this->isFieldRenderArray($build)) {
       return NULL;
     }
+    
     $elements = Element::children($build);
     if (empty($elements)) {
       return NULL;
     }
+    
     $Attribute = new Attribute();
     foreach ($elements as $delta) {
       if (!empty($build[$delta]["#markup"])) {
@@ -66,7 +67,8 @@ trait FormatageModelsTwigBgImage {
       elseif ($build[$delta]['#theme'] == 'responsive_image_formatter') {
         $Attribute->addClass('lazyload');
         return $Attribute->setAttribute('data-bgset', $this->renderResponssiveImage($build[$delta]['#item'], $build[$delta]['#responsive_image_style_id']));
-      } elseif (!empty($build[$delta][0]["#markup"])) {
+      }
+      elseif (!empty($build[$delta][0]["#markup"])) {
         return $Attribute->setAttribute('style', 'background-image:url(' . $build[$delta][0]["#markup"] . ');');
       }
       else {
@@ -87,7 +89,6 @@ trait FormatageModelsTwigBgImage {
        */
       $breakpointManager = \Drupal::service('breakpoint.manager');
       $breakpoints = array_reverse($breakpointManager->getBreakpointsByGroup($responsive_image_style->getBreakpointGroup()));
-      
       //
       $target_id = $item->getValue();
       $dataBgset = null;
