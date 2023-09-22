@@ -113,6 +113,8 @@ class FormatageModelsTeasers extends FormatageModels implements ContainerFactory
     }
     //
     $build = $this->stylesGroupManager->buildStyles($build, $this->configuration['container_wrapper']['bootstrap_styles']);
+    //
+    
     return $build;
   }
   

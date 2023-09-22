@@ -19,6 +19,26 @@ class FormatageModelsSection extends FormatageModels implements ContainerFactory
   
   /**
    *
+   * @var \Drupal\layout_custom_style\StyleScssPluginManager
+   */
+  protected $StyleScssPluginManager;
+  
+  /**
+   *
+   * @var unknown
+   */
+  protected $moduleLayoutstyleExistExit = NULL;
+  
+  /**
+   * Contient l'url relative de l'image.
+   * (with le slash).
+   *
+   * @var string
+   */
+  protected $image_icon_url = NULL;
+  
+  /**
+   *
    * {@inheritdoc}
    * @see \Drupal\formatage_models\Plugin\Layout\FormatageModels::__construct()
    */
@@ -26,6 +46,43 @@ class FormatageModelsSection extends FormatageModels implements ContainerFactory
     // TODO Auto-generated method stub
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->stylesGroupManager = $styles_group_manager;
+    if ($this->checkModuleLayoutstyleExist()) {
+      /**
+       * il ya beaucoup de service qui implemente cette class( Pour mettre à
+       * jour
+       * l'icone), donc injecte un nouveau service cela va exigé qu'on modifie
+       * beaucoup de session.
+       * il faut une fonction dans la class parente qui permet de mettre à jour
+       * l'image et qui appelle le construct parent. cette fonction devrait
+       * avoir un alert pour les layouts ne disposant pas d'image.
+       * for branch 4x.
+       *
+       * @var \Drupal\formatage_models\Plugin\Layout\Sections\FormatageModelsSection $StyleScssPluginManager
+       */
+      $this->StyleScssPluginManager = \Drupal::service('plugin.manager.style_scss');
+      //
+      $this->setImageUrlLayout();
+    }
+  }
+  
+  protected function checkModuleLayoutstyleExist() {
+    if ($this->moduleLayoutstyleExistExit === NULL) {
+      $this->moduleLayoutstyleExistExit = \Drupal::moduleHandler()->moduleExists('layout_custom_style');
+    }
+    return $this->moduleLayoutstyleExistExit;
+  }
+  
+  /**
+   * Permet de definir l'image de l'url.
+   * Elle evite qu'on soit obliger de redefinir la __construct ailleur , car
+   * cela rend complique l'utilisation de l'injection des dependances.
+   *
+   * @param string $url
+   *        begin with /
+   */
+  protected function setImageUrlLayout($url) {
+    if ($this->image_icon_url)
+      $this->pluginDefinition->set('icon', $this->pathResolver->getPath('module', 'layoutscommerce') . $this->image_icon_url);
   }
   
   /**
@@ -52,7 +109,7 @@ class FormatageModelsSection extends FormatageModels implements ContainerFactory
     if (!empty($this->configuration[$currentDomain])) {
       $build['#settings'] = $this->configuration[$currentDomain];
     }
-    
+    // dd($this);
     // classes and attributes.
     if (!isset($build['#attributes']['class'])) {
       $build['#attributes']['class'] = [];
@@ -125,7 +182,13 @@ class FormatageModelsSection extends FormatageModels implements ContainerFactory
     
     // bootstrap styles.
     $build = $this->stylesGroupManager->buildStyles($build, $this->configuration['container_wrapper']['bootstrap_styles']);
+    // add style_scss
+    // $build = $this->StyleScssPluginManager->
     // dump($build);
+    if ($this->checkModuleLayoutstyleExist()) {
+      $this->StyleScssPluginManager->build($build, $this->configuration);
+    }
+    
     return $build;
   }
   
@@ -215,6 +278,17 @@ class FormatageModelsSection extends FormatageModels implements ContainerFactory
       $this->configuration['container_wrapper']['bootstrap_styles'] = [];
     
     $this->stylesGroupManager->buildStylesFormElements($form['blb_style'], $form_state, $this->configuration['container_wrapper']['bootstrap_styles'], 'bootstrap_layout_builder.styles');
+    if ($this->checkModuleLayoutstyleExist()) {
+      // // add style_scss
+      // $form['scss'] = [
+      // '#type' => 'details',
+      // '#title' => 'Css & Scss',
+      // '#open' => false
+      // ];
+      // if (empty($this->configuration['scss']))
+      // $this->configuration['scss'] = [];
+      $this->StyleScssPluginManager->buildConfiguration($form, $form_state, $this->configuration);
+    }
     return $form;
   }
   
@@ -238,6 +312,10 @@ class FormatageModelsSection extends FormatageModels implements ContainerFactory
       \Drupal::messenger()->addWarning($message);
     }
     $this->configuration['container_wrapper']['bootstrap_styles'] = $this->stylesGroupManager->submitStylesFormElements($form['blb_style'], $form_state, $style_tab, $this->configuration['container_wrapper']['bootstrap_styles'], 'bootstrap_layout_builder.styles');
+    // On sauvegarde la veleur du style.
+    if ($this->checkModuleLayoutstyleExist()) {
+      $this->StyleScssPluginManager->submitConfigurationForm($form, $form_state, $this->configuration);
+    }
   }
   
 }

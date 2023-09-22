@@ -14,38 +14,38 @@ use Drupal\Component\Utility\NestedArray;
  * default class for module layout module
  *
  * @author stephane
- *
+ *        
  */
 class FormatageModels extends LayoutDefault {
-
+  
   /**
    * The layouts services from formatage_models.
    *
    * @var \Drupal\formatage_models\Services\Layouts
    */
   protected $Layouts;
-
+  
   /**
    * The styles group plugin manager.
    *
    * @var \Drupal\bootstrap_styles\StylesGroup\StylesGroupManager
    */
   protected $stylesGroupManager;
-
+  
   /**
    * The config factory.
    *
    * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   protected $configFactory;
-
+  
   /**
    * Contient la configuration globale, avec les configuration par domaine.
    *
    * @var array
    */
   protected $globalConfiguration = [];
-
+  
   /**
    * permet de recuperation la config en function du domaine, si elle existe.
    * Si ce paramettre est definie alors les données sont enregistrées en
@@ -54,7 +54,7 @@ class FormatageModels extends LayoutDefault {
    * @var array
    */
   protected $subConfiguration = null;
-
+  
   /**
    * Le fait que le domaine existe, n'entrainne pas que les données vont etre
    * enregistrer en function de ce dernier.
@@ -62,13 +62,13 @@ class FormatageModels extends LayoutDefault {
    * @var String
    */
   protected $currentDomain = null;
-
+  
   /**
    *
    * @var \Drupal\Core\Extension\ExtensionPathResolver
    */
   protected $pathResolver;
-
+  
   /**
    *
    * {@inheritdoc}
@@ -76,6 +76,10 @@ class FormatageModels extends LayoutDefault {
   public function __construct(array $configuration, $plugin_id, $plugin_definition) {
     // $this->Layouts = $Layouts;
     $this->Layouts = \Drupal::service('formatage_models.layouts');
+    /**
+     *
+     * @var \Drupal\Core\Extension\ExtensionPathResolver $pathResolver
+     */
     $this->pathResolver = \Drupal::service('extension.path.resolver');
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     // on ne modifie pas la configuration à ce stade, car cela pourra avoir des
@@ -102,7 +106,7 @@ class FormatageModels extends LayoutDefault {
       $this->Layouts->setConfig($this->configuration);
     $this->Layouts->setRegions($this->getPluginDefinition()->getRegions());
   }
-
+  
   /**
    *
    * {@inheritdoc}
@@ -113,10 +117,10 @@ class FormatageModels extends LayoutDefault {
     foreach ($regions as $region => $label) {
       $regions_css['region_css_' . $region] = '';
     }
-
+    
     return $regions_css + parent::defaultConfiguration() + $this->Layouts->defaultConfiguration();
   }
-
+  
   /**
    * Renvoit la configuration Globale.
    * NB: Cette function peut etre utiliser par d'autres modules afin de
@@ -127,7 +131,7 @@ class FormatageModels extends LayoutDefault {
   public function getConfiguration() {
     return parent::getConfiguration();
   }
-
+  
   /**
    * Si le contenu est MAJ par l'utilisateur, on doit mettre egalment celui
    * present dans l'objet Layouts.
@@ -145,7 +149,7 @@ class FormatageModels extends LayoutDefault {
     //
     $this->Layouts->setConfig($configuration);
   }
-
+  
   /**
    *
    * @return array
@@ -153,7 +157,7 @@ class FormatageModels extends LayoutDefault {
   public function getSubConfiguration() {
     return $this->subConfiguration;
   }
-
+  
   /**
    *
    * @return array
@@ -162,7 +166,7 @@ class FormatageModels extends LayoutDefault {
     $this->subConfiguration = $configuration;
     $this->Layouts->setConfig($configuration);
   }
-
+  
   /**
    * On ne doit pas importer les librairies de maniere brute.
    * ( de ce fait on masque parent::build($regions)).
@@ -199,7 +203,7 @@ class FormatageModels extends LayoutDefault {
     // dump($build);
     return $build;
   }
-
+  
   /**
    *
    * {@inheritdoc}
@@ -210,7 +214,7 @@ class FormatageModels extends LayoutDefault {
     if ($this->subConfiguration) {
       $this->configuration = $this->subConfiguration;
     }
-
+    
     $form = parent::buildConfigurationForm($form, $form_state);
     $label = $this->getPluginDefinition()->getLabel() . ' ( ' . $this->getBaseId() . ' ) ';
     if (empty($this->configuration['label']) || $this->configuration['label'] == $this->getBaseId()) {
@@ -219,7 +223,7 @@ class FormatageModels extends LayoutDefault {
     else {
       $form['label']['#default_value'] = $this->configuration['label'];
     }
-
+    
     $this->Layouts->buildConfigurationForm($form);
     // $form['style'] =
     // $this->stylesGroupManager->buildStylesFormElements($form['style'],
@@ -230,7 +234,7 @@ class FormatageModels extends LayoutDefault {
     // $this->pluginDefinition->getLibrary();
     return $form;
   }
-
+  
   /**
    *
    * {@inheritdoc}
@@ -238,7 +242,7 @@ class FormatageModels extends LayoutDefault {
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
     //
   }
-
+  
   /**
    *
    * {@inheritdoc}
@@ -274,7 +278,7 @@ class FormatageModels extends LayoutDefault {
     // $db['end $configuration'] = $this->configuration;
     // dump($db);
   }
-
+  
   /**
    * Permet de supprimer les enregistrement de domaine dans un sous
    * enregistrement.
@@ -291,5 +295,5 @@ class FormatageModels extends LayoutDefault {
     }
     return $Conf;
   }
-
+  
 }
