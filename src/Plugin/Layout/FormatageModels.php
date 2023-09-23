@@ -71,6 +71,18 @@ class FormatageModels extends LayoutDefault {
   
   /**
    *
+   * @var \Drupal\layout_custom_style\StyleScssPluginManager
+   */
+  protected $StyleScssPluginManager;
+  
+  /**
+   *
+   * @var string
+   */
+  protected $moduleLayoutstyleExistExit = NULL;
+  
+  /**
+   *
    * {@inheritdoc}
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition) {
@@ -105,6 +117,31 @@ class FormatageModels extends LayoutDefault {
     else
       $this->Layouts->setConfig($this->configuration);
     $this->Layouts->setRegions($this->getPluginDefinition()->getRegions());
+    //
+    if ($this->checkModuleLayoutstyleExist()) {
+      /**
+       * Il ya beaucoup de service qui implemente cette class( Pour mettre à
+       * jour
+       * l'icone), donc injecte un nouveau service cela va exigé qu'on modifie
+       * beaucoup de session.
+       * il faut une fonction dans la class parente qui permet de mettre à jour
+       * l'image et qui appelle le construct parent. cette fonction devrait
+       * avoir un alert pour les layouts ne disposant pas d'image.
+       * for branch 4x.
+       *
+       * @var \Drupal\formatage_models\Plugin\Layout\Sections\FormatageModelsSection $StyleScssPluginManager
+       */
+      $this->StyleScssPluginManager = \Drupal::service('plugin.manager.style_scss');
+      //
+      $this->setImageUrlLayout();
+    }
+  }
+  
+  protected function checkModuleLayoutstyleExist() {
+    if ($this->moduleLayoutstyleExistExit === NULL) {
+      $this->moduleLayoutstyleExistExit = \Drupal::moduleHandler()->moduleExists('layout_custom_style');
+    }
+    return $this->moduleLayoutstyleExistExit;
   }
   
   /**
@@ -201,6 +238,9 @@ class FormatageModels extends LayoutDefault {
     // $build['#attached']['library'][] = $library;
     // }
     // dump($build);
+    if ($this->checkModuleLayoutstyleExist()) {
+      $this->StyleScssPluginManager->build($build, $this->configuration);
+    }
     return $build;
   }
   
@@ -225,13 +265,10 @@ class FormatageModels extends LayoutDefault {
     }
     
     $this->Layouts->buildConfigurationForm($form);
-    // $form['style'] =
-    // $this->stylesGroupManager->buildStylesFormElements($form['style'],
-    // $form_state,
-    // $this->configuration['container_wrapper']['bootstrap_styles'],
-    // 'bootstrap_layout_builder.styles');
-    // $form['info-sup']['#markup'] = 'Librairie : ' .
-    // $this->pluginDefinition->getLibrary();
+    
+    if ($this->checkModuleLayoutstyleExist()) {
+      $this->StyleScssPluginManager->buildConfiguration($form, $form_state, $this->configuration);
+    }
     return $form;
   }
   
@@ -277,6 +314,11 @@ class FormatageModels extends LayoutDefault {
     // $db['end $globalConfiguration'] = $this->globalConfiguration;
     // $db['end $configuration'] = $this->configuration;
     // dump($db);
+    //
+    // On sauvegarde la valeur du style.
+    if ($this->checkModuleLayoutstyleExist()) {
+      $this->StyleScssPluginManager->submitConfigurationForm($form, $form_state, $this->configuration);
+    }
   }
   
   /**
