@@ -82,6 +82,14 @@ class FormatageModels extends LayoutDefault {
   protected $moduleLayoutstyleExistExit = NULL;
   
   /**
+   * Contient l'url relative de l'image.
+   * (begin with le slash, example : "/icones/card-model.png" ).
+   *
+   * @var string
+   */
+  protected $image_icon_url = NULL;
+  
+  /**
    *
    * {@inheritdoc}
    */

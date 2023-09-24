@@ -18,14 +18,6 @@ class FormatageModelsSection extends FormatageModels implements ContainerFactory
   protected $stylesGroupManager;
   
   /**
-   * Contient l'url relative de l'image.
-   * (with le slash).
-   *
-   * @var string
-   */
-  protected $image_icon_url = NULL;
-  
-  /**
    *
    * {@inheritdoc}
    * @see \Drupal\formatage_models\Plugin\Layout\FormatageModels::__construct()
