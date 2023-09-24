@@ -137,6 +137,19 @@ class FormatageModels extends LayoutDefault {
     }
   }
   
+  /**
+   * Permet de definir l'image de l'url.
+   * Elle evite qu'on soit obliger de redefinir la __construct ailleur , car
+   * cela rend complique l'utilisation de l'injection des dependances.
+   *
+   * @param string $url
+   *        begin with /
+   */
+  protected function setImageUrlLayout() {
+    if ($this->image_icon_url)
+      $this->pluginDefinition->set('icon', $this->pathResolver->getPath('module', 'layoutscommerce') . $this->image_icon_url);
+  }
+  
   protected function checkModuleLayoutstyleExist() {
     if ($this->moduleLayoutstyleExistExit === NULL) {
       $this->moduleLayoutstyleExistExit = \Drupal::moduleHandler()->moduleExists('layout_custom_style');
