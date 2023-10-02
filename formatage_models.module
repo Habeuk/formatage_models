@@ -6,6 +6,7 @@ use Stephane888\Debug\Repositories\ConfigDrupal;
 use Drupal\Core\Field\FormatterInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Url;
 
 /**
  *
@@ -18,6 +19,39 @@ use Drupal\Component\Utility\Html;
  */
 
 /**
+ * implement hook_entity_operation
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ */
+function formatage_models_entity_operation(\Drupal\Core\Entity\EntityInterface $entity) {
+  if ($entity->isNew())
+    return [];
+  /**
+   * Ajout la possibilité de duppliquer toutes la configuration.
+   */
+  $entitytypeId = $entity->getEntityTypeId();
+  $entityId = $entity->id();
+  switch ($entitytypeId) {
+    case 'paragraphs_type':
+      return [
+        'clone' => [
+          'title' => t('Clone by formatage models'),
+          'weight' => 50,
+          'url' => Url::fromRoute('formatage_models.clone_entity', [
+            'entity_type_id' => $entitytypeId,
+            'id' => $entityId,
+            'etatpe' => 'init',
+            'clone_id' => 'none'
+          ], [
+            'query' => \Drupal::destination()->getAsArray()
+          ])
+        ]
+      ];
+      break;
+  }
+}
+
+/**
  * Implements hook_field_formatter_third_party_settings_form().
  *
  * Adds a textfield for container, label and value.
@@ -27,7 +61,7 @@ function formatage_models_field_formatter_third_party_settings_form(FormatterInt
     'container' => '',
     'title' => '',
     'value' => '',
-    'item'  => ''
+    'item' => ''
   ]);
   $element['classes'] = [
     '#type' => 'details',
@@ -51,9 +85,9 @@ function formatage_models_field_formatter_third_party_settings_form(FormatterInt
     '#default_value' => $classes['value']
   ];
   $element['classes']['item'] = [
-      '#type' => 'textfield',
-      '#title' => t('Class for each item'),
-      '#default_value' => $classes['item']
+    '#type' => 'textfield',
+    '#title' => t('Class for each item'),
+    '#default_value' => $classes['item']
   ];
   //
   if (\Drupal::moduleHandler()->moduleExists('token')) {
@@ -74,13 +108,13 @@ function formatage_models_field_formatter_third_party_settings_form(FormatterInt
  * according to the field formatter settings.
  */
 function formatage_models_preprocess_field(&$variables) {
-
+  
   // Add class for whole field.
   if (!empty($variables['element']['#third_party_settings']['formatage_models']['classes'])) {
     $classContainer = $variables['element']['#third_party_settings']['formatage_models']['classes']['container'];
     $classTitle = $variables['element']['#third_party_settings']['formatage_models']['classes']['title'];
     $classValue = $variables['element']['#third_party_settings']['formatage_models']['classes']['value'];
-    $classItem = !empty($variables['element']['#third_party_settings']['formatage_models']['classes']['item'])?$variables['element']['#third_party_settings']['formatage_models']['classes']['item']:'';
+    $classItem = !empty($variables['element']['#third_party_settings']['formatage_models']['classes']['item']) ? $variables['element']['#third_party_settings']['formatage_models']['classes']['item'] : '';
     
     /** @var \Drupal\Core\Utility\Token $token */
     $token = \Drupal::service('token');
@@ -117,18 +151,17 @@ function formatage_models_preprocess_field(&$variables) {
       $variables['content_attributes']['class'][] = Html::escape($thisClass);
     }
     //
-    if(!empty($variables['items'])){
-        $classItem = explode(' ', $classItem);
-        foreach ($variables['items'] as &$value) {
-            $value['attributes']->addClass($classItem);
-        }
+    if (!empty($variables['items'])) {
+      $classItem = explode(' ', $classItem);
+      foreach ($variables['items'] as &$value) {
+        $value['attributes']->addClass($classItem);
+      }
     }
     
-    
-//     if (!empty($classValue)) {
-//       // \Stephane888\Debug\debugLog::kintDebugDrupal($variables,
-//       // 'formatage_models_preprocess_field--', true);
-//     }
+    // if (!empty($classValue)) {
+    // // \Stephane888\Debug\debugLog::kintDebugDrupal($variables,
+    // // 'formatage_models_preprocess_field--', true);
+    // }
   }
 }
 
@@ -313,9 +346,9 @@ function formatage_models_preprocess_page(&$variables) {
   elseif ($route_name == 'entity.paragraphs_type.collection') {
     $variables['page']['content']['#attached']['library'][] = 'formatage_models/formatage-models-admin-paragraph';
   }
-
+  
   if (!empty($variables['logged_in'])) {
-
+    
     // Il faudra que ces liens soient configurable (settings.form).
     $routes = [
       'vuejs_entity.model_choisie_form',
@@ -672,7 +705,7 @@ function formatage_models_preprocess_views_view_render_page(&$vars) {
   $view = $vars['view'];
   //
   $css = $view->display_handler->getOption('view_row_css');
-
+  
   if ($css) {
     $Attribute = new Attribute();
     $css = explode(" ", $css);
@@ -763,6 +796,8 @@ function formatage_models_preprocess_views_view_render(&$vars) {
     $vars['footer']['#attributes'] = $Attribute;
   }
 }
+
+
 
 
 
