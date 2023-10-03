@@ -149,6 +149,7 @@ class FormatageModels extends LayoutDefault {
    * Permet de definir l'image de l'url.
    * Elle evite qu'on soit obliger de redefinir la __construct ailleur , car
    * cela rend complique l'utilisation de l'injection des dependances.
+   * Nb: vous devez definir: protected $image_icon_url = NULL;
    *
    * @param string $url
    *        begin with /
