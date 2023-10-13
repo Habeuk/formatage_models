@@ -9,7 +9,7 @@
 	<div {% if settings.config_section %} class="{{ settings.config_section.type_container }} {{ settings.config_section.container_class }}" {% else %} class="" {% endif %}>
     	{% if content.main|has_value %}
     		{# verification #}
-    		{% if settings.region_tag_main %}
+    		{% if settings.region_tag_main %}    		
     			<{{settings.region_tag_main}} {{region_attributes.main.addClass('main')}}>
             		{% if settings.load_clean_value %}
             		    {{ content.main|layout_value }}
@@ -25,6 +25,7 @@
             		    {{ content.main }}
             		{% endif %}
             	</div>
+            	
             {% endif %}
     	{% endif %}
     	{# content region for teaser, ce model est deja assez utilisé, on laisse la classe row pour ce cas de figure #}
