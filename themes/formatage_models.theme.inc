@@ -7,6 +7,7 @@ function template_preprocess_formatage_models_swiper_views_style(&$vars) {
 }
 
 function template_preprocess_formatage_models_fieldgalleries(&$vars, $hook) {
+  formatage_models_preprocess_field($vars);
   $element = $vars['element'];
   // Creating variables for the template.
   $vars['entity_type'] = $element['#entity_type'];

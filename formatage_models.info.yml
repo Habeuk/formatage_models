@@ -6,5 +6,6 @@ core_version_requirement: ^9 || ^10
 dependencies:
   - drupal:layout_builder
   - drupal:bootstrap_layout_builder
+  - drupal:jsonapi
   - apivuejs
   - filesmanager
