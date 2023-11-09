@@ -1,6 +1,6 @@
 {% if content %}
 	<section {{attributes.addClass('bloc_description_html')}}>
-		<div class="container">
+		<div {% if settings.config_section %} class="{{ settings.config_section.type_container }} {{ settings.config_section.container_class }}" {% else %} class="container" {% endif %}>
 			<div class="row">
 				<div{{region_attributes.left.addClass('left')}}>
 					{{content.left}}

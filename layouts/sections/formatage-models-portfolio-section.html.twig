@@ -1,6 +1,6 @@
 <!-- ======= Portfolio Section ======= -->
 <section id="portfolio" class="portfolio">
-	<div class="container" data-aos="fade-up">
+	<div {% if settings.config_section %} class="{{ settings.config_section.type_container }} {{ settings.config_section.container_class }}" {% else %} class="container" {% endif %}>
 		<div class="section-title">
 			<h2>Portfolio</h2>
 			<p>Check our Portfolio</p>

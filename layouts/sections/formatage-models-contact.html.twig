@@ -1,5 +1,6 @@
 {% if content %}
 	<section {{attributes.addClass('formatage-models-contact')}}>
+	<div {% if settings.config_section %} class="{{ settings.config_section.type_container }} {{ settings.config_section.container_class }}" {% else %} class="container" {% endif %}>
 		<div class="row">
 			<div class="col-md-4 content-left">
 				<h2 {{region_attributes.titre.addClass('titre')}}>
@@ -12,6 +13,7 @@
 			<div {{region_attributes.content_map_google.addClass('content_map_google')}}>
 				{{ content.content_map_google }}
 			</div>
+		</div>
 		</div>
 	</section>
 {% endif %}

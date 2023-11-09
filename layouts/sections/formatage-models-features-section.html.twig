@@ -1,6 +1,6 @@
 <!-- ======= Features Section ======= -->
 <section id="features" {{attributes.addClass('features')}}>
-	<div class="container" data-aos="fade-up">
+	<div {% if settings.config_section %} class="{{ settings.config_section.type_container }} {{ settings.config_section.container_class }}" {% else %} class="container" {% endif %} data-aos="fade-up">
 		<div class="row">
 			<div class="image col-lg-6" style="background-image: url('/themes/custom/prestataires/images/camera-securite-mur-immeuble-bureaux_163132-740.jpg')" data-aos="fade-right"></div>
 			<div class="col-lg-6" data-aos="fade-left" data-aos-delay="100">

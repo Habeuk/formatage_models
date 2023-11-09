@@ -1,7 +1,7 @@
 {% if content %}
     <!-- ======= Hero Section ======= -->
     <section id="hero" {{ attributes.addClass('d-flex','align-items-center','justify-content-center','gp-hero') }}>
-        <div class="container" data-aos="fade-up">
+        <div {% if settings.config_section %} class="{{ settings.config_section.type_container }} {{ settings.config_section.container_class }}" {% else %} class="container" {% endif %}>
             <div class="row justify-content-center" data-aos="fade-up" data-aos-delay="150">
                 <div class="col-xl-6 col-lg-8">
                     {% if content.title %}

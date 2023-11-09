@@ -8,7 +8,7 @@
 		{% endif %}
 	{% endif %}
 	<section {{ attributes.addClass(['images-bg','space-padding']) }} >
-		<div class="container">
+		<div {% if settings.config_section %} class="{{ settings.config_section.type_container }} {{ settings.config_section.container_class }}" {% else %} class="container" {% endif %}>
 			<div class="row">
 				<div class = "{{ settings.larger_text }}">
 					{% if content.sub_title %}

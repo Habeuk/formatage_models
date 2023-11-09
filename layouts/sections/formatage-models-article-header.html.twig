@@ -1,5 +1,6 @@
 {% if content %}
 	<div{{attributes}}>
+	<div {% if settings.config_section %} class="{{ settings.config_section.type_container }} {{ settings.config_section.container_class }}" {% else %} class="container" {% endif %}>
 		<div class="row">
 			<div class="{{settings.class_col}}">
 				<header class="header-blog">
@@ -13,6 +14,7 @@
 					</div>
 				</header>
 			</div>
+		</div>
 		</div>
 	</div>
 {% endif %}

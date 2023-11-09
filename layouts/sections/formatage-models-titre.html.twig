@@ -1,6 +1,6 @@
 {% if content  %}
 	<section {{ attributes.addClass(['titre-section','space-padding']) }}>
-		<div class="container">
+		<div {% if settings.config_section %} class="{{ settings.config_section.type_container }} {{ settings.config_section.container_class }}" {% else %} class="container" {% endif %}>
 			{% if content.main %}
 				<h1 {{ region_attributes.main.addClass(['main']) }}>
 					{{ content.main|layout_value }}

@@ -1,6 +1,6 @@
 {% if content %}
 	<section {{ attributes.addClass(['fb-services','section-padding']) }}>
-		<div class="container">
+		<div {% if settings.config_section %} class="{{ settings.config_section.type_container }} {{ settings.config_section.container_class }}" {% else %} class="container" {% endif %}>
 			<div class="section-header text-center">
 				{% if content.title %}
 					<h2 class="section-header wow fadeInDown animated" data-wow-delay="0.3s" style="visibility: visible; -webkit-animation-delay: 0.3s; -moz-animation-delay: 0.3s;  animation-delay: 0.3s; ">

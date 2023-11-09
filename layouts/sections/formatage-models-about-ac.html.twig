@@ -1,6 +1,6 @@
 {% if content %}
 	<section id="hero" {{attributes.addClass('ac-about')}}>
-		<div class="container">
+		<div {% if settings.config_section %} class="{{ settings.config_section.type_container }} {{ settings.config_section.container_class }}" {% else %} class="container" {% endif %}>
 			<div class="row d-flex align-items-center">
 				<div class="col-md-7 content-image">
 					{% if content.image1 %}

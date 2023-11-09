@@ -8,7 +8,7 @@
 	<section {{attributes.addClass('page-header-bg')}}>
 		{% if content.title or content.sub_title %}
 		<div class=" content-text d-flex flex-column justify-content-center w-100">
-			<div class="container ">
+			<div {% if settings.config_section %} class="{{ settings.config_section.type_container }} {{ settings.config_section.container_class }}" {% else %} class="container" {% endif %}>
 				<div class="row">
 					{% if content.title %}
         				<{{settings.region_tag_title}} {{ region_attributes.title.addClass('title') }}> {{ content.title }} </{{settings.region_tag_title}}>

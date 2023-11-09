@@ -2,7 +2,7 @@
 <!-- ======= Footer ======= -->
 <footer {{ attributes.addClass('formatage-models-footer-gp') }}>
 	<div class="footer-top">
-		<div class="container">
+		<div {% if settings.config_section %} class="{{ settings.config_section.type_container }} {{ settings.config_section.container_class }}" {% else %} class="container" {% endif %}>
 			<div class="row">
 				<div class="col-lg-3 col-md-6">
 					<div class="footer-info">
@@ -98,7 +98,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="container">
+	<div {% if settings.config_section %} class="{{ settings.config_section.type_container }} {{ settings.config_section.container_class }}" {% else %} class="container" {% endif %}>
 		<div class="copyright">
 			&copy; Copyright
 			<strong>

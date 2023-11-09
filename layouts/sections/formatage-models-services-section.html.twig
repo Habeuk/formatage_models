@@ -1,6 +1,6 @@
 <!-- ======= Services Section ======= -->
 <section id="services" {{attributes.addClass('services')}}>
-	<div class="container" data-aos="fade-up">
+	<div {% if settings.config_section %} class="{{ settings.config_section.type_container }} {{ settings.config_section.container_class }}" {% else %} class="container" {% endif %}>
 		<div class="section-title">
 			<h2>Services</h2>
 			<p>Check our Services</p>

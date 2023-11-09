@@ -1,6 +1,6 @@
 {% if content %}
 	<div{{attributes.addClass('main-twentytwenty')}}>
-		<div class="container">
+		<div {% if settings.config_section %} class="{{ settings.config_section.type_container }} {{ settings.config_section.container_class }}" {% else %} class="container" {% endif %}>
 			<div class="d-flex justify-content-center buttons">
 				<div{{region_attributes.button1.addclass(['seeMore','after-before']).setattribute('data-tab','#tab-vue-twentytwenty')}}>{{ content.button1 }}</div>
 				<div{{region_attributes.button2.addclass(['seeMore','vue-generale']).setattribute('data-tab','#tab-vue-general')}}>{{ content.button2 }}</div>
