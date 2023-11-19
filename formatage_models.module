@@ -379,6 +379,7 @@ function formatage_models_preprocess_page(&$variables) {
  * @param array $extra
  */
 function formatage_models_plugin_filter_layout__layout_builder_alter(array &$definitions, array $extra) {
+  \Stephane888\Debug\debugLog::kintDebugDrupal($definitions, 'formatage_models_plugin_filter_layout__layout_builder_alter', true);
   foreach ($definitions as $layout_id => $layout) {
     $module = $layout->getProvider();
     if (!$module) {
