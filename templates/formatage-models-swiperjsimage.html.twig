@@ -1,0 +1,23 @@
+<div {{ wrappers_attributes }}>
+	<div class="swiper-wrapper">
+		{% for row in items %}
+		<div {{row['#attributes']}}>
+			{{ row }}
+		</div>
+		{% endfor %}
+	</div>
+	<!-- If we need pagination -->
+	<div {{ swipper_attributes_paginations.addClass() }}></div>
+	<!-- If we need navigation buttons -->
+	{% if swiperjs_options.navigation.enabled %}
+	<div {{swipper_attributes_buttons_prev}}></div>
+	<div {{swipper_attributes_buttons_next}}></div>
+	{% endif %}
+	<!-- If we need scrollbar -->
+	{% if swiper_options.scroll %}
+	<div class="swiper-scrollbar"></div>
+	{% endif %}
+</div>
+{#
+{{ dump(swiperjs_options) }}
+#}

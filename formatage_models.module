@@ -804,6 +804,14 @@ function formatage_models_preprocess_views_view_render(&$vars) {
   }
 }
 
+/**
+ *
+ * @param array $vars
+ */
+function template_preprocess_formatage_models_swiperjsimage(&$vars) {
+  //
+}
+
 
 
 
