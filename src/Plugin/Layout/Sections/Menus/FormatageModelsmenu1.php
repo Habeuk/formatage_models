@@ -5,6 +5,7 @@ namespace Drupal\formatage_models\Plugin\Layout\Sections\Menus;
 use Drupal\bootstrap_styles\StylesGroup\StylesGroupManager;
 use Drupal\formatage_models\Plugin\Layout\Sections\FormatageModelsSection;
 use Drupal\formatage_models\FormatageModelsThemes;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 
 /**
@@ -41,13 +42,41 @@ class FormatageModelsmenu1 extends FormatageModelsSection {
   public function build(array $regions) {
     $build = parent::build($regions);
     FormatageModelsThemes::formatSettingValues($build);
-    if (is_array($build['site_main_menu']))
-      $build['site_main_menu'] = $this->getMenus($build['site_main_menu']);
+    /**
+     * Ajouter une configuration pour desactiver le formatage.
+     */
+    // if (is_array($build['site_main_menu']))
+    // $build['site_main_menu'] = $this->getMenus($build['site_main_menu']);
     return $build;
+  }
+
+  /**
+   *
+   * {@inheritdoc}
+   * @see \Drupal\formatage_models\Plugin\Layout\Sections\FormatageModelsSection::buildConfigurationForm()
+   */
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+    $form = parent::buildConfigurationForm($form, $form_state);
+    $form['containt_menu'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('containt_menu'),
+      '#default_value' => $this->configuration['containt_menu']
+    ];
+    /**
+     * Configuration du menu.
+     */
+    $form['menu_config'] = [
+      '#type' => 'details',
+      '#title' => 'Configuration du menu',
+      '#open' => false
+    ];
+    return $form;
   }
 
   private function getMenus(array $region) {
     foreach ($region as $k => $m) {
+      if (!empty($m['#in_preview']))
+        return $region;
       if (isset($m['#base_plugin_id']) && $m['#base_plugin_id'] === 'system_menu_block') {
         // set new theme.
         $region[$k]['content']['#theme'] = 'layoutmenu_formatage_models_menu1';
@@ -60,7 +89,8 @@ class FormatageModelsmenu1 extends FormatageModelsSection {
         ];
         if (!empty($region[$k]['content']['#items']))
           $this->formatListMenus($region[$k]['content']['#items']);
-      } elseif (isset($m['#base_plugin_id']) && $m['#base_plugin_id'] === 'field_block') {
+      }
+      elseif (isset($m['#base_plugin_id']) && $m['#base_plugin_id'] === 'field_block') {
         // set new theme.
         $region[$k]['content']['#theme'] = 'layoutmenu_formatage_models_menu1';
 
@@ -72,7 +102,8 @@ class FormatageModelsmenu1 extends FormatageModelsSection {
         ];
         if (!empty($region[$k]['content'][0]['#items']))
           $this->formatListMenus($region[$k]['content'][0]['#items']);
-      } elseif (isset($m['#plugin_id']) && str_contains($m['#plugin_id'], ":menus")) {
+      }
+      elseif (isset($m['#plugin_id']) && str_contains($m['#plugin_id'], ":menus")) {
         $elements = Element::children($region[$k]['content']);
         foreach ($elements as $delta) {
           $region[$k]['content'][$delta]['#theme'] = 'layoutmenu_formatage_models_menu1';
@@ -93,7 +124,7 @@ class FormatageModelsmenu1 extends FormatageModelsSection {
     return $region;
   }
 
-  private function formatListMenus(array &$items) {
+  private function formatListMenus(array &$items, $menu_level = 0) {
     foreach ($items as $k => $item) {
       if (!empty($item['attributes'])) {
         /**
@@ -116,9 +147,11 @@ class FormatageModelsmenu1 extends FormatageModelsSection {
           $attribute->addClass('nav-item--active');
         }
         $items[$k]['attributes'] = $attribute;
+        $items[$k]['menu_level'] = $menu_level;
         //
         if (!empty($item['below'])) {
-          $this->formatListMenus($item['below']);
+          $menu_level++;
+          $this->formatListMenus($item['below'], $menu_level);
           $items[$k]['below'] = $item['below'];
         }
       }
@@ -131,4 +164,5 @@ class FormatageModelsmenu1 extends FormatageModelsSection {
       'region_css_site_main_menu' => ''
     ] + parent::defaultConfiguration();
   }
+
 }

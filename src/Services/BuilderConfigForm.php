@@ -29,7 +29,6 @@ class BuilderConfigForm {
       if (isset($item['builder-form']) && $item['builder-form'] && !empty($item['fields'])) {
         $this->buildcontainerFields($key, $item, $form);
         $this->buildRenderField($item['fields'], $form[$key]);
-        // dump($item);
       }
     }
   }
