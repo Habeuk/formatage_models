@@ -13,8 +13,6 @@
   "require": {
     "drupal/bootstrap_layout_builder": "^2.0",
     "habeuk/htmlbootstrap": "^1.5 | dev-1x",
-    "habeuk/debug": "^2.0 | dev-2x",
-    "habeuk/drupal_utility": "^1.0 | dev-1x",
     "habeuk/filesmanager": "^1.0 | dev-1x",
     "habeuk/apivuejs": "^1.0 | dev-1x"
   }
