@@ -27,7 +27,7 @@ use Drupal\Core\Render\Element;
  * )
  */
 class FormatageModelsmenu1 extends FormatageModelsSection {
-
+  
   /**
    *
    * {@inheritdoc}
@@ -38,18 +38,20 @@ class FormatageModelsmenu1 extends FormatageModelsSection {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $styles_group_manager);
     $this->pluginDefinition->set('icon', $this->pathResolver->getPath('module', 'formatage_models') . "/icones/menus/formatage-models-menu1.png");
   }
-
+  
   public function build(array $regions) {
     $build = parent::build($regions);
     FormatageModelsThemes::formatSettingValues($build);
     /**
      * Ajouter une configuration pour desactiver le formatage.
+     * ( Je ne pense pas que cela soit l'option a adapté dans une vision à long
+     * terme ).
      */
-    // if (is_array($build['site_main_menu']))
-    // $build['site_main_menu'] = $this->getMenus($build['site_main_menu']);
+    if (is_array($build['site_main_menu']))
+      $build['site_main_menu'] = $this->getMenus($build['site_main_menu']);
     return $build;
   }
-
+  
   /**
    *
    * {@inheritdoc}
@@ -57,11 +59,6 @@ class FormatageModelsmenu1 extends FormatageModelsSection {
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildConfigurationForm($form, $form_state);
-    $form['containt_menu'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('containt_menu'),
-      '#default_value' => $this->configuration['containt_menu']
-    ];
     /**
      * Configuration du menu.
      */
@@ -72,7 +69,7 @@ class FormatageModelsmenu1 extends FormatageModelsSection {
     ];
     return $form;
   }
-
+  
   private function getMenus(array $region) {
     foreach ($region as $k => $m) {
       if (!empty($m['#in_preview']))
@@ -80,7 +77,7 @@ class FormatageModelsmenu1 extends FormatageModelsSection {
       if (isset($m['#base_plugin_id']) && $m['#base_plugin_id'] === 'system_menu_block') {
         // set new theme.
         $region[$k]['content']['#theme'] = 'layoutmenu_formatage_models_menu1';
-
+        
         // add class
         $region[$k]['content']['#attributes'] = [
           'class' => [
@@ -93,7 +90,7 @@ class FormatageModelsmenu1 extends FormatageModelsSection {
       elseif (isset($m['#base_plugin_id']) && $m['#base_plugin_id'] === 'field_block') {
         // set new theme.
         $region[$k]['content']['#theme'] = 'layoutmenu_formatage_models_menu1';
-
+        
         // add class
         $region[$k]['content']['#attributes'] = [
           'class' => [
@@ -120,10 +117,10 @@ class FormatageModelsmenu1 extends FormatageModelsSection {
         }
       }
     }
-
+    
     return $region;
   }
-
+  
   private function formatListMenus(array &$items, $menu_level = 0) {
     foreach ($items as $k => $item) {
       if (!empty($item['attributes'])) {
@@ -157,12 +154,12 @@ class FormatageModelsmenu1 extends FormatageModelsSection {
       }
     }
   }
-
+  
   public function defaultConfiguration() {
     return [
       'css' => 'bg-light',
       'region_css_site_main_menu' => ''
     ] + parent::defaultConfiguration();
   }
-
+  
 }
