@@ -42,7 +42,7 @@ class BlockRender extends Block {
       'default' => ''
     ];
     $options['view_form_css'] = [
-      'default' => ''
+      'default' => 'mb-5 box-shadow-light'
     ];
     $options['view_footer_css'] = [
       'default' => ''
