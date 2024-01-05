@@ -1923,6 +1923,7 @@ module.exports = !fails(function () {
 var documentAll = typeof document == 'object' && document.all;
 
 // https://tc39.es/ecma262/#sec-IsHTMLDDA-internal-slot
+// eslint-disable-next-line unicorn/no-typeof-undefined -- required for testing
 var IS_HTMLDDA = typeof documentAll == 'undefined' && documentAll !== undefined;
 
 module.exports = {
@@ -1965,11 +1966,9 @@ module.exports = function (it) {
 /***/ }),
 
 /***/ 8056:
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
+/***/ (function(module) {
 
-var getBuiltIn = __webpack_require__(8516);
-
-module.exports = getBuiltIn('navigator', 'userAgent') || '';
+module.exports = typeof navigator != 'undefined' && String(navigator.userAgent) || '';
 
 
 /***/ }),
@@ -2220,7 +2219,7 @@ module.exports =
   check(typeof self == 'object' && self) ||
   check(typeof __webpack_require__.g == 'object' && __webpack_require__.g) ||
   // eslint-disable-next-line no-new-func -- fallback
-  (function () { return this; })() || Function('return this')();
+  (function () { return this; })() || this || Function('return this')();
 
 
 /***/ }),
@@ -2525,6 +2524,7 @@ module.exports = function (obj) {
 /***/ 1885:
 /***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
+var uncurryThis = __webpack_require__(9410);
 var fails = __webpack_require__(2462);
 var isCallable = __webpack_require__(2527);
 var hasOwn = __webpack_require__(6777);
@@ -2535,8 +2535,12 @@ var InternalStateModule = __webpack_require__(5936);
 
 var enforceInternalState = InternalStateModule.enforce;
 var getInternalState = InternalStateModule.get;
+var $String = String;
 // eslint-disable-next-line es/no-object-defineproperty -- safe
 var defineProperty = Object.defineProperty;
+var stringSlice = uncurryThis(''.slice);
+var replace = uncurryThis(''.replace);
+var join = uncurryThis([].join);
 
 var CONFIGURABLE_LENGTH = DESCRIPTORS && !fails(function () {
   return defineProperty(function () { /* empty */ }, 'length', { value: 8 }).length !== 8;
@@ -2545,8 +2549,8 @@ var CONFIGURABLE_LENGTH = DESCRIPTORS && !fails(function () {
 var TEMPLATE = String(String).split('String');
 
 var makeBuiltIn = module.exports = function (value, name, options) {
-  if (String(name).slice(0, 7) === 'Symbol(') {
-    name = '[' + String(name).replace(/^Symbol\(([^)]*)\)/, '$1') + ']';
+  if (stringSlice($String(name), 0, 7) === 'Symbol(') {
+    name = '[' + replace($String(name), /^Symbol\(([^)]*)\)/, '$1') + ']';
   }
   if (options && options.getter) name = 'get ' + name;
   if (options && options.setter) name = 'set ' + name;
@@ -2565,7 +2569,7 @@ var makeBuiltIn = module.exports = function (value, name, options) {
   } catch (error) { /* empty */ }
   var state = enforceInternalState(value);
   if (!hasOwn(state, 'source')) {
-    state.source = TEMPLATE.join(typeof name == 'string' ? name : '');
+    state.source = join(TEMPLATE, typeof name == 'string' ? name : '');
   } return value;
 };
 
@@ -2858,10 +2862,10 @@ var store = __webpack_require__(9556);
 (module.exports = function (key, value) {
   return store[key] || (store[key] = value !== undefined ? value : {});
 })('versions', []).push({
-  version: '3.26.1',
+  version: '3.31.1',
   mode: IS_PURE ? 'pure' : 'global',
-  copyright: '© 2014-2022 Denis Pushkarev (zloirock.ru)',
-  license: 'https://github.com/zloirock/core-js/blob/v3.26.1/LICENSE',
+  copyright: '© 2014-2023 Denis Pushkarev (zloirock.ru)',
+  license: 'https://github.com/zloirock/core-js/blob/v3.31.1/LICENSE',
   source: 'https://github.com/zloirock/core-js'
 });
 
@@ -2874,13 +2878,18 @@ var store = __webpack_require__(9556);
 /* eslint-disable es/no-symbol -- required for testing */
 var V8_VERSION = __webpack_require__(1185);
 var fails = __webpack_require__(2462);
+var global = __webpack_require__(1421);
+
+var $String = global.String;
 
 // eslint-disable-next-line es/no-object-getownpropertysymbols -- required for testing
 module.exports = !!Object.getOwnPropertySymbols && !fails(function () {
   var symbol = Symbol();
   // Chrome 38 Symbol has incorrect toString conversion
   // `get-own-property-symbols` polyfill symbols converted to object are not Symbol instances
-  return !String(symbol) || !(Object(symbol) instanceof Symbol) ||
+  // nb: Do not call `String` directly to avoid this being optimized out to `symbol+''` which will,
+  // of course, fail.
+  return !$String(symbol) || !(Object(symbol) instanceof Symbol) ||
     // Chrome 38-40 symbols are not inherited from DOM collections prototypes to instances
     !Symbol.sham && V8_VERSION && V8_VERSION < 41;
 });
@@ -3104,21 +3113,15 @@ var uid = __webpack_require__(1893);
 var NATIVE_SYMBOL = __webpack_require__(9784);
 var USE_SYMBOL_AS_UID = __webpack_require__(4183);
 
-var WellKnownSymbolsStore = shared('wks');
 var Symbol = global.Symbol;
-var symbolFor = Symbol && Symbol['for'];
-var createWellKnownSymbol = USE_SYMBOL_AS_UID ? Symbol : Symbol && Symbol.withoutSetter || uid;
+var WellKnownSymbolsStore = shared('wks');
+var createWellKnownSymbol = USE_SYMBOL_AS_UID ? Symbol['for'] || Symbol : Symbol && Symbol.withoutSetter || uid;
 
 module.exports = function (name) {
-  if (!hasOwn(WellKnownSymbolsStore, name) || !(NATIVE_SYMBOL || typeof WellKnownSymbolsStore[name] == 'string')) {
-    var description = 'Symbol.' + name;
-    if (NATIVE_SYMBOL && hasOwn(Symbol, name)) {
-      WellKnownSymbolsStore[name] = Symbol[name];
-    } else if (USE_SYMBOL_AS_UID && symbolFor) {
-      WellKnownSymbolsStore[name] = symbolFor(description);
-    } else {
-      WellKnownSymbolsStore[name] = createWellKnownSymbol(description);
-    }
+  if (!hasOwn(WellKnownSymbolsStore, name)) {
+    WellKnownSymbolsStore[name] = NATIVE_SYMBOL && hasOwn(Symbol, name)
+      ? Symbol[name]
+      : createWellKnownSymbol('Symbol.' + name);
   } return WellKnownSymbolsStore[name];
 };
 
@@ -3143,18 +3146,20 @@ var INCORRECT_TO_LENGTH = fails(function () {
 
 // V8 and Safari <= 15.4, FF < 23 throws InternalError
 // https://bugs.chromium.org/p/v8/issues/detail?id=12681
-var SILENT_ON_NON_WRITABLE_LENGTH = !function () {
+var properErrorOnNonWritableLength = function () {
   try {
     // eslint-disable-next-line es/no-object-defineproperty -- safe
     Object.defineProperty([], 'length', { writable: false }).push();
   } catch (error) {
     return error instanceof TypeError;
   }
-}();
+};
+
+var FORCED = INCORRECT_TO_LENGTH || !properErrorOnNonWritableLength();
 
 // `Array.prototype.push` method
 // https://tc39.es/ecma262/#sec-array.prototype.push
-$({ target: 'Array', proto: true, arity: 1, forced: INCORRECT_TO_LENGTH || SILENT_ON_NON_WRITABLE_LENGTH }, {
+$({ target: 'Array', proto: true, arity: 1, forced: FORCED }, {
   // eslint-disable-next-line no-unused-vars -- required for `.length`
   push: function push(item) {
     var O = toObject(this);
@@ -7304,7 +7309,7 @@ __webpack_require__(7888);
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var _fieldsDrupal_loadField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2764);
+/* harmony import */ var _fieldsDrupal_loadField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6855);
 /**
  * Bug: Les plugins sont charger via cette route : /core/assets/vendor/
  * Cela est du au fait que il ya un ckeditor qui est chargé à partir de la. (/core/modules/ckeditor/js/ckeditor.js et /core/assets/vendor/ckeditor/ckeditor.js)
@@ -7511,7 +7516,7 @@ __webpack_require__(7888);
 
 /***/ }),
 
-/***/ 2764:
+/***/ 6855:
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9057,8 +9062,8 @@ var html_render_component = (0,componentNormalizer/* default */.Z)(
 )
 
 /* harmony default export */ var html_render = (html_render_component.exports);
-;// CONCATENATED MODULE: ./node_modules/babel-loader/lib/index.js??clonedRuleSet-40.use[1]!./node_modules/@vue/vue-loader-v15/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!./node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!../components_bootstrapvuejs/src/components/fieldsDrupal/drupal-file.vue?vue&type=template&id=429e2da3&
-var drupal_filevue_type_template_id_429e2da3_render = function render() {
+;// CONCATENATED MODULE: ./node_modules/babel-loader/lib/index.js??clonedRuleSet-40.use[1]!./node_modules/@vue/vue-loader-v15/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!./node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!../components_bootstrapvuejs/src/components/fieldsDrupal/drupal-file.vue?vue&type=template&id=8b3fd382&
+var drupal_filevue_type_template_id_8b3fd382_render = function render() {
   var _vm = this,
     _c = _vm._self._c;
   return _c('div', {
@@ -9101,11 +9106,11 @@ var drupal_filevue_type_template_id_429e2da3_render = function render() {
       }
     }])
   }), _c('div', {
-    staticClass: "previews d-flex flex-wrap"
+    staticClass: "previews"
   }, _vm._l(_vm.toUplode, function (fil, i) {
     return _c('div', {
       key: i,
-      staticClass: "item"
+      staticClass: "item d-flex w-100"
     }, [_c('b-img', {
       staticClass: "img-preview",
       attrs: {
@@ -9135,10 +9140,41 @@ var drupal_filevue_type_template_id_429e2da3_render = function render() {
           return _vm.delete_file(i, fil);
         }
       }
-    })], 1);
+    }), _vm.field.definition_settings.alt_field ? _c('ValidationProvider', {
+      staticClass: "align-self-center flex-grow-1",
+      attrs: {
+        "rules": _vm.getAltRules,
+        "name": _vm.field.name + '_alt_' + i
+      },
+      scopedSlots: _vm._u([{
+        key: "default",
+        fn: function (v) {
+          return [_c('b-form-input', {
+            staticClass: "align-self-center",
+            attrs: {
+              "state": _vm.getValidationState(v),
+              "placeholder": "Alt",
+              "name": _vm.field.name + '_alt_' + i
+            },
+            on: {
+              "input": function ($event) {
+                return _vm.updateValue('alt', i, _vm.alts[i]);
+              }
+            },
+            model: {
+              value: _vm.alts[i],
+              callback: function ($$v) {
+                _vm.$set(_vm.alts, i, $$v);
+              },
+              expression: "alts[i]"
+            }
+          })];
+        }
+      }], null, true)
+    }) : _vm._e()], 1);
   }), 0)], 1);
 };
-var drupal_filevue_type_template_id_429e2da3_staticRenderFns = [];
+var drupal_filevue_type_template_id_8b3fd382_staticRenderFns = [];
 
 ;// CONCATENATED MODULE: ./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib/index.js??clonedRuleSet-40.use[1]!./node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!../components_bootstrapvuejs/src/components/fieldsDrupal/drupal-file.vue?vue&type=script&lang=js&
 
@@ -9180,7 +9216,8 @@ var drupal_filevue_type_template_id_429e2da3_staticRenderFns = [];
       // Fichiers provenant de l'action utilisateur.
       files: [],
       // Fichiers uploaded.
-      toUplode: []
+      toUplode: [],
+      alts: []
     };
   },
   computed: {
@@ -9207,8 +9244,23 @@ var drupal_filevue_type_template_id_429e2da3_staticRenderFns = [];
       } else return "";
     }
   },
+  watch: {
+    /**
+     *
+     * @param {Array} newModel
+     * @param {array} oldModel
+     */
+    model(newModel, oldModel) {
+      this.alts = newModel[this.field.name].map(element => {
+        return element.alt ? element.alt : "";
+      });
+    }
+  },
   mounted() {
     this.getValue();
+    this.alts = this.model[this.field.name].map(element => {
+      return element.alt ? element.alt : "";
+    });
   },
   methods: {
     /**
@@ -9227,6 +9279,12 @@ var drupal_filevue_type_template_id_429e2da3_staticRenderFns = [];
      */
     getRules() {
       return loadField.getRules(this.field);
+    },
+    /**
+     * @return {String} rules for the alt field
+     */
+    getAltRules() {
+      return this.field.definition_settings.alt_field_required ? "required" : "";
     },
     /**
      *
@@ -9296,12 +9354,8 @@ var drupal_filevue_type_template_id_429e2da3_staticRenderFns = [];
     },
 
     setValue(vals) {
-      if (this.namespaceStore) {
-        this.$store.dispatch(this.namespaceStore + "/setValue", {
-          value: vals,
-          fieldName: this.fullname
-        });
-      } else this.$store.dispatch("setValue", {
+      const storeAction = this.namespaceStore ? this.namespaceStore + "/setValue" : "setValue";
+      this.$store.dispatch(storeAction, {
         value: vals,
         fieldName: this.fullname
       });
@@ -9322,6 +9376,12 @@ var drupal_filevue_type_template_id_429e2da3_staticRenderFns = [];
           }
         });
       }
+    },
+    updateValue(property, index, value) {
+      const storeAction = this.namespaceStore ? this.namespaceStore + "/getValue" : "getValue";
+      const vals = this.model[this.field.name];
+      vals[index][property] = value;
+      this.setValue(vals);
     },
     delete_file(index, file) {
       if (file.target_id && this.field.definition_settings && this.field.definition_settings.module_name) {
@@ -9355,8 +9415,8 @@ var drupal_filevue_type_template_id_429e2da3_staticRenderFns = [];
 ;
 var drupal_file_component = (0,componentNormalizer/* default */.Z)(
   fieldsDrupal_drupal_filevue_type_script_lang_js_,
-  drupal_filevue_type_template_id_429e2da3_render,
-  drupal_filevue_type_template_id_429e2da3_staticRenderFns,
+  drupal_filevue_type_template_id_8b3fd382_render,
+  drupal_filevue_type_template_id_8b3fd382_staticRenderFns,
   false,
   null,
   null,
@@ -14437,6 +14497,7 @@ var AccordionCard_component = (0,componentNormalizer/* default */.Z)(
         break;
       case "image":
       case "image_image":
+      case "hbk_file_generic":
         template = drupal_file;
         break;
       case "experience_type":
@@ -14534,7 +14595,7 @@ var AccordionCard_component = (0,componentNormalizer/* default */.Z)(
 "use strict";
 /* harmony import */ var core_js_modules_es_array_push_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6352);
 /* harmony import */ var core_js_modules_es_array_push_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_push_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _components_fieldsDrupal_loadField__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(2764);
+/* harmony import */ var _components_fieldsDrupal_loadField__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6855);
 
 
 /**
@@ -14558,6 +14619,11 @@ var AccordionCard_component = (0,componentNormalizer/* default */.Z)(
    * NB: la valeur retounée est valide si l'execution est strictement en serie.
    */
   lastIdsEntity: [],
+  /**
+   * Represente le nombre d'essaie qui peut etre effectuer avant de marquer l'action comme non aboutie.
+   */
+  numberTry: 0,
+  timeWaitBeforeRetry: 15000,
   /**
    * Permet de generer le formulaire drupal.
    * @param {Array} entities
@@ -14632,18 +14698,23 @@ var AccordionCard_component = (0,componentNormalizer/* default */.Z)(
    */
   prepareSaveEntities(store, datas, suivers, ActionDomainId = false) {
     return new Promise((resolu, rejecte) => {
+      //console.log("prepareSaveEntities");
       // on vide les derniers ids.
       this.lastIdsEntity = [];
       const updateDomainId = entity => {
+        //console.log("entity.field_domain_source : ", entity, "\n ActionDomainId : ", ActionDomainId, "\n this.domainRegister : ", this.domainRegister);
         if (ActionDomainId && this.domainRegister.id && entity.field_domain_access) {
           entity.field_domain_access = [{
+            target_id: this.domainRegister.id
+          }];
+          if (entity.field_domain_source !== undefined) entity.field_domain_source = [{
             target_id: this.domainRegister.id
           }];
         }
         return entity;
       };
       const loopItemAddValues = (values, resp, has_target_revision_id) => {
-        console.log("loopItemAddValues values : ", values, "\n resp : ", resp, "\n has_target_revision_id : ", has_target_revision_id);
+        // console.log("loopItemAddValues values : ", values, "\n resp : ", resp, "\n has_target_revision_id : ", has_target_revision_id);
         if (has_target_revision_id) {
           // try to get revision.
           var revision_id;
@@ -14668,54 +14739,82 @@ var AccordionCard_component = (0,componentNormalizer/* default */.Z)(
        * @param {Integer} i
        * @param {Array} values
        */
-      const loopItem = (items, i, values = [], has_target_revision_id = false) => {
+      const loopItem = (items, i, values = [], has_target_revision_id = false, essaie = 0) => {
         return new Promise((resolv, reject) => {
           if (items[i]) {
             const item = items[i];
             if (items[i].entities) {
               const keys = Object.keys(items[i].entities);
               loopFieldEntity(items[i].entities, keys[0], items[i].entity, keys, 0).then(entity => {
-                store.dispatch("saveEntity", {
-                  entity_type_id: items[i].target_type,
-                  value: updateDomainId(entity),
-                  index: i
-                }).then(resp => {
-                  suivers.creates++;
-                  console.log(" Before loopItemAddValues 1 : ", values);
-                  if (!loopItemAddValues(values, resp, has_target_revision_id)) reject(" Revision requis mais non definit ");
-                  i = i + 1;
-                  if (i < items.length) {
-                    resolv(loopItem(items, i, values, has_target_revision_id));
-                  } else resolv(values);
-                }).catch(er => {
-                  console.log(" catch loopItem : ", er);
-                  reject(er);
-                });
+                const saveEntity = () => {
+                  store.dispatch("saveEntity", {
+                    entity_type_id: items[i].target_type,
+                    value: updateDomainId(entity),
+                    index: i
+                  }).then(resp => {
+                    suivers.creates++;
+                    //console.log(" Before loopItemAddValues 1 : ", values);
+                    if (!loopItemAddValues(values, resp, has_target_revision_id)) reject(" Revision requis mais non definit ");
+                    i = i + 1;
+                    if (i < items.length) {
+                      resolv(loopItem(items, i, values, has_target_revision_id));
+                    } else resolv(values);
+                  }).catch(er => {
+                    /**
+                     * Si l'utilisateur a defini un nombre d'essaie.
+                     */
+                    if (essaie < this.numberTry) {
+                      essaie++;
+                      //console.log("loopItem re-try : ", essaie);
+                      setTimeout(() => {
+                        saveEntity();
+                      }, this.timeWaitBeforeRetry);
+                    } else {
+                      //console.log(" catch loopItem : ", er);
+                      reject(er);
+                    }
+                  });
+                };
+                saveEntity();
               }).catch(er => {
-                console.log(" catch loopItem : ", er);
+                //console.log(" catch loopItem : ", er);
                 reject(er);
               });
             } else {
-              store.dispatch("saveEntity", {
-                entity_type_id: item.target_type,
-                value: updateDomainId(item.entity),
-                index: i
-              }).then(resp => {
-                suivers.creates++;
-                console.log(" Before loopItemAddValues 2 : ", values);
-                if (!loopItemAddValues(values, resp, has_target_revision_id)) reject(" Revision requis mais non definit ");
-                // values.push({ target_id: resp.data.id });
+              const saveEntity = () => {
+                store.dispatch("saveEntity", {
+                  entity_type_id: item.target_type,
+                  value: updateDomainId(item.entity),
+                  index: i
+                }).then(resp => {
+                  suivers.creates++;
+                  //console.log(" Before loopItemAddValues 2 : ", values);
+                  if (!loopItemAddValues(values, resp, has_target_revision_id)) reject(" Revision requis mais non definit ");
+                  // values.push({ target_id: resp.data.id });
 
-                i = i + 1;
-                if (items.length <= i) {
-                  resolv(loopItem(items, i, values, has_target_revision_id));
-                } else {
-                  resolv(values);
-                }
-              }).catch(er => {
-                console.log("catch loopItem : ", er);
-                reject(er);
-              });
+                  i = i + 1;
+                  if (items.length <= i) {
+                    resolv(loopItem(items, i, values, has_target_revision_id));
+                  } else {
+                    resolv(values);
+                  }
+                }).catch(er => {
+                  /**
+                   * Si l'utilisateur a defini un nombre d'essaie.
+                   */
+                  if (essaie < this.numberTry) {
+                    essaie++;
+                    //console.log("loopItem re-try : ", essaie);
+                    setTimeout(() => {
+                      saveEntity();
+                    }, this.timeWaitBeforeRetry);
+                  } else {
+                    //console.log("catch loopItem : ", er);
+                    reject(er);
+                  }
+                });
+              };
+              saveEntity();
             }
           } else resolv(values);
         });
@@ -14733,11 +14832,11 @@ var AccordionCard_component = (0,componentNormalizer/* default */.Z)(
        */
       const loopFieldEntity = (datas, fieldname, entity, keys, i) => {
         return new Promise((resolv, reject) => {
-          console.log(" loopFieldEntity : ", datas, "\n fieldname : ", fieldname);
+          //console.log(" loopFieldEntity : ", datas, "\n fieldname : ", fieldname);
           // Si le champs contient des données,
           // on parcourt chacune des entrées.
           if (datas[fieldname] && datas[fieldname].length > 0) {
-            console.log("entity[fieldname][0] : ", entity[fieldname][0], "\n : ", entity);
+            //console.log("entity[fieldname][0] : ", entity[fieldname][0], "\n : ", entity);
             // on verifie s'il ya des entrées supplementaire
             if (entity[fieldname][0]) {
               var has_target_revision_id = false;
@@ -14753,7 +14852,7 @@ var AccordionCard_component = (0,componentNormalizer/* default */.Z)(
             }
             // Pour chaque champs, on cree les contenus et on recupere les ids.
             loopItem(datas[fieldname], 0, [], has_target_revision_id).then(resp => {
-              console.log(" loopFieldEntity result of loopItem : ", resp);
+              //console.log(" loopFieldEntity result of loopItem : ", resp);
               entity[fieldname] = resp;
               // on passe au champs suivant.
               i = i + 1;
@@ -14763,7 +14862,7 @@ var AccordionCard_component = (0,componentNormalizer/* default */.Z)(
                 resolv(entity);
               }
             }).catch(er => {
-              console.log("catch loopFieldEntity : ", er);
+              //console.log("catch loopFieldEntity : ", er);
               reject(er);
             });
           } else resolv(entity);
@@ -14780,18 +14879,59 @@ var AccordionCard_component = (0,componentNormalizer/* default */.Z)(
        * @return resp [{id:..., json:...}] // return un json avec une proprieté json et une autre id.
        * @K erreur signalé.
        */
-      const loopEntityPromise = (datas, i = null, values = []) => {
+      const loopEntityPromise = (datas, i = null, values = [], essaie = 0) => {
         return new Promise((resolv, reject) => {
-          console.log("loopEntityPromise : ", datas);
+          //console.log("loopEntityPromise : ", datas);
           if (datas[i]) {
             // S'il contient des sous entités.
             if (datas[i].entities && typeof datas[i].entities === "object") {
               const keys = Object.keys(datas[i].entities);
               loopFieldEntity(datas[i].entities, keys[0], datas[i].entity, keys, 0).then(entity => {
-                console.log(" loopEntityPromise SEND with override entity : ", entity);
+                //console.log(" loopEntityPromise SEND with override entity : ", entity);
+                const saveEntity = () => {
+                  store.dispatch("saveEntity", {
+                    entity_type_id: datas[i].target_type,
+                    value: updateDomainId(entity),
+                    index: i
+                  }).then(resp => {
+                    suivers.creates++;
+                    this.lastIdsEntity.push({
+                      target_id: resp.data.id
+                    });
+                    values.push(resp.data.json);
+                    // datas[i].entity = resp.data.json;
+                    i = i + 1;
+                    if (i < datas.length) {
+                      resolv(loopEntityPromise(datas, i, values));
+                    } else resolv(values);
+                  }).catch(er => {
+                    /**
+                     * Si l'utilisateur a defini un nombre d'essaie.
+                     */
+                    if (essaie < this.numberTry) {
+                      essaie++;
+                      //console.log("loopEntityPromise re-try : ", essaie);
+                      setTimeout(() => {
+                        saveEntity();
+                      }, this.timeWaitBeforeRetry);
+                    } else {
+                      //console.log("catch loopEntityPromise : ", er);
+                      reject(er);
+                    }
+                  });
+                };
+                saveEntity();
+              }).catch(er => {
+                //console.log("catch loopEntityPromise : ", er);
+                reject(er);
+              });
+            }
+            // S'il ne contient pas de sous entité.
+            else {
+              const saveEntity = () => {
                 store.dispatch("saveEntity", {
                   entity_type_id: datas[i].target_type,
-                  value: updateDomainId(entity),
+                  value: updateDomainId(datas[i].entity),
                   index: i
                 }).then(resp => {
                   suivers.creates++;
@@ -14799,43 +14939,30 @@ var AccordionCard_component = (0,componentNormalizer/* default */.Z)(
                     target_id: resp.data.id
                   });
                   values.push(resp.data.json);
-                  // datas[i].entity = resp.data.json;
                   i = i + 1;
                   if (i < datas.length) {
                     resolv(loopEntityPromise(datas, i, values));
                   } else resolv(values);
                 }).catch(er => {
-                  console.log("catch loopEntityPromise : ", er);
-                  reject(er);
+                  /**
+                   * Si l'utilisateur a defini un nombre d'essaie.
+                   */
+                  if (essaie < this.numberTry) {
+                    essaie++;
+                    //console.log("loopEntityPromise re-try : ", essaie);
+                    setTimeout(() => {
+                      saveEntity();
+                    }, this.timeWaitBeforeRetry);
+                  } else {
+                    //console.log("catch loopEntityPromise : ", er);
+                    reject(er);
+                  }
                 });
-              }).catch(er => {
-                console.log("catch loopEntityPromise : ", er);
-                reject(er);
-              });
-            }
-            // S'il ne contient pas de sous entité.
-            else {
-              store.dispatch("saveEntity", {
-                entity_type_id: datas[i].target_type,
-                value: updateDomainId(datas[i].entity),
-                index: i
-              }).then(resp => {
-                suivers.creates++;
-                this.lastIdsEntity.push({
-                  target_id: resp.data.id
-                });
-                values.push(resp.data.json);
-                i = i + 1;
-                if (i < datas.length) {
-                  resolv(loopEntityPromise(datas, i, values));
-                } else resolv(values);
-              }).catch(er => {
-                console.log("catch loopEntityPromise : ", er);
-                reject(er);
-              });
+              };
+              saveEntity();
             }
           } else {
-            console.log(" loopEntityPromise END ");
+            //console.log(" loopEntityPromise END ");
             resolv([]);
           }
         });
@@ -14869,7 +14996,7 @@ var AccordionCard_component = (0,componentNormalizer/* default */.Z)(
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(236);
+/* harmony import */ var _rootConfig_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6452);
 
 /**
  * @see https://www.drupal.org/docs/core-modules-and-themes/core-modules/jsonapi-module/filtering
@@ -14881,7 +15008,7 @@ class filters {
   }
 
   addFilter(fieldName, operator, value) {
-    var key = "fil-" + _config__WEBPACK_IMPORTED_MODULE_0__/* ["default"].getRandomIntInclusive */ .Z.getRandomIntInclusive();
+    var key = "fil-" + _rootConfig_js__WEBPACK_IMPORTED_MODULE_0__/* ["default"].getRandomIntInclusive */ .Z.getRandomIntInclusive();
     this.addParam(key, "path", fieldName);
     this.addParam(key, "operator", operator);
     this.addParam(key, "value", value);
@@ -15023,12 +15150,12 @@ __webpack_require__.d(__webpack_exports__, {
   "Z": function() { return /* binding */ App_utilities; }
 });
 
-// EXTERNAL MODULE: ../drupal-vuejs/src/config.js
-var config = __webpack_require__(236);
+// EXTERNAL MODULE: ../drupal-vuejs/src/rootConfig.js
+var rootConfig = __webpack_require__(6452);
 ;// CONCATENATED MODULE: ../drupal-vuejs/src/App/session.js
 
 /* harmony default export */ var session = ({
-  ...config/* default */.Z,
+  ...rootConfig/* default */.Z,
   url_session: "/session/token",
   token: null,
   /**
@@ -15051,7 +15178,7 @@ var config = __webpack_require__(236);
 
 const utilities = {
   ...session,
-  ...config/* default */.Z,
+  ...rootConfig/* default */.Z,
   /**
    * configCustom[{name:"",value:""}]
    */
@@ -15100,7 +15227,7 @@ const utilities = {
 
 /***/ }),
 
-/***/ 236:
+/***/ 6452:
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -15108,6 +15235,8 @@ const utilities = {
 
 const config = {
   ...wbuutilities__WEBPACK_IMPORTED_MODULE_0__/* .AjaxBasic */ .EC,
+  // on ne laisse la valeur par defaut, pour permttre au domaine local de pouvoir se connecter.
+  TestDomain: window.location.host.includes("localhost") ? "http://habeuk.kksa" : window.location.protocol + "//" + window.location.host,
   /**
    * Retoune un entier arleatoire entre [99-999]
    */
@@ -19020,7 +19149,7 @@ const basicRequest = {
   },
   post: function (url, datas, configs) {
     return new Promise((resolv, reject) => {
-      if (this.languageId !== "" && this.languageId !== undefined && this.languageId !== null) url = "/" + this.languageId + url;
+      if (this.languageId !== "" && this.languageId !== undefined && this.languageId !== null && !url.includes("://")) url = "/" + this.languageId + url;
       const urlFinal = url.includes("://") ? url : this.getBaseUrl() + url;
       InstAxios.post(urlFinal, datas, configs).then(reponse => {
         if (this.debug) console.log("Debug axio : \n", urlFinal, "\n payload: ", datas, "\n config: ", configs, "\n Duration : ", reponse.headers["request-duration"], "\n reponse: ", reponse, "\n ------ \n");
@@ -19065,7 +19194,7 @@ const basicRequest = {
   },
   get: function (url, configs) {
     return new Promise((resolv, reject) => {
-      if (this.languageId !== "" && this.languageId !== undefined && this.languageId !== null) url = "/" + this.languageId + url;
+      if (this.languageId !== "" && this.languageId !== undefined && this.languageId !== null && !url.includes("://")) url = "/" + this.languageId + url;
       const urlFinal = url.includes("://") ? url : this.getBaseUrl() + url;
       InstAxios.get(urlFinal, configs).then(reponse => {
         if (this.debug) console.log("Debug axio : \n", urlFinal, "\n Config: ", configs, "\n Duration : ", reponse.headers["request-duration"], "\n Reponse: ", reponse, "\n ------ \n");
@@ -31959,7 +32088,7 @@ var EditEntity_component = (0,componentNormalizer/* default */.Z)(
 // EXTERNAL MODULE: ../components_bootstrapvuejs/src/js/FormUttilities.js
 var FormUttilities = __webpack_require__(9351);
 // EXTERNAL MODULE: ../components_bootstrapvuejs/src/components/fieldsDrupal/loadField.js + 136 modules
-var loadField = __webpack_require__(2764);
+var loadField = __webpack_require__(6855);
 // EXTERNAL MODULE: ../components_bootstrapvuejs/src/components/Ressouces/ckeditor-config.js
 var ckeditor_config = __webpack_require__(3009);
 ;// CONCATENATED MODULE: ./src/store/index.js
