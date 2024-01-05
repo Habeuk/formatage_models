@@ -210,13 +210,21 @@ class itemsEntity {
       });
     });
   }
+  getColumnName() {
+    switch (this.entity_type_id) {
+      case 'webform':
+        return "title";
+      default:
+        return "name";
+    }
+  }
   /**
    * Recupere les items
    * ( on doit pouvoir faire un search avec d'autres filtre )
    */
   getSearch(search) {
     const filter = new _buildFilter_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z();
-    filter.addFilter("name", "CONTAINS", search);
+    filter.addFilter(this.getColumnName(), "CONTAINS", search);
     return new Promise(resolv => {
       _utilities_js__WEBPACK_IMPORTED_MODULE_1__/* ["default"].dGet */ .Z.dGet(this.url + "?" + filter.query, _Confs_js__WEBPACK_IMPORTED_MODULE_2__/* ["default"].headers */ .Z.headers).then(resp => {
         this.items = resp.data;
@@ -230,7 +238,7 @@ class itemsEntity {
    */
   getValue(term) {
     const filter = new _buildFilter_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z();
-    filter.addFilter("name", "=", term);
+    filter.addFilter(this.getColumnName(), "=", term);
     return new Promise(resolv => {
       _utilities_js__WEBPACK_IMPORTED_MODULE_1__/* ["default"].dGet */ .Z.dGet(this.url + "?" + filter.query, _Confs_js__WEBPACK_IMPORTED_MODULE_2__/* ["default"].headers */ .Z.headers).then(resp => {
         this.items = resp.data;
@@ -294,7 +302,11 @@ class itemsEntity {
   filter(field_name, operator, value) {
     const filter = new _buildFilter_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z();
     filter.addFilter(field_name, operator, value);
-    if (filter.query) this.filterQuery += filter.query;
+    if (filter.query) {
+      if (!this.filterQuery) this.filterQuery += filter.query;else {
+        this.filterQuery += "&" + filter.query;
+      }
+    }
   }
   /**
    * Les entities à joindre dans la requete.
@@ -315,6 +327,11 @@ class itemsEntity {
         options.push({
           text: term.attributes.name ? term.attributes.name : term.attributes.display_name,
           value: term.attributes.drupal_internal__uid
+        });
+      } else if (term.attributes.title) {
+        options.push({
+          text: term.attributes.title,
+          value: term.attributes.drupal_internal__id
         });
       } else if (term.attributes.name) {
         options.push({

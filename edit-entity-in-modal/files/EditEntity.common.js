@@ -10319,7 +10319,7 @@ var MultiSelectvue_type_template_id_03a152cd_staticRenderFns = [];
   name: "MultiSelect",
   components: {
     MultiSelectTaxo: () => __webpack_require__.e(/* import() */ 968).then(__webpack_require__.bind(__webpack_require__, 8968)),
-    MultiSelectEntities: () => __webpack_require__.e(/* import() */ 874).then(__webpack_require__.bind(__webpack_require__, 5874))
+    MultiSelectEntities: () => __webpack_require__.e(/* import() */ 497).then(__webpack_require__.bind(__webpack_require__, 9497))
   },
   props: {
     classCss: {
@@ -14497,6 +14497,7 @@ var AccordionCard_component = (0,componentNormalizer/* default */.Z)(
         break;
       case "image":
       case "image_image":
+      case "video_upload":
       case "hbk_file_generic":
         template = drupal_file;
         break;
@@ -15010,7 +15011,7 @@ class filters {
   addFilter(fieldName, operator, value) {
     var key = "fil-" + _rootConfig_js__WEBPACK_IMPORTED_MODULE_0__/* ["default"].getRandomIntInclusive */ .Z.getRandomIntInclusive();
     this.addParam(key, "path", fieldName);
-    this.addParam(key, "operator", operator);
+    this.addParam(key, "operator", encodeURIComponent(operator));
     this.addParam(key, "value", value);
     return this.query;
   }
