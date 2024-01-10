@@ -220,6 +220,7 @@ function formatage_models_preprocess_paragraph(&$variables) {
       'vuejs_entity.model_choisie_form',
       'buildercv.build_cv'
     ];
+    
     $route_name = \Drupal::routeMatch()->getRouteName();
     if (!in_array($route_name, $routes) && !\Drupal::service('router.admin_context')->isAdminRoute()) {
       $variables['content']['formatage_models_quickly_edit'] = [
@@ -396,7 +397,7 @@ function formatage_models_plugin_filter_layout__layout_builder_alter(array &$def
 function formatage_models_preprocess_layout(&$vars) {
   if (!empty($vars['region_attributes'])) {
     foreach ($vars['region_attributes'] as $key => $region_attribute) {
-      $vars['region_attributes'][$key]->addClass('layout-region lyt');
+      $vars['region_attributes'][$key]->addClass('layout-region');
     }
   }
 }
@@ -696,7 +697,8 @@ function formatage_models_preprocess_formatage_models_bg_header(array &$vars) {
  * @param array $vars
  */
 function formatage_models_preprocess_views_view_render_page(&$vars) {
-  module_load_include('inc', 'views', 'views.theme');
+  // module_load_include('inc', 'views', 'views.theme');
+  \Drupal::moduleHandler()->loadInclude('views', 'inc', 'views.theme');
   template_preprocess_views_view($vars);
   /**
    *
@@ -752,7 +754,8 @@ function formatage_models_preprocess_views_view_render_page(&$vars) {
  * @param array $vars
  */
 function formatage_models_preprocess_views_view_render(&$vars) {
-  module_load_include('inc', 'views', 'views.theme');
+  // module_load_include('inc', 'views', 'views.theme');
+  \Drupal::moduleHandler()->loadInclude('views', 'inc', 'views.theme');
   template_preprocess_views_view($vars);
   /**
    *
