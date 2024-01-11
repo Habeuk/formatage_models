@@ -3,6 +3,7 @@
 namespace Drupal\formatage_models\Plugin\Layout\Pages;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\formatage_models\FormatageModelsThemes;
 
 /**
  * A very advanced custom layout.
@@ -49,6 +50,18 @@ class FormatageModelsBlogList extends FormatageModelsPages {
       'region_tag_lefttile' => 'h2',
       'region_tag_righttile' => 'h2'
     ] + parent::defaultConfiguration();
+  }
+  
+  /**
+   *
+   * {@inheritdoc}
+   * @see \Drupal\formatage_models\Plugin\Layout\FormatageModels::build()
+   */
+  public function build(array $regions) {
+    // TODO Auto-generated method stub
+    $build = parent::build($regions);
+    FormatageModelsThemes::formatSettingValues($build);
+    return $build;
   }
   
   /**

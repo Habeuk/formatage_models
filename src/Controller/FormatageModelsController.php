@@ -15,6 +15,10 @@ use Drupal\Core\Url;
  */
 class FormatageModelsController extends ControllerBase {
   
+  public function test_contextuals() {
+    return [];
+  }
+  
   /**
    * Le clonnage dans un environnement complexe peut prendre assez de temps.
    * du coup, il faut le faire en plusieurs etape.
