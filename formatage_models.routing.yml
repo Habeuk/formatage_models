@@ -25,7 +25,7 @@ formatage_models.clone_entity:
     _permission: 'access administration pages'
 
 formatage_models.test_contextuals:
-  path: '/admin/config/formatage-models/test_contextuals/{entity_type}/{view_mode}'
+  path: '/admin/config/formatage-models/test_contextuals/{entity_type}/{view_mode}/{orther}'
   defaults:
     _title: 'clone entity'
     _controller: '\Drupal\formatage_models\Controller\FormatageModelsController::test_contextuals'
