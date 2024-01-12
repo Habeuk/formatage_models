@@ -516,8 +516,15 @@ function formatage_models_theme($existing, $type, $theme, $path) {
     'render element' => 'element',
     'file' => 'themes/formatage_models.theme.inc'
   ];
+  $hooks['formatage_models_search_with_icon'] = [
+    'variables' => [
+      'content' => NULL
+    ]
+  ];
   return $hooks;
 }
+
+// hook_theme();
 
 /**
  *
