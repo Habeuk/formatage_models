@@ -2,3 +2,10 @@ formatage_models.edit_layout:
   route_name: layout_builder.overrides.paragraph.view
   group: paragraph
   title: 'Edit layout'
+  
+
+   
+formatage_models.mycontentkksa:
+  route_name: formatage_models.mycontentkksa
+  group: paragraph
+  title: 'Context link'

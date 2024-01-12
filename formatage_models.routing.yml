@@ -23,3 +23,19 @@ formatage_models.clone_entity:
     _controller: '\Drupal\formatage_models\Controller\FormatageModelsController::CloneEntity'
   requirements:
     _permission: 'access administration pages'
+
+formatage_models.test_contextuals:
+  path: '/admin/config/formatage-models/test_contextuals/{entity_type}/{view_mode}'
+  defaults:
+    _title: 'clone entity'
+    _controller: '\Drupal\formatage_models\Controller\FormatageModelsController::test_contextuals'
+  requirements:
+    _permission: 'access administration pages'
+    
+formatage_models.mycontentkksa:
+  path: '/admin/config/formatage-models/test_contextualsv2/{entity_type}/{view_mode}'
+  defaults:
+    _title: 'clone entity'
+    _controller: '\Drupal\formatage_models\Controller\FormatageModelsController::test_contextuals'
+  requirements:
+    _permission: 'access administration pages'
