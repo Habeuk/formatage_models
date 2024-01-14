@@ -5,7 +5,7 @@ formatage_models.edit_layout:
   
 
    
-formatage_models.mycontentkksa_ctt:
-  route_name: formatage_models.mycontentkksa
-  group: paragraph
-  title: 'Context link by kksa'
+#formatage_models.mycontentkksa_ctt:
+#  route_name: formatage_models.mycontentkksa
+#  group: paragraph
+#  title: 'Context link by kksa'
