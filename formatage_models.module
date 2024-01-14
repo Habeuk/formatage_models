@@ -192,7 +192,7 @@ function addTextareaTreeMultipleMoreAjax(&$form, FormStateInterface $form_state)
  */
 function formatage_models_preprocess_paragraph(&$variables) {
   // dump($variables);
-  if (\Drupal::currentUser()->id() == 10000) {
+  if (\Drupal::currentUser()->id()) {
     // add class .contextual-region
     $variables['attributes']['class'][] = 'contextual-region';
     /**
@@ -235,22 +235,22 @@ function formatage_models_preprocess_paragraph(&$variables) {
     // ]
     // ];
   }
-  else {
-    $variables['#contextual_links'] = [
-      'mycontentkksa_ctt' => [
-        'entity_type' => 'dfdf',
-        'view_mode' => 'sfdsd'
-      ]
-    ];
-    // $paragraph = $variables['paragraph'];
-    // $contextual_link = [
-    // '#type' => 'contextual_links_placeholder',
-    // '#id' => 'paragraph:paragraph=' . $paragraph->id() . ':langcode=' .
-    // $paragraph->language()->getId()
-    // ];
-    // $variables['content']['contextual_links'] = $contextual_link;
-    // dump($variables);
-  }
+  // else {
+  // $variables['#contextual_links'] = [
+  // 'mycontentkksa_ctt' => [
+  // 'entity_type' => 'dfdf',
+  // 'view_mode' => 'sfdsd'
+  // ]
+  // ];
+  // $paragraph = $variables['paragraph'];
+  // $contextual_link = [
+  // '#type' => 'contextual_links_placeholder',
+  // '#id' => 'paragraph:paragraph=' . $paragraph->id() . ':langcode=' .
+  // $paragraph->language()->getId()
+  // ];
+  // $variables['content']['contextual_links'] = $contextual_link;
+  // dump($variables);
+  // }
 }
 
 function formatage_models_contextual_links_view_alter(&$vars) {
