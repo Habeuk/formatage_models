@@ -6,6 +6,13 @@ function template_preprocess_formatage_models_swiper_views_style(&$vars) {
   FormatageModelsThemes::ViewsGetValues($vars);
 }
 
+function template_preprocess_formatage_models_search_input_submit(&$vars) {
+  if (!empty($vars['element']['#attributes'])) {
+    $vars['attributes'] = $vars['element']['#attributes'];
+    $vars['value'] = $vars['element']['#value'];
+  }
+}
+
 function template_preprocess_formatage_models_fieldgalleries(&$vars, $hook) {
   formatage_models_preprocess_field($vars);
   $element = $vars['element'];
@@ -14,14 +21,14 @@ function template_preprocess_formatage_models_fieldgalleries(&$vars, $hook) {
   $vars['field_name'] = $element['#field_name'];
   $vars['field_type'] = $element['#field_type'];
   $vars['label_display'] = $element['#label_display'];
-
+  
   $vars['label_hidden'] = ($element['#label_display'] == 'hidden');
   // Always set the field label - allow themes to decide whether to display
   // it.
   // In addition the label should be rendered but hidden to support screen
   // readers.
   $vars['label'] = $element['#title'];
-
+  
   $vars['multiple'] = $element['#is_multiple'];
   //
   $vars['items'] = $element['items'];

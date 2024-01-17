@@ -31,7 +31,9 @@ class HbkSearchBlock extends SearchBlock {
   public function defaultConfiguration() {
     return [
       'template_render' => 'formatage_models_search_with_icon',
-      'class_input' => 'h3'
+      'class_key' => 'h3',
+      'class_actions' => '',
+      'class_form' => 'mb-4 bg-light justify-content-center align-items-center'
     ] + parent::defaultConfiguration();
   }
   
@@ -44,19 +46,23 @@ class HbkSearchBlock extends SearchBlock {
     $template = $this->configuration['template_render'];
     $config = $this->getConfiguration();
     if ($template) {
+      $form['#attributes']['class'][] = 'formatage_models-search-block-form';
+      $form['#attributes']['class'][] = $config['class_form'];
       if (!empty($form['actions']['submit'])) {
-        $form['actions']['submit']['#theme_wrappers'][] = 'input_submit_blm';
+        $form['actions']['submit']['#theme_wrappers'][] = 'formatage_models_search_input_submit';
+        $form['actions']['submit']['#attributes']['class'][] = $config['class_actions'];
       }
       if (!empty($form['keys'])) {
         $form['keys']['#attributes']['placeholder'] = $form['keys']['#attributes']['title'];
+        $form['keys']['#wrapper_attributes']['class'][] = 'flex-grow-1';
         if (!empty($form['keys']['#attributes']['class'])) {
           $form['keys']['#attributes']['class'][] = 'blm-key-search';
-          $form['keys']['#attributes']['class'][] = $config['class_input'];
+          $form['keys']['#attributes']['class'][] = $config['class_key'];
         }
         else {
           $form['keys']['#attributes']['class'] = [
             'blm-key-search',
-            $config['class_input']
+            $config['class_key']
           ];
         }
       }
@@ -76,6 +82,9 @@ class HbkSearchBlock extends SearchBlock {
   public function blockSubmit($form, FormStateInterface $form_state) {
     parent::blockSubmit($form, $form_state);
     $this->configuration['template_render'] = $form_state->getValue('template_render');
+    $this->configuration['class_key'] = $form_state->getValue('class_key');
+    $this->configuration['class_actions'] = $form_state->getValue('class_actions');
+    $this->configuration['class_form'] = $form_state->getValue('class_form');
   }
   
   /**
@@ -94,6 +103,21 @@ class HbkSearchBlock extends SearchBlock {
       "#description" => $this->t("Template that will render the search form"),
       "#default_value" => $this->configuration["template_render"],
       "#options" => $options
+    ];
+    $form['class_key'] = [
+      '#type' => 'textfield',
+      '#title' => 'Class key',
+      "#default_value" => $this->configuration["class_key"]
+    ];
+    $form['class_actions'] = [
+      '#type' => 'textfield',
+      '#title' => 'Class button',
+      "#default_value" => $this->configuration["class_actions"]
+    ];
+    $form['class_form'] = [
+      '#type' => 'textfield',
+      '#title' => 'Class button',
+      "#default_value" => $this->configuration["class_form"]
     ];
     return $form;
   }

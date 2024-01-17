@@ -521,6 +521,13 @@ function formatage_models_theme($existing, $type, $theme, $path) {
       'content' => NULL
     ]
   ];
+  $hooks['formatage_models_search_input_submit'] = [
+    'render element' => 'element',
+    'preprocess functions' => [
+      'template_preprocess_formatage_models_search_input_submit'
+    ],
+    'file' => 'themes/formatage_models.theme.inc'
+  ];
   return $hooks;
 }
 
