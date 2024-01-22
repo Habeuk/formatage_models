@@ -16,6 +16,7 @@
     "habeuk/debug": "^2.0 | dev-2x",
     "habeuk/drupal_utility": "^1.0 | dev-1x",
     "habeuk/filesmanager": "^1.0 | dev-1x",
-    "habeuk/apivuejs": "^1.0 | dev-1x"
+    "habeuk/apivuejs": "^1.0 | dev-1x",
+    "habeuk/layout_custom_style": "^1.0.0 | dev-1x"
   }
 }
