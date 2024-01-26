@@ -23,7 +23,7 @@ use Drupal\search\Plugin\Block\SearchBlock;
  * )
  */
 class HbkSearchBlock extends SearchBlock {
-  
+
   /**
    *
    * {@inheritdoc}
@@ -33,16 +33,22 @@ class HbkSearchBlock extends SearchBlock {
       'template_render' => 'formatage_models_search_with_icon',
       'class_key' => 'h3',
       'class_actions' => '',
-      'class_form' => 'mb-4 bg-light justify-content-center align-items-center'
+      'class_form' => 'mb-4 bg-light justify-content-center align-items-center',
+      'form_override' => [
+        'enable' => false,
+        'action' => '/search/node',
+        'keys' => 'keys'
+      ]
     ] + parent::defaultConfiguration();
   }
-  
+
   /**
    *
    * {@inheritdoc}
    */
   public function build() {
     $form = parent::build();
+    $build = $form;
     $template = $this->configuration['template_render'];
     $config = $this->getConfiguration();
     if ($template) {
@@ -66,15 +72,20 @@ class HbkSearchBlock extends SearchBlock {
           ];
         }
       }
-      return [
+      // applique la surcharge
+      if ($config['form_override']['enable']) {
+        //
+        $form['#action'] = $config['form_override']['action'];
+        $form['keys']['#name'] = $config['form_override']['keys'];
+      }
+      $build = [
         "#theme" => $template,
         "#content" => $form
       ];
     }
-    else
-      return $form;
+    return $build;
   }
-  
+
   /**
    *
    * {@inheritdoc}
@@ -85,8 +96,9 @@ class HbkSearchBlock extends SearchBlock {
     $this->configuration['class_key'] = $form_state->getValue('class_key');
     $this->configuration['class_actions'] = $form_state->getValue('class_actions');
     $this->configuration['class_form'] = $form_state->getValue('class_form');
+    $this->configuration['form_override'] = $form_state->getValue('form_override');
   }
-  
+
   /**
    *
    * {@inheritdoc}
@@ -119,7 +131,28 @@ class HbkSearchBlock extends SearchBlock {
       '#title' => 'Class button',
       "#default_value" => $this->configuration["class_form"]
     ];
+    $form['form_override'] = [
+      '#type' => 'details',
+      '#title' => "Surchage le formulaire",
+      "#tree" => true
+    ];
+    $form['form_override']['enable'] = [
+      '#type' => 'checkbox',
+      '#title' => 'Activer la surcharger',
+      "#default_value" => $this->configuration['form_override']["enable"] ?? false
+    ];
+    $form['form_override']['action'] = [
+      '#type' => 'textfield',
+      '#title' => 'Action',
+      "#default_value" => $this->configuration['form_override']["action"]
+    ];
+    $form['form_override']['keys'] = [
+      '#type' => 'textfield',
+      '#title' => 'Definit la clée de recherche',
+      '#description' => "Par defaut c'est key, vous devez definir la valeur permettant d'executer la recherche au niveau de la vue",
+      "#default_value" => $this->configuration['form_override']["keys"]
+    ];
     return $form;
   }
-  
+
 }
