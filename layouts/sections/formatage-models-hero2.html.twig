@@ -7,24 +7,26 @@
 		{% set attributes=attributes.merge(content.image_bg|layout_bg_img) %}
 	{% endif %}
 	<div {{attributes.addClass('hero-section-rc-web')}}>
-		<div class="hero-section-rc-web__block-center">
-			<div class="desc">
-				{% if content.description %}
-				<div {{region_attributes.description.addClass(['description','hp-desc'])}}>
-					{{content.description}}
-				</div>
-				{% endif %}
-				{% if content.title %}
-				<h1 {{region_attributes.title.addClass(['title','desc__title'])}}>
-					{{content.title}}
-				</h1>
-				{% endif %}
-			</div>
+		<div {% if settings.config_section %} class="{{ settings.config_section.type_container }} {{ settings.config_section.container_class }}" {% else %} class="" {% endif %}>
+    		<div class="hero-section-rc-web__block-center">
+    			<div class="desc">
+    				{% if content.description %}
+    				<div {{region_attributes.description.addClass(['description','hp-desc'])}}>
+    					{{content.description}}
+    				</div>
+    				{% endif %}
+    				{% if content.title %}
+    				<h1 {{region_attributes.title.addClass(['title','desc__title'])}}>
+    					{{content.title}}
+    				</h1>
+    				{% endif %}
+    			</div>
+    		</div>
+    		{% if content.button %}
+    		<div {{region_attributes.button.addClass('rc-btn-block')}}>
+    			{{content.button}}
+    		</div>
+		    {% endif %}
 		</div>
-		{% if content.button %}
-		<div {{region_attributes.button.addClass('rc-btn-block')}}>
-			{{content.button}}
-		</div>
-		{% endif %}
 	</div>
 {% endif %}
