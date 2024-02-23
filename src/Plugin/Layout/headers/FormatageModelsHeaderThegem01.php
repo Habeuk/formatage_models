@@ -72,7 +72,7 @@ class FormatageModelsHeaderThegem01 extends FormatageModelsSection {
   function defaultConfiguration() {
     return [
       'css' => 'bg-dark text-white',
-      'region_css_data_mobile' => 'ml-auto d-lg-none',
+      'region_css_data_mobile' => 'me-auto d-lg-none',
       'load_libray' => true,
       'infos' => [
         'builder-form' => true,

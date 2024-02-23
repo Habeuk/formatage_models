@@ -50,7 +50,7 @@ class FormatageModelsComments extends FormatageModelsSection {
     public function defaultConfiguration() {
         return parent::defaultConfiguration() + [
             'css' => '',
-            'region_css_entete' => "col-md-6 ml-auto",
+            'region_css_entete' => "col-md-6 me-auto",
             'sf' => [
                 'builder-form' => true,
                 'info' => [

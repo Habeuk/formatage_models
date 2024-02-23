@@ -61,7 +61,7 @@ class FormatageModelsMenu01 extends FormatageModels {
     if (!empty($build['menu'])) {
       foreach ($build['menu'] as $k => $value) {
         if (isset($value['#base_plugin_id']) && ($value['#base_plugin_id'] == 'system_menu_block' | $value['#base_plugin_id'] == 'field_block')) {
-          $build['menu'][$k]['content']['#attributes']['class'][] = 'navbar-nav mr-auto';
+          $build['menu'][$k]['content']['#attributes']['class'][] = 'navbar-nav me-auto';
         }
       }
     }

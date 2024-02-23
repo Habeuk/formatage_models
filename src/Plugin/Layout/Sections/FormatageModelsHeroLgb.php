@@ -66,7 +66,7 @@ class FormatageModelsHeroLgb extends FormatageModelsSection {
   public function defaultConfiguration() {
     return parent::defaultConfiguration() + [
       'css' => '',
-      'region_css_entete' => "col-md-6 ml-auto",
+      'region_css_entete' => "col-md-6 me-auto",
       'region_css_entete2' => "col-md-6",
       'region_tag_title' => 'h1',
       'region_tag_subtitle' => 'h4',
