@@ -83,11 +83,11 @@ class SwiperjsImageFormatter extends ImageFormatter {
         $element['#attributes'] = $item_attributes;
       }
       $wrappers_attributes = new Attribute();
-      $wrappers_attributes->addClass('swiper', 'swiper-full-options');
+      $wrappers_attributes->addClass('swiper', 'swiper-full-options', $items->getEntity()->getEntityTypeId(), $items->getName());
       $wrappers_attributes->setAttribute('data-swiper', Json::encode($swiperjs_options));
       //
       $swipper_attributes_paginations = new Attribute();
-      $swipper_attributes_paginations->addClass('swiper-pagination', $this->getSetting('pagination_color'));
+      $swipper_attributes_paginations->addClass('swiper-pagination', $this->getSetting('pagination_color'), $this->getSetting('pagination_postion'));
       //
       $swipper_attributes_buttons_prev = new Attribute();
       $swipper_attributes_buttons_prev->addClass('swiper-button', 'swiper-button-prev', $this->getSetting('buttons_color'), $this->getSetting('buttons_position'));
