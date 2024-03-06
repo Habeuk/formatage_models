@@ -1,28 +1,44 @@
-.formatage_models_quickly_edit{
+.formatage_models_quickly_edit {
 	display: flex;
 	position: absolute;
-    top: 0;
-    left: 10px;
-    color:#fff;
-    background: rgb(255 255 255 / 10%);
-    z-index: -9999;
-    border-radius: 50%;
-    justify-content: center;
-    align-items: center;
-    width: 40px;
-    height: 40px;    
-    font-size: 2rem;
-    transition: all 1s;
-    opacity:0;
+	top: 0;
+	left: 10px;
+	color: #fff;
+	background: rgb(255 255 255 / 10%);
+	z-index: -9999;
+	border-radius: 50%;
+	justify-content: center;
+	align-items: center;
+	width: 50px;
+	height: 50px;
+	font-size: 2rem;
+	transition: all 1s;
+	opacity: 0;
 }
+
+.formatage_models_quickly_edit svg {
+	width: 2.8rem;
+	height: 2.8rem;
+	fill: #0a4575;
+}
+
 /**
  * On affiche uniquement le premier niveau, on masque les sous elements.
  */
-.contextual-region:hover > .formatage_models_quickly_edit, 
-.contextual-region:hover > .node__content > .formatage_models_quickly_edit{
+.contextual-region:hover>.formatage_models_quickly_edit,
+.contextual-region:hover>.node__content>.formatage_models_quickly_edit {
 	color: #4369a3;
-    background: rgb(255 255 255 / 85%);  
-    z-index: 9999;      
-    cursor:pointer;
-    opacity:1;
+	background: rgb(255 255 255 / 92%);
+	z-index: 9999;
+	cursor: pointer;
+	opacity: 1;
+	border: 1px solid rgb(239, 241, 247);
 }
+/**
+ * Pour les elements inclues ont decalle.
+ */
+ .contextual-region .contextual-region   .contextual-region:hover >.formatage_models_quickly_edit {
+	 top: 3rem;	 
+	 background:rgb(243 243 243 / 92%);
+	 z-index: 10000;
+ }

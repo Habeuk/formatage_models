@@ -63,6 +63,14 @@ function formatage_models_field_formatter_third_party_settings_form(FormatterInt
     'value' => '',
     'item' => ''
   ]);
+  // Pour corriger les elements manquants.
+  // ( pas necessaire de corriger, car il suffit d'enregistrer à nouveau).
+  // $classes += [
+  // 'container' => '',
+  // 'title' => '',
+  // 'value' => '',
+  // 'item' => ''
+  // ];
   $element['classes'] = [
     '#type' => 'details',
     '#title' => t('Field Formatter'),
@@ -340,6 +348,7 @@ function formatage_models_entity_view_alter(array &$build, \Drupal\Core\Entity\E
  */
 function formatage_models_preprocess_page(&$variables) {
   $route_name = \Drupal::routeMatch()->getRouteName();
+  
   if ($route_name === 'layout_builder.overrides.node.view' || str_contains($route_name, 'layout_builder.')) {
     $variables['page']['content']['#attached']['library'][] = 'formatage_models/formatage-models-admin';
   }

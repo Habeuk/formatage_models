@@ -5,8 +5,11 @@
   max-width: -webkit-fill-available;
   font-size: 1.2rem !important;
 }
+#drupal-off-canvas  details{
+	margin-bottom: 1rem;	
+}
 #drupal-off-canvas summary{
-	font-size: 1.4rem !important;
+	font-size: 1.7rem !important;	
 }
 .ui-dialog.ui-dialog-off-canvas, .layout-selection{
 	background: rgb(247, 248, 249) !important;	
@@ -23,7 +26,7 @@
 #drupal-off-canvas summary:hover, 
 #drupal-off-canvas summary:focus{
 	background: transparent !important;
-    color: inherit !important;
+    /*color: inherit !important;*/
     padding-inline: 0 !important;
     padding-top: 0 !important;
     padding-bottom: 0 !important;
@@ -56,6 +59,12 @@
 #drupal-off-canvas .form-control
 {
 	color:#000 !important;
+}
+#drupal-off-canvas .form-select, #drupal-off-canvas .form-text, #drupal-off-canvas .form-tel, #drupal-off-canvas .form-email, 
+#drupal-off-canvas .form-url, #drupal-off-canvas .form-search, #drupal-off-canvas .form-number, #drupal-off-canvas .form-color, 
+#drupal-off-canvas .form-file, #drupal-off-canvas .form-textarea, #drupal-off-canvas .form-date, #drupal-off-canvas .form-time
+{
+	font-size: 13px;	
 }
 
 .form-wrapper.accordion{
