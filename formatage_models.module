@@ -108,14 +108,14 @@ function formatage_models_field_formatter_third_party_settings_form(FormatterInt
  * according to the field formatter settings.
  */
 function formatage_models_preprocess_field(&$variables) {
-
+  
   // Add class for whole field.
   if (!empty($variables['element']['#third_party_settings']['formatage_models']['classes'])) {
     $classContainer = $variables['element']['#third_party_settings']['formatage_models']['classes']['container'];
     $classTitle = $variables['element']['#third_party_settings']['formatage_models']['classes']['title'];
     $classValue = $variables['element']['#third_party_settings']['formatage_models']['classes']['value'];
     $classItem = !empty($variables['element']['#third_party_settings']['formatage_models']['classes']['item']) ? $variables['element']['#third_party_settings']['formatage_models']['classes']['item'] : '';
-
+    
     /** @var \Drupal\Core\Utility\Token $token */
     $token = \Drupal::service('token');
     /** @var \Drupal\Core\Entity\EntityInterface $object */
@@ -157,7 +157,7 @@ function formatage_models_preprocess_field(&$variables) {
         $value['attributes']->addClass($classItem);
       }
     }
-
+    
     // if (!empty($classValue)) {
     // // \Stephane888\Debug\debugLog::kintDebugDrupal($variables,
     // // 'formatage_models_preprocess_field--', true);
@@ -346,9 +346,8 @@ function formatage_models_preprocess_page(&$variables) {
   elseif ($route_name == 'entity.paragraphs_type.collection') {
     $variables['page']['content']['#attached']['library'][] = 'formatage_models/formatage-models-admin-paragraph';
   }
-
+  
   if (!empty($variables['logged_in'])) {
-
     // Il faudra que ces liens soient configurable (settings.form).
     $routes = [
       'vuejs_entity.model_choisie_form',
@@ -426,6 +425,18 @@ function formatage_models_theme($existing, $type, $theme, $path) {
     'render element' => 'element',
     'file' => 'themes/formatage_models.theme.inc'
   ];
+  $hooks['formatage_models_search_with_icon'] = [
+    'variables' => [
+      'content' => NULL
+    ]
+  ];
+  $hooks['formatage_models_search_input_submit'] = [
+    'render element' => 'element',
+    'preprocess functions' => [
+      'template_preprocess_formatage_models_search_input_submit'
+    ],
+    'file' => 'themes/formatage_models.theme.inc'
+  ];
   return $hooks;
 }
 
@@ -443,7 +454,7 @@ function formatage_models_preprocess_views_view_render_page(&$vars) {
   $view = $vars['view'];
   //
   $css = $view->display_handler->getOption('view_row_css');
-
+  
   if ($css) {
     $Attribute = new Attribute();
     $css = explode(" ", $css);
