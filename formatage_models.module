@@ -470,6 +470,7 @@ function formatage_models_preprocess_views_view_render_page(&$vars) {
     $Attribute->addClass($css);
     $vars['rows']['attributes'] = $Attribute;
   }
+  
   //
   $css = $view->display_handler->getOption('view_header_css');
   if ($css) {
