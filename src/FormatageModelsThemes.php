@@ -45,40 +45,6 @@ class FormatageModelsThemes {
       ],
       'file' => 'themes/formatage_models__img_url.theme.inc'
     ];
-    //
-    $hooks['formatage_models_swiper_views_style'] = [
-      'preprocess functions' => [
-        'template_preprocess_formatage_models_swiper_views_style'
-      ],
-      'file' => 'themes/formatage_models.theme.inc'
-    ];
-    $hooks['formatage_models_swiper_big_views_style'] = [
-      'preprocess functions' => [
-        'template_preprocess_formatage_models_swiper_big_views_style'
-      ],
-      'file' => 'themes/formatage_models.theme.inc'
-    ];
-    $hooks['formatage_models_swiper_unique'] = [
-      'preprocess functions' => [
-        'template_preprocess_formatage_models_swiper_unique'
-      ],
-      'file' => 'themes/formatage_models.theme.inc'
-    ];
-    //
-    $hooks['formatage_models_swiper_big_views_style_v2'] = [
-      'preprocess functions' => [
-        'template_preprocess_formatage_models_swiper_big_views_style_v2'
-      ],
-      'file' => 'themes/formatage_models.theme.inc'
-    ];
-    
-    // formatage_models_swiper_big_views_style_v3
-    $hooks['formatage_models_swiper_big_views_style_v3'] = [
-      'preprocess functions' => [
-        'template_preprocess_formatage_models_swiper_big_views_style_v3'
-      ],
-      'file' => 'themes/formatage_models.theme.inc'
-    ];
     
     // theme de base pour les menus. layoutmenu--fast-models-fn-first-menu
     $hooks['formatage_models_menu'] = [
