@@ -158,6 +158,7 @@ class FormatageModelsSection extends FormatageModels implements ContainerFactory
         'bootstrap_styles' => []
       ],
       'css' => '',
+      'id' => '',
       'config_section' => [
         'type_container' => 'container',
         'container_class' => ''
@@ -204,11 +205,11 @@ class FormatageModelsSection extends FormatageModels implements ContainerFactory
       '#title' => 'Classe pour le conteneur',
       '#default_value' => $this->configuration['config_section']['container_class']
     ];
-      $form['config_section']['id'] = [
-        '#type' => 'textfield',
-        '#title' => 'Identifiant du layout',
-        '#default_value' => $this->configuration['id']
-      ];
+    $form['config_section']['id'] = [
+      '#type' => 'textfield',
+      '#title' => 'Identifiant du layout',
+      '#default_value' => $this->configuration['id']
+    ];
     //
     $form['blb_style'] = [
       '#type' => 'details',
@@ -231,7 +232,7 @@ class FormatageModelsSection extends FormatageModels implements ContainerFactory
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     parent::submitConfigurationForm($form, $form_state);
     $this->configuration['config_section'] = $form_state->getValue('config_section');
-    if (!empty($this->configuration['config_section']["id"]) ) {
+    if (!empty($this->configuration['config_section']["id"])) {
       $this->configuration['id'] = $this->configuration['config_section']["id"];
     }
     $style_tab = [

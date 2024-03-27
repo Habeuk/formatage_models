@@ -33,6 +33,7 @@ class SwiperjsImageFormatter extends ImageFormatter {
       'swiperjs_options' => Fullswiperoptions::options(),
       'pagination_color' => '',
       'pagination_postion' => '',
+      'pagination_model' => '',
       'buttons_color' => '',
       'buttons_position' => '',
       'layoutgenentitystyles_view' => 'fullswiperoptions/fullswiperoptions'
