@@ -88,7 +88,8 @@ trait ArrayElements {
       }
     }
     else
-      $elements = $build;
+      // Must return a array.
+      $elements[] = $build;
     return $elements;
   }
   
