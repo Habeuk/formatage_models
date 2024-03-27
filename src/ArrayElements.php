@@ -28,6 +28,9 @@ trait ArrayElements {
         if (!empty($build[$key]['content'])) {
           $key_items = Element::children($build[$key]['content']);
           foreach ($key_items as $i) {
+            // On ignore les éléments vide
+            if (Element::isEmpty($build[$key]['content'][$i]))
+              continue;
             if (!empty($build[$key]['content'][$i]["#view"]) && !empty($build[$key]['content'][$i]['#rows'][0]['#rows'])) {
               $rows = $build[$key]['content'][$i]['#rows'][0]['#rows'];
               foreach ($rows as $value) {
