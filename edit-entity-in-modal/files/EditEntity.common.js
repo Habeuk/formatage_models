@@ -7309,7 +7309,7 @@ __webpack_require__(7888);
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var _fieldsDrupal_loadField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6855);
+/* harmony import */ var _fieldsDrupal_loadField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3885);
 /**
  * Bug: Les plugins sont charger via cette route : /core/assets/vendor/
  * Cela est du au fait que il ya un ckeditor qui est chargé à partir de la. (/core/modules/ckeditor/js/ckeditor.js et /core/assets/vendor/ckeditor/ckeditor.js)
@@ -7516,7 +7516,7 @@ __webpack_require__(7888);
 
 /***/ }),
 
-/***/ 6855:
+/***/ 3885:
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9062,8 +9062,8 @@ var html_render_component = (0,componentNormalizer/* default */.Z)(
 )
 
 /* harmony default export */ var html_render = (html_render_component.exports);
-;// CONCATENATED MODULE: ./node_modules/babel-loader/lib/index.js??clonedRuleSet-40.use[1]!./node_modules/@vue/vue-loader-v15/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!./node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!../components_bootstrapvuejs/src/components/fieldsDrupal/drupal-file.vue?vue&type=template&id=8b3fd382&
-var drupal_filevue_type_template_id_8b3fd382_render = function render() {
+;// CONCATENATED MODULE: ./node_modules/babel-loader/lib/index.js??clonedRuleSet-40.use[1]!./node_modules/@vue/vue-loader-v15/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!./node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!../components_bootstrapvuejs/src/components/fieldsDrupal/drupal-file.vue?vue&type=template&id=3744621a&
+var drupal_filevue_type_template_id_3744621a_render = function render() {
   var _vm = this,
     _c = _vm._self._c;
   return _c('div', {
@@ -9174,7 +9174,7 @@ var drupal_filevue_type_template_id_8b3fd382_render = function render() {
     }) : _vm._e()], 1);
   }), 0)], 1);
 };
-var drupal_filevue_type_template_id_8b3fd382_staticRenderFns = [];
+var drupal_filevue_type_template_id_3744621a_staticRenderFns = [];
 
 ;// CONCATENATED MODULE: ./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib/index.js??clonedRuleSet-40.use[1]!./node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!../components_bootstrapvuejs/src/components/fieldsDrupal/drupal-file.vue?vue&type=script&lang=js&
 
@@ -9364,15 +9364,23 @@ var drupal_filevue_type_template_id_8b3fd382_staticRenderFns = [];
       if (this.model[this.field.name] && this.model[this.field.name].length) {
         this.toUplode = [];
         this.model[this.field.name].forEach(item => {
+          console.log("item image:", item);
           if (loadField.config) {
             const toUplode = {
               url: "",
               target_id: item.target_id
             };
-            if (item.target_id) loadField.getImageUrl(item.target_id).then(resp => {
-              toUplode.url = resp.data;
-              this.toUplode.push(toUplode);
-            });
+            if (item.target_id) if (this.field.type === "hbk_file_generic") {
+              loadField.getVideoThumbUrl(item.target_id).then(resp => {
+                toUplode.url = resp.data;
+                this.toUplode.push(toUplode);
+              });
+            } else {
+              loadField.getImageUrl(item.target_id).then(resp => {
+                toUplode.url = resp.data;
+                this.toUplode.push(toUplode);
+              });
+            }
           }
         });
       }
@@ -9415,8 +9423,8 @@ var drupal_filevue_type_template_id_8b3fd382_staticRenderFns = [];
 ;
 var drupal_file_component = (0,componentNormalizer/* default */.Z)(
   fieldsDrupal_drupal_filevue_type_script_lang_js_,
-  drupal_filevue_type_template_id_8b3fd382_render,
-  drupal_filevue_type_template_id_8b3fd382_staticRenderFns,
+  drupal_filevue_type_template_id_3744621a_render,
+  drupal_filevue_type_template_id_3744621a_staticRenderFns,
   false,
   null,
   null,
@@ -14553,8 +14561,13 @@ var AccordionCard_component = (0,componentNormalizer/* default */.Z)(
     }
     return template;
   },
-  getImageUrl(fid, style = "medium") {
-    return this.config.get("/filesmanager/image/" + fid + "/" + style);
+  getImageUrl(fid, style = "medium", param = []) {
+    const url = this.config.get("/filesmanager/image/" + fid + "/" + style);
+    console.log("image url: ", url);
+    return url;
+  },
+  getVideoThumbUrl(fid, style = "medium") {
+    return this.config.get("/filesmanager/hbk_generic/" + fid + "/" + style);
   },
   getRules(field) {
     const rules = {};
@@ -14596,7 +14609,7 @@ var AccordionCard_component = (0,componentNormalizer/* default */.Z)(
 "use strict";
 /* harmony import */ var core_js_modules_es_array_push_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6352);
 /* harmony import */ var core_js_modules_es_array_push_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_push_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _components_fieldsDrupal_loadField__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6855);
+/* harmony import */ var _components_fieldsDrupal_loadField__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3885);
 
 
 /**
@@ -15011,7 +15024,7 @@ class filters {
   addFilter(fieldName, operator, value) {
     var key = "fil-" + _rootConfig_js__WEBPACK_IMPORTED_MODULE_0__/* ["default"].getRandomIntInclusive */ .Z.getRandomIntInclusive();
     this.addParam(key, "path", fieldName);
-    this.addParam(key, "operator", encodeURIComponent(operator));
+    this.addParam(key, "operator", operator);
     this.addParam(key, "value", value);
     return this.query;
   }
@@ -19033,7 +19046,11 @@ var axios_default = /*#__PURE__*/__webpack_require__.n(axios);
 
 /**
  * Permet d'effectuer les requetes
- * pour modifier ou definir les paramettres par defaut de l'instance, {AjaxBasic}.axiosInstance.defaults.timeout = 30000;
+ * pour modifier ou definir les paramettres par defaut de l'instance,
+ * 1- importer
+ * import { AjaxToastBootStrap } from "wbuutilities";
+ * 2- Surcharger ( par example la duree)
+ * AjaxToastBootStrap.axiosInstance.defaults.timeout = 1200000;
  */
 
 const InstAxios = axios_default().create({
@@ -19046,7 +19063,7 @@ InstAxios.interceptors.request.use(config => {
   //
   return config;
 });
-//surcharge de la reponse
+// surcharge de la reponse
 InstAxios.interceptors.response.use(response => {
   // Calcul de la durée
   const currentTime = new Date().getTime();
@@ -19109,6 +19126,11 @@ const basicRequest = {
    */
   isLocalDev: window.location.host.includes("localhost") || window.location.host.includes(".kksa") ? true : false,
   /**
+   * Permet d'ajouter les enttetes.
+   * {key:value}
+   */
+  customHeaders: {},
+  /**
    * Permet de derminer la source du domaine, en function des paramettres definit.
    * @private (ne doit pas etre surcharger).
    * @returns String
@@ -19148,10 +19170,11 @@ const basicRequest = {
       return null;
     }
   },
-  post: function (url, datas, configs) {
+  post: function (url, datas, configs = {}) {
     return new Promise((resolv, reject) => {
       if (this.languageId !== "" && this.languageId !== undefined && this.languageId !== null && !url.includes("://")) url = "/" + this.languageId + url;
       const urlFinal = url.includes("://") ? url : this.getBaseUrl() + url;
+      configs = this.mergeCustomHeaders(configs);
       InstAxios.post(urlFinal, datas, configs).then(reponse => {
         if (this.debug) console.log("Debug axio : \n", urlFinal, "\n payload: ", datas, "\n config: ", configs, "\n Duration : ", reponse.headers["request-duration"], "\n reponse: ", reponse, "\n ------ \n");
         resolv({
@@ -19172,9 +19195,10 @@ const basicRequest = {
       });
     });
   },
-  delete: function (url, datas, configs) {
+  delete: function (url, datas, configs = {}) {
     return new Promise((resolv, reject) => {
       const urlFinal = url.includes("://") ? url : this.getBaseUrl() + url;
+      configs = this.mergeCustomHeaders(configs);
       InstAxios.delete(urlFinal, configs, datas).then(reponse => {
         resolv({
           status: true,
@@ -19193,10 +19217,11 @@ const basicRequest = {
       });
     });
   },
-  get: function (url, configs) {
+  get: function (url, configs = {}) {
     return new Promise((resolv, reject) => {
       if (this.languageId !== "" && this.languageId !== undefined && this.languageId !== null && !url.includes("://")) url = "/" + this.languageId + url;
       const urlFinal = url.includes("://") ? url : this.getBaseUrl() + url;
+      configs = this.mergeCustomHeaders(configs);
       InstAxios.get(urlFinal, configs).then(reponse => {
         if (this.debug) console.log("Debug axio : \n", urlFinal, "\n Config: ", configs, "\n Duration : ", reponse.headers["request-duration"], "\n Reponse: ", reponse, "\n ------ \n");
         resolv({
@@ -19261,6 +19286,24 @@ const basicRequest = {
       };
       reader.onerror = error => reject(error);
     });
+  },
+  /**
+   * Permet d'ajouter une configuration specifique
+   */
+  setHeaders(key, value) {
+    this.customHeaders[key] = value;
+  },
+  /**
+   * Permet d'additionner la configation
+   */
+  mergeCustomHeaders(configs) {
+    if (!configs.headers) configs.headers = {};
+    if (this.customHeaders) {
+      for (const i in this.customHeaders) {
+        configs.headers[i] = this.customHeaders[i];
+      }
+    }
+    return configs;
   }
 };
 /* harmony default export */ var basic = (basicRequest);
@@ -25827,30 +25870,29 @@ const AjaxToastBootStrap = {
       toaster: "b-toaster-top-right"
     });
   },
-  bPost: function (url, datas, configs, showNotification = false) {
+  bPost: function (url, datas, configs, showNotification = false, successMessage = "success", failureMessage = "warning") {
     return new Promise((resolv, reject) => {
       this.post(url, datas, configs).then(reponse => {
         if (showNotification) {
-          this.notification("success");
+          this.notification(successMessage);
         }
         resolv(reponse);
       }).catch(error => {
         //console.log("error : ", error);
-        this.notification(this.GetErrorTitle(error), "warning");
+        this.notification(this.GetErrorTitle(error), failureMessage);
         reject(error);
       });
     });
   },
-  bGet(url, configs, showNotification = false) {
+  bGet(url, configs, showNotification = false, successMessage = "success", failureMessage = "warning") {
     return new Promise((resolv, reject) => {
       this.get(url, configs).then(reponse => {
         if (showNotification) {
-          this.notification("success");
+          this.notification(successMessage);
         }
         resolv(reponse);
       }).catch(error => {
-        //console.log("error : ", error);
-        this.notification(this.GetErrorTitle(error), "warning");
+        this.notification(this.GetErrorTitle(error), failureMessage);
         reject(error);
       });
     });
@@ -32089,7 +32131,7 @@ var EditEntity_component = (0,componentNormalizer/* default */.Z)(
 // EXTERNAL MODULE: ../components_bootstrapvuejs/src/js/FormUttilities.js
 var FormUttilities = __webpack_require__(9351);
 // EXTERNAL MODULE: ../components_bootstrapvuejs/src/components/fieldsDrupal/loadField.js + 136 modules
-var loadField = __webpack_require__(6855);
+var loadField = __webpack_require__(3885);
 // EXTERNAL MODULE: ../components_bootstrapvuejs/src/components/Ressouces/ckeditor-config.js
 var ckeditor_config = __webpack_require__(3009);
 ;// CONCATENATED MODULE: ./src/store/index.js

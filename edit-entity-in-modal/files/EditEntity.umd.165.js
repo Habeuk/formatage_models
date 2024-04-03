@@ -92,7 +92,7 @@ var vue_multiselect_min_default = /*#__PURE__*/__webpack_require__.n(vue_multise
 // EXTERNAL MODULE: ../drupal-vuejs/src/App/jsonApi/itemsEntity.js
 var itemsEntity = __webpack_require__(1139);
 // EXTERNAL MODULE: ../components_bootstrapvuejs/src/components/fieldsDrupal/loadField.js + 136 modules
-var loadField = __webpack_require__(6472);
+var loadField = __webpack_require__(4831);
 ;// CONCATENATED MODULE: ./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib/index.js??clonedRuleSet-82.use[1]!./node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!../components_bootstrapvuejs/src/components/Ressouces/MultiSelectEntities.vue?vue&type=script&lang=js&
 
 
@@ -394,21 +394,13 @@ class itemsEntity {
       });
     });
   }
-  getColumnName() {
-    switch (this.entity_type_id) {
-      case 'webform':
-        return "title";
-      default:
-        return "name";
-    }
-  }
   /**
    * Recupere les items
    * ( on doit pouvoir faire un search avec d'autres filtre )
    */
   getSearch(search) {
     const filter = new _buildFilter_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z();
-    filter.addFilter(this.getColumnName(), "CONTAINS", search);
+    filter.addFilter("name", "CONTAINS", search);
     return new Promise(resolv => {
       _utilities_js__WEBPACK_IMPORTED_MODULE_1__/* ["default"].dGet */ .Z.dGet(this.url + "?" + filter.query, _Confs_js__WEBPACK_IMPORTED_MODULE_2__/* ["default"].headers */ .Z.headers).then(resp => {
         this.items = resp.data;
@@ -422,7 +414,7 @@ class itemsEntity {
    */
   getValue(term) {
     const filter = new _buildFilter_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z();
-    filter.addFilter(this.getColumnName(), "=", term);
+    filter.addFilter("name", "=", term);
     return new Promise(resolv => {
       _utilities_js__WEBPACK_IMPORTED_MODULE_1__/* ["default"].dGet */ .Z.dGet(this.url + "?" + filter.query, _Confs_js__WEBPACK_IMPORTED_MODULE_2__/* ["default"].headers */ .Z.headers).then(resp => {
         this.items = resp.data;
@@ -486,11 +478,7 @@ class itemsEntity {
   filter(field_name, operator, value) {
     const filter = new _buildFilter_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z();
     filter.addFilter(field_name, operator, value);
-    if (filter.query) {
-      if (!this.filterQuery) this.filterQuery += filter.query;else {
-        this.filterQuery += "&" + filter.query;
-      }
-    }
+    if (filter.query) this.filterQuery += filter.query;
   }
   /**
    * Les entities à joindre dans la requete.
@@ -511,11 +499,6 @@ class itemsEntity {
         options.push({
           text: term.attributes.name ? term.attributes.name : term.attributes.display_name,
           value: term.attributes.drupal_internal__uid
-        });
-      } else if (term.attributes.title) {
-        options.push({
-          text: term.attributes.title,
-          value: term.attributes.drupal_internal__id
         });
       } else if (term.attributes.name) {
         options.push({
