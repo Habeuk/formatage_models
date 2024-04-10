@@ -1933,6 +1933,7 @@ module.exports = !fails(function () {
 var documentAll = typeof document == 'object' && document.all;
 
 // https://tc39.es/ecma262/#sec-IsHTMLDDA-internal-slot
+// eslint-disable-next-line unicorn/no-typeof-undefined -- required for testing
 var IS_HTMLDDA = typeof documentAll == 'undefined' && documentAll !== undefined;
 
 module.exports = {
@@ -1975,11 +1976,9 @@ module.exports = function (it) {
 /***/ }),
 
 /***/ 8056:
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
+/***/ (function(module) {
 
-var getBuiltIn = __webpack_require__(8516);
-
-module.exports = getBuiltIn('navigator', 'userAgent') || '';
+module.exports = typeof navigator != 'undefined' && String(navigator.userAgent) || '';
 
 
 /***/ }),
@@ -2230,7 +2229,7 @@ module.exports =
   check(typeof self == 'object' && self) ||
   check(typeof __webpack_require__.g == 'object' && __webpack_require__.g) ||
   // eslint-disable-next-line no-new-func -- fallback
-  (function () { return this; })() || Function('return this')();
+  (function () { return this; })() || this || Function('return this')();
 
 
 /***/ }),
@@ -2535,6 +2534,7 @@ module.exports = function (obj) {
 /***/ 1885:
 /***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
+var uncurryThis = __webpack_require__(9410);
 var fails = __webpack_require__(2462);
 var isCallable = __webpack_require__(2527);
 var hasOwn = __webpack_require__(6777);
@@ -2545,8 +2545,12 @@ var InternalStateModule = __webpack_require__(5936);
 
 var enforceInternalState = InternalStateModule.enforce;
 var getInternalState = InternalStateModule.get;
+var $String = String;
 // eslint-disable-next-line es/no-object-defineproperty -- safe
 var defineProperty = Object.defineProperty;
+var stringSlice = uncurryThis(''.slice);
+var replace = uncurryThis(''.replace);
+var join = uncurryThis([].join);
 
 var CONFIGURABLE_LENGTH = DESCRIPTORS && !fails(function () {
   return defineProperty(function () { /* empty */ }, 'length', { value: 8 }).length !== 8;
@@ -2555,8 +2559,8 @@ var CONFIGURABLE_LENGTH = DESCRIPTORS && !fails(function () {
 var TEMPLATE = String(String).split('String');
 
 var makeBuiltIn = module.exports = function (value, name, options) {
-  if (String(name).slice(0, 7) === 'Symbol(') {
-    name = '[' + String(name).replace(/^Symbol\(([^)]*)\)/, '$1') + ']';
+  if (stringSlice($String(name), 0, 7) === 'Symbol(') {
+    name = '[' + replace($String(name), /^Symbol\(([^)]*)\)/, '$1') + ']';
   }
   if (options && options.getter) name = 'get ' + name;
   if (options && options.setter) name = 'set ' + name;
@@ -2575,7 +2579,7 @@ var makeBuiltIn = module.exports = function (value, name, options) {
   } catch (error) { /* empty */ }
   var state = enforceInternalState(value);
   if (!hasOwn(state, 'source')) {
-    state.source = TEMPLATE.join(typeof name == 'string' ? name : '');
+    state.source = join(TEMPLATE, typeof name == 'string' ? name : '');
   } return value;
 };
 
@@ -2868,10 +2872,10 @@ var store = __webpack_require__(9556);
 (module.exports = function (key, value) {
   return store[key] || (store[key] = value !== undefined ? value : {});
 })('versions', []).push({
-  version: '3.26.1',
+  version: '3.31.1',
   mode: IS_PURE ? 'pure' : 'global',
-  copyright: '© 2014-2022 Denis Pushkarev (zloirock.ru)',
-  license: 'https://github.com/zloirock/core-js/blob/v3.26.1/LICENSE',
+  copyright: '© 2014-2023 Denis Pushkarev (zloirock.ru)',
+  license: 'https://github.com/zloirock/core-js/blob/v3.31.1/LICENSE',
   source: 'https://github.com/zloirock/core-js'
 });
 
@@ -2884,13 +2888,18 @@ var store = __webpack_require__(9556);
 /* eslint-disable es/no-symbol -- required for testing */
 var V8_VERSION = __webpack_require__(1185);
 var fails = __webpack_require__(2462);
+var global = __webpack_require__(1421);
+
+var $String = global.String;
 
 // eslint-disable-next-line es/no-object-getownpropertysymbols -- required for testing
 module.exports = !!Object.getOwnPropertySymbols && !fails(function () {
   var symbol = Symbol();
   // Chrome 38 Symbol has incorrect toString conversion
   // `get-own-property-symbols` polyfill symbols converted to object are not Symbol instances
-  return !String(symbol) || !(Object(symbol) instanceof Symbol) ||
+  // nb: Do not call `String` directly to avoid this being optimized out to `symbol+''` which will,
+  // of course, fail.
+  return !$String(symbol) || !(Object(symbol) instanceof Symbol) ||
     // Chrome 38-40 symbols are not inherited from DOM collections prototypes to instances
     !Symbol.sham && V8_VERSION && V8_VERSION < 41;
 });
@@ -3114,21 +3123,15 @@ var uid = __webpack_require__(1893);
 var NATIVE_SYMBOL = __webpack_require__(9784);
 var USE_SYMBOL_AS_UID = __webpack_require__(4183);
 
-var WellKnownSymbolsStore = shared('wks');
 var Symbol = global.Symbol;
-var symbolFor = Symbol && Symbol['for'];
-var createWellKnownSymbol = USE_SYMBOL_AS_UID ? Symbol : Symbol && Symbol.withoutSetter || uid;
+var WellKnownSymbolsStore = shared('wks');
+var createWellKnownSymbol = USE_SYMBOL_AS_UID ? Symbol['for'] || Symbol : Symbol && Symbol.withoutSetter || uid;
 
 module.exports = function (name) {
-  if (!hasOwn(WellKnownSymbolsStore, name) || !(NATIVE_SYMBOL || typeof WellKnownSymbolsStore[name] == 'string')) {
-    var description = 'Symbol.' + name;
-    if (NATIVE_SYMBOL && hasOwn(Symbol, name)) {
-      WellKnownSymbolsStore[name] = Symbol[name];
-    } else if (USE_SYMBOL_AS_UID && symbolFor) {
-      WellKnownSymbolsStore[name] = symbolFor(description);
-    } else {
-      WellKnownSymbolsStore[name] = createWellKnownSymbol(description);
-    }
+  if (!hasOwn(WellKnownSymbolsStore, name)) {
+    WellKnownSymbolsStore[name] = NATIVE_SYMBOL && hasOwn(Symbol, name)
+      ? Symbol[name]
+      : createWellKnownSymbol('Symbol.' + name);
   } return WellKnownSymbolsStore[name];
 };
 
@@ -3153,18 +3156,20 @@ var INCORRECT_TO_LENGTH = fails(function () {
 
 // V8 and Safari <= 15.4, FF < 23 throws InternalError
 // https://bugs.chromium.org/p/v8/issues/detail?id=12681
-var SILENT_ON_NON_WRITABLE_LENGTH = !function () {
+var properErrorOnNonWritableLength = function () {
   try {
     // eslint-disable-next-line es/no-object-defineproperty -- safe
     Object.defineProperty([], 'length', { writable: false }).push();
   } catch (error) {
     return error instanceof TypeError;
   }
-}();
+};
+
+var FORCED = INCORRECT_TO_LENGTH || !properErrorOnNonWritableLength();
 
 // `Array.prototype.push` method
 // https://tc39.es/ecma262/#sec-array.prototype.push
-$({ target: 'Array', proto: true, arity: 1, forced: INCORRECT_TO_LENGTH || SILENT_ON_NON_WRITABLE_LENGTH }, {
+$({ target: 'Array', proto: true, arity: 1, forced: FORCED }, {
   // eslint-disable-next-line no-unused-vars -- required for `.length`
   push: function push(item) {
     var O = toObject(this);
@@ -7314,7 +7319,7 @@ __webpack_require__(7888);
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var _fieldsDrupal_loadField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6871);
+/* harmony import */ var _fieldsDrupal_loadField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4213);
 /**
  * Bug: Les plugins sont charger via cette route : /core/assets/vendor/
  * Cela est du au fait que il ya un ckeditor qui est chargé à partir de la. (/core/modules/ckeditor/js/ckeditor.js et /core/assets/vendor/ckeditor/ckeditor.js)
@@ -7483,7 +7488,10 @@ __webpack_require__(7888);
     //     date.getTime()
     // );
     // humm.
-    if (_fieldsDrupal_loadField__WEBPACK_IMPORTED_MODULE_0__/* ["default"].config */ .Z.config) CKEDITOR.config.quickuploaderUploadUrl = _fieldsDrupal_loadField__WEBPACK_IMPORTED_MODULE_0__/* ["default"].config.getBaseUrl */ .Z.config.getBaseUrl();
+    if (_fieldsDrupal_loadField__WEBPACK_IMPORTED_MODULE_0__/* ["default"].config */ .Z.config) {
+      if (_fieldsDrupal_loadField__WEBPACK_IMPORTED_MODULE_0__/* ["default"].config.getBaseUrl */ .Z.config.getBaseUrl) console.log("");
+      CKEDITOR.config.quickuploaderUploadUrl = _fieldsDrupal_loadField__WEBPACK_IMPORTED_MODULE_0__/* ["default"].config.getBaseUrl */ .Z.config.getBaseUrl();
+    }
   },
   // Le parent surchargera cette partie enfin de fournir ces styles.
   /**
@@ -7521,7 +7529,7 @@ __webpack_require__(7888);
 
 /***/ }),
 
-/***/ 6871:
+/***/ 4213:
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9067,8 +9075,8 @@ var html_render_component = (0,componentNormalizer/* default */.Z)(
 )
 
 /* harmony default export */ var html_render = (html_render_component.exports);
-;// CONCATENATED MODULE: ./node_modules/babel-loader/lib/index.js??clonedRuleSet-82.use[1]!./node_modules/@vue/vue-loader-v15/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!./node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!../components_bootstrapvuejs/src/components/fieldsDrupal/drupal-file.vue?vue&type=template&id=429e2da3&
-var drupal_filevue_type_template_id_429e2da3_render = function render() {
+;// CONCATENATED MODULE: ./node_modules/babel-loader/lib/index.js??clonedRuleSet-82.use[1]!./node_modules/@vue/vue-loader-v15/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!./node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!../components_bootstrapvuejs/src/components/fieldsDrupal/drupal-file.vue?vue&type=template&id=3744621a&
+var drupal_filevue_type_template_id_3744621a_render = function render() {
   var _vm = this,
     _c = _vm._self._c;
   return _c('div', {
@@ -9111,11 +9119,11 @@ var drupal_filevue_type_template_id_429e2da3_render = function render() {
       }
     }])
   }), _c('div', {
-    staticClass: "previews d-flex flex-wrap"
+    staticClass: "previews"
   }, _vm._l(_vm.toUplode, function (fil, i) {
     return _c('div', {
       key: i,
-      staticClass: "item"
+      staticClass: "item d-flex w-100"
     }, [_c('b-img', {
       staticClass: "img-preview",
       attrs: {
@@ -9145,10 +9153,41 @@ var drupal_filevue_type_template_id_429e2da3_render = function render() {
           return _vm.delete_file(i, fil);
         }
       }
-    })], 1);
+    }), _vm.field.definition_settings.alt_field ? _c('ValidationProvider', {
+      staticClass: "align-self-center flex-grow-1",
+      attrs: {
+        "rules": _vm.getAltRules,
+        "name": _vm.field.name + '_alt_' + i
+      },
+      scopedSlots: _vm._u([{
+        key: "default",
+        fn: function (v) {
+          return [_c('b-form-input', {
+            staticClass: "align-self-center",
+            attrs: {
+              "state": _vm.getValidationState(v),
+              "placeholder": "Alt",
+              "name": _vm.field.name + '_alt_' + i
+            },
+            on: {
+              "input": function ($event) {
+                return _vm.updateValue('alt', i, _vm.alts[i]);
+              }
+            },
+            model: {
+              value: _vm.alts[i],
+              callback: function ($$v) {
+                _vm.$set(_vm.alts, i, $$v);
+              },
+              expression: "alts[i]"
+            }
+          })];
+        }
+      }], null, true)
+    }) : _vm._e()], 1);
   }), 0)], 1);
 };
-var drupal_filevue_type_template_id_429e2da3_staticRenderFns = [];
+var drupal_filevue_type_template_id_3744621a_staticRenderFns = [];
 
 ;// CONCATENATED MODULE: ./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib/index.js??clonedRuleSet-82.use[1]!./node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!../components_bootstrapvuejs/src/components/fieldsDrupal/drupal-file.vue?vue&type=script&lang=js&
 
@@ -9190,7 +9229,8 @@ var drupal_filevue_type_template_id_429e2da3_staticRenderFns = [];
       // Fichiers provenant de l'action utilisateur.
       files: [],
       // Fichiers uploaded.
-      toUplode: []
+      toUplode: [],
+      alts: []
     };
   },
   computed: {
@@ -9217,8 +9257,23 @@ var drupal_filevue_type_template_id_429e2da3_staticRenderFns = [];
       } else return "";
     }
   },
+  watch: {
+    /**
+     *
+     * @param {Array} newModel
+     * @param {array} oldModel
+     */
+    model(newModel, oldModel) {
+      this.alts = newModel[this.field.name].map(element => {
+        return element.alt ? element.alt : "";
+      });
+    }
+  },
   mounted() {
     this.getValue();
+    this.alts = this.model[this.field.name].map(element => {
+      return element.alt ? element.alt : "";
+    });
   },
   methods: {
     /**
@@ -9237,6 +9292,12 @@ var drupal_filevue_type_template_id_429e2da3_staticRenderFns = [];
      */
     getRules() {
       return loadField.getRules(this.field);
+    },
+    /**
+     * @return {String} rules for the alt field
+     */
+    getAltRules() {
+      return this.field.definition_settings.alt_field_required ? "required" : "";
     },
     /**
      *
@@ -9306,12 +9367,8 @@ var drupal_filevue_type_template_id_429e2da3_staticRenderFns = [];
     },
 
     setValue(vals) {
-      if (this.namespaceStore) {
-        this.$store.dispatch(this.namespaceStore + "/setValue", {
-          value: vals,
-          fieldName: this.fullname
-        });
-      } else this.$store.dispatch("setValue", {
+      const storeAction = this.namespaceStore ? this.namespaceStore + "/setValue" : "setValue";
+      this.$store.dispatch(storeAction, {
         value: vals,
         fieldName: this.fullname
       });
@@ -9320,18 +9377,32 @@ var drupal_filevue_type_template_id_429e2da3_staticRenderFns = [];
       if (this.model[this.field.name] && this.model[this.field.name].length) {
         this.toUplode = [];
         this.model[this.field.name].forEach(item => {
+          console.log("item image:", item);
           if (loadField.config) {
             const toUplode = {
               url: "",
               target_id: item.target_id
             };
-            if (item.target_id) loadField.getImageUrl(item.target_id).then(resp => {
-              toUplode.url = resp.data;
-              this.toUplode.push(toUplode);
-            });
+            if (item.target_id) if (this.field.type === "hbk_file_generic") {
+              loadField.getVideoThumbUrl(item.target_id).then(resp => {
+                toUplode.url = resp.data;
+                this.toUplode.push(toUplode);
+              });
+            } else {
+              loadField.getImageUrl(item.target_id).then(resp => {
+                toUplode.url = resp.data;
+                this.toUplode.push(toUplode);
+              });
+            }
           }
         });
       }
+    },
+    updateValue(property, index, value) {
+      const storeAction = this.namespaceStore ? this.namespaceStore + "/getValue" : "getValue";
+      const vals = this.model[this.field.name];
+      vals[index][property] = value;
+      this.setValue(vals);
     },
     delete_file(index, file) {
       if (file.target_id && this.field.definition_settings && this.field.definition_settings.module_name) {
@@ -9365,8 +9436,8 @@ var drupal_filevue_type_template_id_429e2da3_staticRenderFns = [];
 ;
 var drupal_file_component = (0,componentNormalizer/* default */.Z)(
   fieldsDrupal_drupal_filevue_type_script_lang_js_,
-  drupal_filevue_type_template_id_429e2da3_render,
-  drupal_filevue_type_template_id_429e2da3_staticRenderFns,
+  drupal_filevue_type_template_id_3744621a_render,
+  drupal_filevue_type_template_id_3744621a_staticRenderFns,
   false,
   null,
   null,
@@ -10268,8 +10339,8 @@ var MultiSelectvue_type_template_id_03a152cd_staticRenderFns = [];
 /* harmony default export */ var MultiSelectvue_type_script_lang_js_ = ({
   name: "MultiSelect",
   components: {
-    MultiSelectTaxo: () => __webpack_require__.e(/* import() */ 526).then(__webpack_require__.bind(__webpack_require__, 7162)),
-    MultiSelectEntities: () => __webpack_require__.e(/* import() */ 828).then(__webpack_require__.bind(__webpack_require__, 3828))
+    MultiSelectTaxo: () => __webpack_require__.e(/* import() */ 561).then(__webpack_require__.bind(__webpack_require__, 9561)),
+    MultiSelectEntities: () => __webpack_require__.e(/* import() */ 592).then(__webpack_require__.bind(__webpack_require__, 4592))
   },
   props: {
     classCss: {
@@ -13570,6 +13641,400 @@ var PhoneInternational_component = (0,componentNormalizer/* default */.Z)(
 )
 
 /* harmony default export */ var PhoneInternational = (PhoneInternational_component.exports);
+;// CONCATENATED MODULE: ./node_modules/babel-loader/lib/index.js??clonedRuleSet-82.use[1]!./node_modules/@vue/vue-loader-v15/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!./node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!../components_bootstrapvuejs/src/components/fieldsDrupal/MoreFieldsAccordion.vue?vue&type=template&id=72c59b0e&
+var MoreFieldsAccordionvue_type_template_id_72c59b0e_render = function render() {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c('div', {
+    staticClass: "mb-4",
+    class: _vm.classCss
+  }, [_c('ValidationProvider', {
+    attrs: {
+      "name": _vm.fullname,
+      "rules": _vm.getRules()
+    },
+    scopedSlots: _vm._u([{
+      key: "default",
+      fn: function (v) {
+        return [_c('div', {
+          staticClass: "accordion"
+        }, [_c('div', {
+          staticClass: "options-config"
+        }, [_c('b-form-checkbox', {
+          attrs: {
+            "switch": "",
+            "size": "md"
+          },
+          model: {
+            value: _vm.select_edit_mode,
+            callback: function ($$v) {
+              _vm.select_edit_mode = $$v;
+            },
+            expression: "select_edit_mode"
+          }
+        }, [_vm._v(" Edit code (Pro) ")])], 1), _vm._l(_vm.editorData, function (item, idx) {
+          return _c('div', {
+            key: idx,
+            staticClass: "mb-2"
+          }, [_c('div', {
+            attrs: {
+              "role": "tab"
+            }
+          }, [_c('b-button', {
+            directives: [{
+              name: "b-toggle",
+              rawName: "v-b-toggle",
+              value: _vm.fullname + '-' + idx,
+              expression: "fullname + '-' + idx"
+            }],
+            attrs: {
+              "block": "",
+              "variant": "info"
+            }
+          }, [_vm._v(" " + _vm._s(_vm._f("truncate")(item.title, 20, "... ")) + " ")])], 1), _c('b-collapse', {
+            attrs: {
+              "id": _vm.fullname + '-' + idx,
+              "visible": idx == 0,
+              "accordion": "my-accordion",
+              "role": "tabpanel"
+            }
+          }, [_c('b-card-body', [_c('b-form-group', [_c('div', {
+            staticClass: "field-item-value title"
+          }, [_c('div', {
+            staticClass: "accordion-header d-flex justify-content-between align-item-center"
+          }, [_c('label', {
+            attrs: {
+              "for": _vm.fullname + '-title-' + idx
+            }
+          }, [_vm._v(" " + _vm._s(_vm.formSettings.title.fieldName) + " ")]), _vm.cardinality ? _c('b-button', {
+            directives: [{
+              name: "b-tooltip",
+              rawName: "v-b-tooltip.v-danger",
+              value: ' Supprimer ',
+              expression: "' Supprimer '",
+              modifiers: {
+                "v-danger": true
+              }
+            }],
+            staticClass: "p-0 border-0 elt-remove",
+            attrs: {
+              "variant": "outline-danger",
+              "size": "sm"
+            },
+            on: {
+              "click": function ($event) {
+                return _vm.remove(idx);
+              }
+            }
+          }, [_c('b-icon', {
+            attrs: {
+              "icon": "trash",
+              "font-scale": "1"
+            }
+          })], 1) : _vm._e()], 1), _c('b-form-input', {
+            attrs: {
+              "id": _vm.fullname + '-title-' + idx,
+              "state": _vm.getValidationState(v),
+              "name": _vm.getFieldFullName(_vm.formSettings.title.fieldName),
+              "placeholder": _vm.formSettings.title.placeholder,
+              "debounce": "2500"
+            },
+            on: {
+              "input": function ($event) {
+                return _vm.input($event, idx, 'title');
+              }
+            },
+            model: {
+              value: item.title,
+              callback: function ($$v) {
+                _vm.$set(item, "title", $$v);
+              },
+              expression: "item.title"
+            }
+          })], 1), _c('div', {
+            staticClass: "field-item-value icon"
+          }, [_c('label', {
+            attrs: {
+              "for": _vm.fullname + '-icon-' + idx
+            }
+          }, [_vm._v(" " + _vm._s(_vm.formSettings.icon.fieldName) + " ")]), !_vm.select_edit_mode ? _c('ckeditor', {
+            attrs: {
+              "name": _vm.fullname + '-icon-' + idx,
+              "config": _vm.editorConfig,
+              "editor-url": _vm.editorUrl
+            },
+            on: {
+              "input": function ($event) {
+                return _vm.input($event, idx, 'icon');
+              },
+              "namespaceloaded": _vm.onNamespaceLoaded
+            },
+            model: {
+              value: item.icon,
+              callback: function ($$v) {
+                _vm.$set(item, "icon", $$v);
+              },
+              expression: "item.icon"
+            }
+          }) : _vm._e()], 1), _c('div', {
+            staticClass: "field-item-value description"
+          }, [_c('label', {
+            attrs: {
+              "for": 'description-' + idx
+            }
+          }, [_vm._v(" " + _vm._s(_vm.formSettings.description.fieldName) + " ")]), !_vm.select_edit_mode ? _c('ckeditor', {
+            attrs: {
+              "name": _vm.fullname + '-description-' + idx,
+              "config": _vm.editorConfig,
+              "editor-url": _vm.editorUrl
+            },
+            on: {
+              "input": function ($event) {
+                return _vm.input($event, idx, 'description ');
+              },
+              "namespaceloaded": _vm.onNamespaceLoaded
+            },
+            model: {
+              value: item.description,
+              callback: function ($$v) {
+                _vm.$set(item, "description", $$v);
+              },
+              expression: "item.description"
+            }
+          }) : _c('b-form-textarea', {
+            attrs: {
+              "placeholder": _vm.formSettings.description.placeholder,
+              "state": _vm.getValidationState(v),
+              "name": _vm.fullname + '-description-' + idx,
+              "rows": "3",
+              "max-rows": "6"
+            },
+            on: {
+              "change": function ($event) {
+                return _vm.input($event, idx, 'description ');
+              }
+            },
+            model: {
+              value: item.description,
+              callback: function ($$v) {
+                _vm.$set(item, "description", $$v);
+              },
+              expression: "item.description"
+            }
+          })], 1), v.errors && v.errors.length > 0 ? _c('div', {
+            staticClass: "text-danger my-2"
+          }, _vm._l(v.errors, function (error, ii) {
+            return _c('small', {
+              key: ii,
+              staticClass: "d-block"
+            }, [_vm._v(" " + _vm._s(error) + " ")]);
+          }), 0) : _vm._e()])], 1)], 1)], 1);
+        }), _vm.cardinality ? _c('div', [_c('b-button', {
+          attrs: {
+            "size": "sm",
+            "variant": "info"
+          },
+          on: {
+            "click": function ($event) {
+              $event.preventDefault();
+              return _vm.addField.apply(null, arguments);
+            }
+          }
+        }, [_vm._v(" Add more ")])], 1) : _vm._e()], 2)];
+      }
+    }])
+  })], 1);
+};
+var MoreFieldsAccordionvue_type_template_id_72c59b0e_staticRenderFns = [];
+
+;// CONCATENATED MODULE: ./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib/index.js??clonedRuleSet-82.use[1]!./node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!../components_bootstrapvuejs/src/components/fieldsDrupal/MoreFieldsAccordion.vue?vue&type=script&lang=js&
+
+
+
+
+
+
+/* harmony default export */ var MoreFieldsAccordionvue_type_script_lang_js_ = ({
+  name: "MoreFieldsAccordion",
+  components: {
+    ValidationProvider: vee_validate_esm/* ValidationProvider */.d_,
+    ckeditor: (ckeditor_default()).component
+  },
+  filters: {
+    truncate: function (text, length, clamp) {
+      clamp = clamp || "...";
+      var node = document.createElement("div");
+      node.innerHTML = text;
+      var content = node.textContent;
+      return content.length > length ? content.slice(0, length) + clamp : content;
+    }
+  },
+  props: {
+    classCss: {
+      type: [Array],
+      default: function () {
+        return [];
+      }
+    },
+    field: {
+      type: Object,
+      required: true
+    },
+    model: {
+      type: [Object, Array],
+      required: true
+    },
+    namespaceStore: {
+      type: String,
+      required: true
+    },
+    parentName: {
+      type: String,
+      required: true
+    }
+  },
+  data() {
+    return {
+      editorData: [],
+      name: "",
+      preEditorConfig: ckeditor_config/* default.preEditorConfig */.Z.preEditorConfig(),
+      editorUrl: ckeditor_config/* default.editorUrl */.Z.editorUrl(),
+      timeout: null,
+      select_edit_mode: true,
+      formSettings: {
+        title: {
+          fieldName: "title",
+          placeholder: "Entrez le titre"
+        },
+        icon: {
+          fieldName: "Icon",
+          placeholder: "entrez l'icon"
+        },
+        description: {
+          fieldName: "Description",
+          placeholder: "Entrez la description"
+        }
+      }
+    };
+  },
+  computed: {
+    editorConfig() {
+      var extraPlugins = "quickuploader, codesnippet, print,format,font,colorbutton,justify,image,filebrowser,stylesheetparser";
+      return {
+        extraPlugins: extraPlugins,
+        ...this.preEditorConfig
+      };
+    },
+    cardinality() {
+      if (this.field.cardinality === -1) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    fullname() {
+      return this.parentName + this.field.name;
+    },
+    baseUrl() {
+      if (loadField.config) return loadField.config.getBaseUrl();else return "";
+    }
+  },
+  mounted() {
+    this.editorData = this.getValue();
+    this.name = this.field.name;
+  },
+  methods: {
+    getFieldFullName(fieldName) {
+      return this.parentName + this.field.name + fieldName;
+    },
+    getValidationState({
+      dirty,
+      validated,
+      valid = null
+    }) {
+      return (dirty || validated) && !valid ? valid : null;
+    },
+    getRules() {
+      return loadField.getRules(this.field);
+    },
+    setValue(vals) {
+      clearTimeout(this.timeout);
+      this.timeout = setTimeout(() => {
+        if (this.namespaceStore) {
+          this.$store.dispatch(this.namespaceStore + "/setValue", {
+            value: vals,
+            fieldName: this.fullname
+          });
+        } else this.$store.dispatch("setValue", {
+          value: vals,
+          fieldName: this.fullname
+        });
+      }, loadField.timeToWait);
+    },
+    getValue() {
+      return this.model[this.field.name] ? this.model[this.field.name] : [];
+    },
+    remove(index) {
+      this.editorData.splice(index, 1);
+    },
+    addField() {
+      const newEntry = {
+        title: "",
+        icon: "",
+        format: "full_html",
+        description: ""
+      };
+      this.editorData.push(newEntry);
+    },
+    input(value, index, field) {
+      console.log("my_values: ", {
+        value,
+        index,
+        field
+      });
+      switch (field) {
+        case "icon":
+          // this.editorData[index].icon = value;
+          break;
+        case "description":
+          // this.editorData[index].description = value;
+          this.editorData[index].format = "full_html";
+          break;
+        case "title":
+          // this.editorData[index].title = value;
+          break;
+        default:
+          break;
+      }
+      this.setValue(this.editorData);
+    },
+    onNamespaceLoaded(CKEDITOR) {
+      ckeditor_config/* default.onNamespaceLoaded */.Z.onNamespaceLoaded(CKEDITOR);
+    }
+  }
+});
+;// CONCATENATED MODULE: ../components_bootstrapvuejs/src/components/fieldsDrupal/MoreFieldsAccordion.vue?vue&type=script&lang=js&
+ /* harmony default export */ var fieldsDrupal_MoreFieldsAccordionvue_type_script_lang_js_ = (MoreFieldsAccordionvue_type_script_lang_js_); 
+;// CONCATENATED MODULE: ../components_bootstrapvuejs/src/components/fieldsDrupal/MoreFieldsAccordion.vue
+
+
+
+
+
+/* normalize component */
+;
+var MoreFieldsAccordion_component = (0,componentNormalizer/* default */.Z)(
+  fieldsDrupal_MoreFieldsAccordionvue_type_script_lang_js_,
+  MoreFieldsAccordionvue_type_template_id_72c59b0e_render,
+  MoreFieldsAccordionvue_type_template_id_72c59b0e_staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* harmony default export */ var MoreFieldsAccordion = (MoreFieldsAccordion_component.exports);
 ;// CONCATENATED MODULE: ./node_modules/babel-loader/lib/index.js??clonedRuleSet-82.use[1]!./node_modules/@vue/vue-loader-v15/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!./node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!../components_bootstrapvuejs/src/components/fieldsDrupal/MoreFieldsIconwTextidget.vue?vue&type=template&id=a51b271a&
 var MoreFieldsIconwTextidgetvue_type_template_id_a51b271a_render = function render() {
   var _vm = this,
@@ -14377,6 +14842,7 @@ var AccordionCard_component = (0,componentNormalizer/* default */.Z)(
 
 
 
+
 // @deprecated will be remove before 2x. use MoreFieldsIconDescription
 
 
@@ -14447,6 +14913,8 @@ var AccordionCard_component = (0,componentNormalizer/* default */.Z)(
         break;
       case "image":
       case "image_image":
+      case "video_upload":
+      case "hbk_file_generic":
         template = drupal_file;
         break;
       case "experience_type":
@@ -14454,8 +14922,9 @@ var AccordionCard_component = (0,componentNormalizer/* default */.Z)(
         template = ExperienceType;
         break;
       case "entity_reference":
-      case "entity_reference_autocomplete":
       case "select2_entity_reference":
+      case "entity_reference_autocomplete":
+      case "entity_reference_autocomplete_tags":
         template = MultiSelect;
         break;
       case "value_niveau_type":
@@ -14492,6 +14961,9 @@ var AccordionCard_component = (0,componentNormalizer/* default */.Z)(
       case "more_fields_icon_text_description_widget":
         template = MoreFieldsIconwDescriptionidget;
         break;
+      case "more_fields_accordion_field_widget":
+        template = MoreFieldsAccordion;
+        break;
       case "phone_international_widget":
         template = PhoneInternational;
         break;
@@ -14501,8 +14973,13 @@ var AccordionCard_component = (0,componentNormalizer/* default */.Z)(
     }
     return template;
   },
-  getImageUrl(fid, style = "medium") {
-    return this.config.get("/filesmanager/image/" + fid + "/" + style);
+  getImageUrl(fid, style = "medium", param = []) {
+    const url = this.config.get("/filesmanager/image/" + fid + "/" + style);
+    console.log("image url: ", url);
+    return url;
+  },
+  getVideoThumbUrl(fid, style = "medium") {
+    return this.config.get("/filesmanager/hbk_generic/" + fid + "/" + style);
   },
   getRules(field) {
     const rules = {};
@@ -14544,7 +15021,7 @@ var AccordionCard_component = (0,componentNormalizer/* default */.Z)(
 "use strict";
 /* harmony import */ var core_js_modules_es_array_push_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6352);
 /* harmony import */ var core_js_modules_es_array_push_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_push_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _components_fieldsDrupal_loadField__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6871);
+/* harmony import */ var _components_fieldsDrupal_loadField__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4213);
 
 
 /**
@@ -14568,6 +15045,11 @@ var AccordionCard_component = (0,componentNormalizer/* default */.Z)(
    * NB: la valeur retounée est valide si l'execution est strictement en serie.
    */
   lastIdsEntity: [],
+  /**
+   * Represente le nombre d'essaie qui peut etre effectuer avant de marquer l'action comme non aboutie.
+   */
+  numberTry: 0,
+  timeWaitBeforeRetry: 15000,
   /**
    * Permet de generer le formulaire drupal.
    * @param {Array} entities
@@ -14642,18 +15124,23 @@ var AccordionCard_component = (0,componentNormalizer/* default */.Z)(
    */
   prepareSaveEntities(store, datas, suivers, ActionDomainId = false) {
     return new Promise((resolu, rejecte) => {
+      //console.log("prepareSaveEntities");
       // on vide les derniers ids.
       this.lastIdsEntity = [];
       const updateDomainId = entity => {
+        //console.log("entity.field_domain_source : ", entity, "\n ActionDomainId : ", ActionDomainId, "\n this.domainRegister : ", this.domainRegister);
         if (ActionDomainId && this.domainRegister.id && entity.field_domain_access) {
           entity.field_domain_access = [{
+            target_id: this.domainRegister.id
+          }];
+          if (entity.field_domain_source !== undefined) entity.field_domain_source = [{
             target_id: this.domainRegister.id
           }];
         }
         return entity;
       };
       const loopItemAddValues = (values, resp, has_target_revision_id) => {
-        console.log("loopItemAddValues values : ", values, "\n resp : ", resp, "\n has_target_revision_id : ", has_target_revision_id);
+        // console.log("loopItemAddValues values : ", values, "\n resp : ", resp, "\n has_target_revision_id : ", has_target_revision_id);
         if (has_target_revision_id) {
           // try to get revision.
           var revision_id;
@@ -14678,54 +15165,82 @@ var AccordionCard_component = (0,componentNormalizer/* default */.Z)(
        * @param {Integer} i
        * @param {Array} values
        */
-      const loopItem = (items, i, values = [], has_target_revision_id = false) => {
+      const loopItem = (items, i, values = [], has_target_revision_id = false, essaie = 0) => {
         return new Promise((resolv, reject) => {
           if (items[i]) {
             const item = items[i];
             if (items[i].entities) {
               const keys = Object.keys(items[i].entities);
               loopFieldEntity(items[i].entities, keys[0], items[i].entity, keys, 0).then(entity => {
-                store.dispatch("saveEntity", {
-                  entity_type_id: items[i].target_type,
-                  value: updateDomainId(entity),
-                  index: i
-                }).then(resp => {
-                  suivers.creates++;
-                  console.log(" Before loopItemAddValues 1 : ", values);
-                  if (!loopItemAddValues(values, resp, has_target_revision_id)) reject(" Revision requis mais non definit ");
-                  i = i + 1;
-                  if (i < items.length) {
-                    resolv(loopItem(items, i, values, has_target_revision_id));
-                  } else resolv(values);
-                }).catch(er => {
-                  console.log(" catch loopItem : ", er);
-                  reject(er);
-                });
+                const saveEntity = () => {
+                  store.dispatch("saveEntity", {
+                    entity_type_id: items[i].target_type,
+                    value: updateDomainId(entity),
+                    index: i
+                  }).then(resp => {
+                    suivers.creates++;
+                    //console.log(" Before loopItemAddValues 1 : ", values);
+                    if (!loopItemAddValues(values, resp, has_target_revision_id)) reject(" Revision requis mais non definit ");
+                    i = i + 1;
+                    if (i < items.length) {
+                      resolv(loopItem(items, i, values, has_target_revision_id));
+                    } else resolv(values);
+                  }).catch(er => {
+                    /**
+                     * Si l'utilisateur a defini un nombre d'essaie.
+                     */
+                    if (essaie < this.numberTry) {
+                      essaie++;
+                      //console.log("loopItem re-try : ", essaie);
+                      setTimeout(() => {
+                        saveEntity();
+                      }, this.timeWaitBeforeRetry);
+                    } else {
+                      //console.log(" catch loopItem : ", er);
+                      reject(er);
+                    }
+                  });
+                };
+                saveEntity();
               }).catch(er => {
-                console.log(" catch loopItem : ", er);
+                //console.log(" catch loopItem : ", er);
                 reject(er);
               });
             } else {
-              store.dispatch("saveEntity", {
-                entity_type_id: item.target_type,
-                value: updateDomainId(item.entity),
-                index: i
-              }).then(resp => {
-                suivers.creates++;
-                console.log(" Before loopItemAddValues 2 : ", values);
-                if (!loopItemAddValues(values, resp, has_target_revision_id)) reject(" Revision requis mais non definit ");
-                // values.push({ target_id: resp.data.id });
+              const saveEntity = () => {
+                store.dispatch("saveEntity", {
+                  entity_type_id: item.target_type,
+                  value: updateDomainId(item.entity),
+                  index: i
+                }).then(resp => {
+                  suivers.creates++;
+                  //console.log(" Before loopItemAddValues 2 : ", values);
+                  if (!loopItemAddValues(values, resp, has_target_revision_id)) reject(" Revision requis mais non definit ");
+                  // values.push({ target_id: resp.data.id });
 
-                i = i + 1;
-                if (items.length <= i) {
-                  resolv(loopItem(items, i, values, has_target_revision_id));
-                } else {
-                  resolv(values);
-                }
-              }).catch(er => {
-                console.log("catch loopItem : ", er);
-                reject(er);
-              });
+                  i = i + 1;
+                  if (items.length <= i) {
+                    resolv(loopItem(items, i, values, has_target_revision_id));
+                  } else {
+                    resolv(values);
+                  }
+                }).catch(er => {
+                  /**
+                   * Si l'utilisateur a defini un nombre d'essaie.
+                   */
+                  if (essaie < this.numberTry) {
+                    essaie++;
+                    //console.log("loopItem re-try : ", essaie);
+                    setTimeout(() => {
+                      saveEntity();
+                    }, this.timeWaitBeforeRetry);
+                  } else {
+                    //console.log("catch loopItem : ", er);
+                    reject(er);
+                  }
+                });
+              };
+              saveEntity();
             }
           } else resolv(values);
         });
@@ -14743,11 +15258,11 @@ var AccordionCard_component = (0,componentNormalizer/* default */.Z)(
        */
       const loopFieldEntity = (datas, fieldname, entity, keys, i) => {
         return new Promise((resolv, reject) => {
-          console.log(" loopFieldEntity : ", datas, "\n fieldname : ", fieldname);
+          //console.log(" loopFieldEntity : ", datas, "\n fieldname : ", fieldname);
           // Si le champs contient des données,
           // on parcourt chacune des entrées.
           if (datas[fieldname] && datas[fieldname].length > 0) {
-            console.log("entity[fieldname][0] : ", entity[fieldname][0], "\n : ", entity);
+            //console.log("entity[fieldname][0] : ", entity[fieldname][0], "\n : ", entity);
             // on verifie s'il ya des entrées supplementaire
             if (entity[fieldname][0]) {
               var has_target_revision_id = false;
@@ -14763,7 +15278,7 @@ var AccordionCard_component = (0,componentNormalizer/* default */.Z)(
             }
             // Pour chaque champs, on cree les contenus et on recupere les ids.
             loopItem(datas[fieldname], 0, [], has_target_revision_id).then(resp => {
-              console.log(" loopFieldEntity result of loopItem : ", resp);
+              //console.log(" loopFieldEntity result of loopItem : ", resp);
               entity[fieldname] = resp;
               // on passe au champs suivant.
               i = i + 1;
@@ -14773,7 +15288,7 @@ var AccordionCard_component = (0,componentNormalizer/* default */.Z)(
                 resolv(entity);
               }
             }).catch(er => {
-              console.log("catch loopFieldEntity : ", er);
+              //console.log("catch loopFieldEntity : ", er);
               reject(er);
             });
           } else resolv(entity);
@@ -14790,18 +15305,59 @@ var AccordionCard_component = (0,componentNormalizer/* default */.Z)(
        * @return resp [{id:..., json:...}] // return un json avec une proprieté json et une autre id.
        * @K erreur signalé.
        */
-      const loopEntityPromise = (datas, i = null, values = []) => {
+      const loopEntityPromise = (datas, i = null, values = [], essaie = 0) => {
         return new Promise((resolv, reject) => {
-          console.log("loopEntityPromise : ", datas);
+          //console.log("loopEntityPromise : ", datas);
           if (datas[i]) {
             // S'il contient des sous entités.
             if (datas[i].entities && typeof datas[i].entities === "object") {
               const keys = Object.keys(datas[i].entities);
               loopFieldEntity(datas[i].entities, keys[0], datas[i].entity, keys, 0).then(entity => {
-                console.log(" loopEntityPromise SEND with override entity : ", entity);
+                //console.log(" loopEntityPromise SEND with override entity : ", entity);
+                const saveEntity = () => {
+                  store.dispatch("saveEntity", {
+                    entity_type_id: datas[i].target_type,
+                    value: updateDomainId(entity),
+                    index: i
+                  }).then(resp => {
+                    suivers.creates++;
+                    this.lastIdsEntity.push({
+                      target_id: resp.data.id
+                    });
+                    values.push(resp.data.json);
+                    // datas[i].entity = resp.data.json;
+                    i = i + 1;
+                    if (i < datas.length) {
+                      resolv(loopEntityPromise(datas, i, values));
+                    } else resolv(values);
+                  }).catch(er => {
+                    /**
+                     * Si l'utilisateur a defini un nombre d'essaie.
+                     */
+                    if (essaie < this.numberTry) {
+                      essaie++;
+                      //console.log("loopEntityPromise re-try : ", essaie);
+                      setTimeout(() => {
+                        saveEntity();
+                      }, this.timeWaitBeforeRetry);
+                    } else {
+                      //console.log("catch loopEntityPromise : ", er);
+                      reject(er);
+                    }
+                  });
+                };
+                saveEntity();
+              }).catch(er => {
+                //console.log("catch loopEntityPromise : ", er);
+                reject(er);
+              });
+            }
+            // S'il ne contient pas de sous entité.
+            else {
+              const saveEntity = () => {
                 store.dispatch("saveEntity", {
                   entity_type_id: datas[i].target_type,
-                  value: updateDomainId(entity),
+                  value: updateDomainId(datas[i].entity),
                   index: i
                 }).then(resp => {
                   suivers.creates++;
@@ -14809,43 +15365,30 @@ var AccordionCard_component = (0,componentNormalizer/* default */.Z)(
                     target_id: resp.data.id
                   });
                   values.push(resp.data.json);
-                  // datas[i].entity = resp.data.json;
                   i = i + 1;
                   if (i < datas.length) {
                     resolv(loopEntityPromise(datas, i, values));
                   } else resolv(values);
                 }).catch(er => {
-                  console.log("catch loopEntityPromise : ", er);
-                  reject(er);
+                  /**
+                   * Si l'utilisateur a defini un nombre d'essaie.
+                   */
+                  if (essaie < this.numberTry) {
+                    essaie++;
+                    //console.log("loopEntityPromise re-try : ", essaie);
+                    setTimeout(() => {
+                      saveEntity();
+                    }, this.timeWaitBeforeRetry);
+                  } else {
+                    //console.log("catch loopEntityPromise : ", er);
+                    reject(er);
+                  }
                 });
-              }).catch(er => {
-                console.log("catch loopEntityPromise : ", er);
-                reject(er);
-              });
-            }
-            // S'il ne contient pas de sous entité.
-            else {
-              store.dispatch("saveEntity", {
-                entity_type_id: datas[i].target_type,
-                value: updateDomainId(datas[i].entity),
-                index: i
-              }).then(resp => {
-                suivers.creates++;
-                this.lastIdsEntity.push({
-                  target_id: resp.data.id
-                });
-                values.push(resp.data.json);
-                i = i + 1;
-                if (i < datas.length) {
-                  resolv(loopEntityPromise(datas, i, values));
-                } else resolv(values);
-              }).catch(er => {
-                console.log("catch loopEntityPromise : ", er);
-                reject(er);
-              });
+              };
+              saveEntity();
             }
           } else {
-            console.log(" loopEntityPromise END ");
+            //console.log(" loopEntityPromise END ");
             resolv([]);
           }
         });
@@ -14879,7 +15422,7 @@ var AccordionCard_component = (0,componentNormalizer/* default */.Z)(
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1269);
+/* harmony import */ var _rootConfig_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3665);
 
 /**
  * @see https://www.drupal.org/docs/core-modules-and-themes/core-modules/jsonapi-module/filtering
@@ -14891,7 +15434,7 @@ class filters {
   }
 
   addFilter(fieldName, operator, value) {
-    var key = "fil-" + _config__WEBPACK_IMPORTED_MODULE_0__/* ["default"].getRandomIntInclusive */ .Z.getRandomIntInclusive();
+    var key = "fil-" + _rootConfig_js__WEBPACK_IMPORTED_MODULE_0__/* ["default"].getRandomIntInclusive */ .Z.getRandomIntInclusive();
     this.addParam(key, "path", fieldName);
     this.addParam(key, "operator", operator);
     this.addParam(key, "value", value);
@@ -15033,12 +15576,12 @@ __webpack_require__.d(__webpack_exports__, {
   "Z": function() { return /* binding */ App_utilities; }
 });
 
-// EXTERNAL MODULE: ../drupal-vuejs/src/config.js
-var config = __webpack_require__(1269);
+// EXTERNAL MODULE: ../drupal-vuejs/src/rootConfig.js
+var rootConfig = __webpack_require__(3665);
 ;// CONCATENATED MODULE: ../drupal-vuejs/src/App/session.js
 
 /* harmony default export */ var session = ({
-  ...config/* default */.Z,
+  ...rootConfig/* default */.Z,
   url_session: "/session/token",
   token: null,
   /**
@@ -15061,7 +15604,7 @@ var config = __webpack_require__(1269);
 
 const utilities = {
   ...session,
-  ...config/* default */.Z,
+  ...rootConfig/* default */.Z,
   /**
    * configCustom[{name:"",value:""}]
    */
@@ -15110,7 +15653,7 @@ const utilities = {
 
 /***/ }),
 
-/***/ 1269:
+/***/ 3665:
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -15118,6 +15661,8 @@ const utilities = {
 
 const config = {
   ...wbuutilities__WEBPACK_IMPORTED_MODULE_0__/* .AjaxBasic */ .EC,
+  // on ne laisse la valeur par defaut, pour permttre au domaine local de pouvoir se connecter.
+  TestDomain: window.location.host.includes("localhost") ? "http://habeuk.kksa" : window.location.protocol + "//" + window.location.host,
   /**
    * Retoune un entier arleatoire entre [99-999]
    */
@@ -18913,7 +19458,11 @@ var axios_default = /*#__PURE__*/__webpack_require__.n(axios);
 
 /**
  * Permet d'effectuer les requetes
- * pour modifier ou definir les paramettres par defaut de l'instance, {AjaxBasic}.axiosInstance.defaults.timeout = 30000;
+ * pour modifier ou definir les paramettres par defaut de l'instance,
+ * 1- importer
+ * import { AjaxToastBootStrap } from "wbuutilities";
+ * 2- Surcharger ( par example la duree)
+ * AjaxToastBootStrap.axiosInstance.defaults.timeout = 1200000;
  */
 
 const InstAxios = axios_default().create({
@@ -18926,7 +19475,7 @@ InstAxios.interceptors.request.use(config => {
   //
   return config;
 });
-//surcharge de la reponse
+// surcharge de la reponse
 InstAxios.interceptors.response.use(response => {
   // Calcul de la durée
   const currentTime = new Date().getTime();
@@ -18989,6 +19538,11 @@ const basicRequest = {
    */
   isLocalDev: window.location.host.includes("localhost") || window.location.host.includes(".kksa") ? true : false,
   /**
+   * Permet d'ajouter les enttetes.
+   * {key:value}
+   */
+  customHeaders: {},
+  /**
    * Permet de derminer la source du domaine, en function des paramettres definit.
    * @private (ne doit pas etre surcharger).
    * @returns String
@@ -19028,10 +19582,11 @@ const basicRequest = {
       return null;
     }
   },
-  post: function (url, datas, configs) {
+  post: function (url, datas, configs = {}) {
     return new Promise((resolv, reject) => {
-      if (this.languageId !== "" && this.languageId !== undefined && this.languageId !== null) url = "/" + this.languageId + url;
+      if (this.languageId !== "" && this.languageId !== undefined && this.languageId !== null && !url.includes("://")) url = "/" + this.languageId + url;
       const urlFinal = url.includes("://") ? url : this.getBaseUrl() + url;
+      configs = this.mergeCustomHeaders(configs);
       InstAxios.post(urlFinal, datas, configs).then(reponse => {
         if (this.debug) console.log("Debug axio : \n", urlFinal, "\n payload: ", datas, "\n config: ", configs, "\n Duration : ", reponse.headers["request-duration"], "\n reponse: ", reponse, "\n ------ \n");
         resolv({
@@ -19052,9 +19607,10 @@ const basicRequest = {
       });
     });
   },
-  delete: function (url, datas, configs) {
+  delete: function (url, datas, configs = {}) {
     return new Promise((resolv, reject) => {
       const urlFinal = url.includes("://") ? url : this.getBaseUrl() + url;
+      configs = this.mergeCustomHeaders(configs);
       InstAxios.delete(urlFinal, configs, datas).then(reponse => {
         resolv({
           status: true,
@@ -19073,10 +19629,11 @@ const basicRequest = {
       });
     });
   },
-  get: function (url, configs) {
+  get: function (url, configs = {}) {
     return new Promise((resolv, reject) => {
-      if (this.languageId !== "" && this.languageId !== undefined && this.languageId !== null) url = "/" + this.languageId + url;
+      if (this.languageId !== "" && this.languageId !== undefined && this.languageId !== null && !url.includes("://")) url = "/" + this.languageId + url;
       const urlFinal = url.includes("://") ? url : this.getBaseUrl() + url;
+      configs = this.mergeCustomHeaders(configs);
       InstAxios.get(urlFinal, configs).then(reponse => {
         if (this.debug) console.log("Debug axio : \n", urlFinal, "\n Config: ", configs, "\n Duration : ", reponse.headers["request-duration"], "\n Reponse: ", reponse, "\n ------ \n");
         resolv({
@@ -19141,6 +19698,24 @@ const basicRequest = {
       };
       reader.onerror = error => reject(error);
     });
+  },
+  /**
+   * Permet d'ajouter une configuration specifique
+   */
+  setHeaders(key, value) {
+    this.customHeaders[key] = value;
+  },
+  /**
+   * Permet d'additionner la configation
+   */
+  mergeCustomHeaders(configs) {
+    if (!configs.headers) configs.headers = {};
+    if (this.customHeaders) {
+      for (const i in this.customHeaders) {
+        configs.headers[i] = this.customHeaders[i];
+      }
+    }
+    return configs;
   }
 };
 /* harmony default export */ var basic = (basicRequest);
@@ -25707,30 +26282,29 @@ const AjaxToastBootStrap = {
       toaster: "b-toaster-top-right"
     });
   },
-  bPost: function (url, datas, configs, showNotification = false) {
+  bPost: function (url, datas, configs, showNotification = false, successMessage = "success", failureMessage = "warning") {
     return new Promise((resolv, reject) => {
       this.post(url, datas, configs).then(reponse => {
         if (showNotification) {
-          this.notification("success");
+          this.notification(successMessage);
         }
         resolv(reponse);
       }).catch(error => {
         //console.log("error : ", error);
-        this.notification(this.GetErrorTitle(error), "warning");
+        this.notification(this.GetErrorTitle(error), failureMessage);
         reject(error);
       });
     });
   },
-  bGet(url, configs, showNotification = false) {
+  bGet(url, configs, showNotification = false, successMessage = "success", failureMessage = "warning") {
     return new Promise((resolv, reject) => {
       this.get(url, configs).then(reponse => {
         if (showNotification) {
-          this.notification("success");
+          this.notification(successMessage);
         }
         resolv(reponse);
       }).catch(error => {
-        //console.log("error : ", error);
-        this.notification(this.GetErrorTitle(error), "warning");
+        this.notification(this.GetErrorTitle(error), failureMessage);
         reject(error);
       });
     });
@@ -31968,8 +32542,8 @@ var EditEntity_component = (0,componentNormalizer/* default */.Z)(
 /* harmony default export */ var EditEntity = (EditEntity_component.exports);
 // EXTERNAL MODULE: ../components_bootstrapvuejs/src/js/FormUttilities.js
 var FormUttilities = __webpack_require__(7657);
-// EXTERNAL MODULE: ../components_bootstrapvuejs/src/components/fieldsDrupal/loadField.js + 136 modules
-var loadField = __webpack_require__(6871);
+// EXTERNAL MODULE: ../components_bootstrapvuejs/src/components/fieldsDrupal/loadField.js + 140 modules
+var loadField = __webpack_require__(4213);
 // EXTERNAL MODULE: ../components_bootstrapvuejs/src/components/Ressouces/ckeditor-config.js
 var ckeditor_config = __webpack_require__(1293);
 ;// CONCATENATED MODULE: ./src/store/index.js
@@ -32122,15 +32696,17 @@ external_commonjs_vue_commonjs2_vue_root_Vue_default().use(vuex_esm);
         commit("ACTIVE_RUNNING");
         if (payload.entity_type_id == undefined || !payload.entity_type_id) {
           reject("Paramettre manquant");
-        } else request.bPost("/apivuejs/save-entity/" + payload.entity_type_id, payload.value).then(resp => {
-          console.log("resp : ", resp);
-          // setTimeout(() => {
-          console.log(" payload : ", payload);
-          resolv(resp);
-          // }, 1000);
-        }).catch(er => {
-          reject(er);
-        });
+        } else {
+          request.bPost("/apivuejs/save-entity/" + payload.entity_type_id, payload.value).then(resp => {
+            console.log("resp : ", resp);
+            // setTimeout(() => {
+            console.log(" payload : ", payload);
+            resolv(resp);
+            // }, 1000);
+          }).catch(er => {
+            reject(er);
+          });
+        }
       });
     },
     cleanDatas({
