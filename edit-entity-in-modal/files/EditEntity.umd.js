@@ -7319,7 +7319,7 @@ __webpack_require__(7888);
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var _fieldsDrupal_loadField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4213);
+/* harmony import */ var _fieldsDrupal_loadField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(138);
 /**
  * Bug: Les plugins sont charger via cette route : /core/assets/vendor/
  * Cela est du au fait que il ya un ckeditor qui est chargé à partir de la. (/core/modules/ckeditor/js/ckeditor.js et /core/assets/vendor/ckeditor/ckeditor.js)
@@ -7529,7 +7529,7 @@ __webpack_require__(7888);
 
 /***/ }),
 
-/***/ 4213:
+/***/ 138:
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9075,8 +9075,8 @@ var html_render_component = (0,componentNormalizer/* default */.Z)(
 )
 
 /* harmony default export */ var html_render = (html_render_component.exports);
-;// CONCATENATED MODULE: ./node_modules/babel-loader/lib/index.js??clonedRuleSet-82.use[1]!./node_modules/@vue/vue-loader-v15/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!./node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!../components_bootstrapvuejs/src/components/fieldsDrupal/drupal-file.vue?vue&type=template&id=3744621a&
-var drupal_filevue_type_template_id_3744621a_render = function render() {
+;// CONCATENATED MODULE: ./node_modules/babel-loader/lib/index.js??clonedRuleSet-82.use[1]!./node_modules/@vue/vue-loader-v15/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!./node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!../components_bootstrapvuejs/src/components/fieldsDrupal/drupal-file.vue?vue&type=template&id=3c6125e0&
+var drupal_filevue_type_template_id_3c6125e0_render = function render() {
   var _vm = this,
     _c = _vm._self._c;
   return _c('div', {
@@ -9156,7 +9156,7 @@ var drupal_filevue_type_template_id_3744621a_render = function render() {
     }), _vm.field.definition_settings.alt_field ? _c('ValidationProvider', {
       staticClass: "align-self-center flex-grow-1",
       attrs: {
-        "rules": _vm.getAltRules,
+        "rules": _vm.getAltRules(),
         "name": _vm.field.name + '_alt_' + i
       },
       scopedSlots: _vm._u([{
@@ -9187,7 +9187,7 @@ var drupal_filevue_type_template_id_3744621a_render = function render() {
     }) : _vm._e()], 1);
   }), 0)], 1);
 };
-var drupal_filevue_type_template_id_3744621a_staticRenderFns = [];
+var drupal_filevue_type_template_id_3c6125e0_staticRenderFns = [];
 
 ;// CONCATENATED MODULE: ./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib/index.js??clonedRuleSet-82.use[1]!./node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!../components_bootstrapvuejs/src/components/fieldsDrupal/drupal-file.vue?vue&type=script&lang=js&
 
@@ -9320,12 +9320,13 @@ var drupal_filevue_type_template_id_3744621a_staticRenderFns = [];
           const file = files[i];
           // Send images.
           loadField.config.postFile("/filesmanager/post", file).then(resp => {
+            console.log(resp);
             reader.onload = read => {
               this.toUplode.push({
                 file: file,
                 status: resp,
                 error: 0,
-                url: read.target.result,
+                url: resp.preview ? resp.preview : read.target.result,
                 target_id: resp.id
               });
             };
@@ -9436,8 +9437,8 @@ var drupal_filevue_type_template_id_3744621a_staticRenderFns = [];
 ;
 var drupal_file_component = (0,componentNormalizer/* default */.Z)(
   fieldsDrupal_drupal_filevue_type_script_lang_js_,
-  drupal_filevue_type_template_id_3744621a_render,
-  drupal_filevue_type_template_id_3744621a_staticRenderFns,
+  drupal_filevue_type_template_id_3c6125e0_render,
+  drupal_filevue_type_template_id_3c6125e0_staticRenderFns,
   false,
   null,
   null,
@@ -13641,8 +13642,8 @@ var PhoneInternational_component = (0,componentNormalizer/* default */.Z)(
 )
 
 /* harmony default export */ var PhoneInternational = (PhoneInternational_component.exports);
-;// CONCATENATED MODULE: ./node_modules/babel-loader/lib/index.js??clonedRuleSet-82.use[1]!./node_modules/@vue/vue-loader-v15/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!./node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!../components_bootstrapvuejs/src/components/fieldsDrupal/MoreFieldsAccordion.vue?vue&type=template&id=72c59b0e&
-var MoreFieldsAccordionvue_type_template_id_72c59b0e_render = function render() {
+;// CONCATENATED MODULE: ./node_modules/babel-loader/lib/index.js??clonedRuleSet-82.use[1]!./node_modules/@vue/vue-loader-v15/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!./node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!../components_bootstrapvuejs/src/components/fieldsDrupal/MoreFieldsAccordion.vue?vue&type=template&id=ce7f45fe&
+var MoreFieldsAccordionvue_type_template_id_ce7f45fe_render = function render() {
   var _vm = this,
     _c = _vm._self._c;
   return _c('div', {
@@ -13656,7 +13657,12 @@ var MoreFieldsAccordionvue_type_template_id_72c59b0e_render = function render() 
     scopedSlots: _vm._u([{
       key: "default",
       fn: function (v) {
-        return [_c('div', {
+        return [_c('label', {
+          staticClass: "pt-2",
+          domProps: {
+            "innerHTML": _vm._s(_vm.field.label)
+          }
+        }), _c('div', {
           staticClass: "accordion"
         }, [_c('div', {
           staticClass: "options-config"
@@ -13845,7 +13851,7 @@ var MoreFieldsAccordionvue_type_template_id_72c59b0e_render = function render() 
     }])
   })], 1);
 };
-var MoreFieldsAccordionvue_type_template_id_72c59b0e_staticRenderFns = [];
+var MoreFieldsAccordionvue_type_template_id_ce7f45fe_staticRenderFns = [];
 
 ;// CONCATENATED MODULE: ./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib/index.js??clonedRuleSet-82.use[1]!./node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!../components_bootstrapvuejs/src/components/fieldsDrupal/MoreFieldsAccordion.vue?vue&type=script&lang=js&
 
@@ -14025,8 +14031,8 @@ var MoreFieldsAccordionvue_type_template_id_72c59b0e_staticRenderFns = [];
 ;
 var MoreFieldsAccordion_component = (0,componentNormalizer/* default */.Z)(
   fieldsDrupal_MoreFieldsAccordionvue_type_script_lang_js_,
-  MoreFieldsAccordionvue_type_template_id_72c59b0e_render,
-  MoreFieldsAccordionvue_type_template_id_72c59b0e_staticRenderFns,
+  MoreFieldsAccordionvue_type_template_id_ce7f45fe_render,
+  MoreFieldsAccordionvue_type_template_id_ce7f45fe_staticRenderFns,
   false,
   null,
   null,
@@ -15021,7 +15027,7 @@ var AccordionCard_component = (0,componentNormalizer/* default */.Z)(
 "use strict";
 /* harmony import */ var core_js_modules_es_array_push_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6352);
 /* harmony import */ var core_js_modules_es_array_push_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_push_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _components_fieldsDrupal_loadField__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4213);
+/* harmony import */ var _components_fieldsDrupal_loadField__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(138);
 
 
 /**
@@ -32543,7 +32549,7 @@ var EditEntity_component = (0,componentNormalizer/* default */.Z)(
 // EXTERNAL MODULE: ../components_bootstrapvuejs/src/js/FormUttilities.js
 var FormUttilities = __webpack_require__(7657);
 // EXTERNAL MODULE: ../components_bootstrapvuejs/src/components/fieldsDrupal/loadField.js + 140 modules
-var loadField = __webpack_require__(4213);
+var loadField = __webpack_require__(138);
 // EXTERNAL MODULE: ../components_bootstrapvuejs/src/components/Ressouces/ckeditor-config.js
 var ckeditor_config = __webpack_require__(1293);
 ;// CONCATENATED MODULE: ./src/store/index.js
