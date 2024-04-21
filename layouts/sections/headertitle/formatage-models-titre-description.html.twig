@@ -1,5 +1,6 @@
 {% if content %}
-	<div{{attributes.addClass('titre-description')}}>
+<div{{attributes.addClass('titre-description')}}> 
+	<div {% if settings.config_section %} class="{{ settings.config_section.type_container }} {{ settings.config_section.container_class }}" {% else %} class="" {% endif %}>
 		{% if content.title|has_value %}
 			{% if settings.region_tag_title %}
         		<{{settings.region_tag_title}} {{ region_attributes.title.addClass(['title']) }}>
@@ -17,4 +18,5 @@
     		</div>
 		{% endif %}
 	</div>
+</div>
 {% endif %}

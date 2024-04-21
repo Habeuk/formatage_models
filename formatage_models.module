@@ -401,13 +401,13 @@ function formatage_models_plugin_filter_layout__layout_builder_alter(array &$def
 /**
  * Implement hook__layouts
  */
-function formatage_models_preprocess_layout(&$vars) {
-  if (!empty($vars['region_attributes'])) {
-    foreach ($vars['region_attributes'] as $key => $region_attribute) {
-      $vars['region_attributes'][$key]->addClass('layout-region lyt');
-    }
-  }
-}
+// function formatage_models_preprocess_layout(&$vars) {
+// if (!empty($vars['region_attributes'])) {
+// foreach ($vars['region_attributes'] as $key => $region_attribute) {
+// $vars['region_attributes'][$key]->addClass('layout-region lyt');
+// }
+// }
+// }
 
 /**
  * Implement hook__layouts
