@@ -15,6 +15,6 @@
     "habeuk/htmlbootstrap": "^1.5 | dev-1x",
     "habeuk/filesmanager": "^1.0 | dev-1x",
     "habeuk/apivuejs": "^1.0 | dev-1x",
-    "habeuk/layout_custom_style": "^1.0.0 | dev-1x"
+    "habeuk/layout_custom_style": "^1.0.2 | dev-1x"
   }
 }
