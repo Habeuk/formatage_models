@@ -3,6 +3,7 @@
 namespace Drupal\formatage_models\Plugin\Layout\Sections;
 
 use Drupal\bootstrap_styles\StylesGroup\StylesGroupManager;
+use Drupal\formatage_models\FormatageModelsThemes;
 
 /**
  * A very advanced custom layout.
@@ -16,47 +17,47 @@ use Drupal\bootstrap_styles\StylesGroup\StylesGroupManager;
  *   library = "formatage_models/formatage-models-footer-gp",
  *   default_region = "title",
  *   regions = {
- *     "title" = {
- *       "label" = @Translation("title"),
+ *     "logo" = {
+ *       "label" = @Translation("logo"),
  *     },
- *     "description" = {
- *       "label" = @Translation("Description"),
+ *     "compagny_info" = {
+ *       "label" = @Translation("compagny_info"),
  *     },
- *     "call_action" = {
- *       "label" = @Translation("Call to action"),
+ *     "social_links" = {
+ *       "label" = @Translation("social_links"),
  *     },
- *     "entete" = {
- *       "label" = @Translation("entete"),
+ *     "link_1" = {
+ *       "label" = @Translation("link_1"),
  *     },
- *     "lyt_footer" = {
- *       "label" = @Translation("footer"),
+ *     "links_1" = {
+ *       "label" = @Translation("links_1"),
  *     },
- *     "image" = {
- *       "label" = @Translation(" Image "),
+ *     "link_2" = {
+ *       "label" = @Translation(" link_2 "),
  *     },
- *     "title1" = {
- *       "label" = @Translation("title 1"),
+ *     "links_2" = {
+ *       "label" = @Translation("links_2"),
  *     },
- *     "description2" = {
- *       "label" = @Translation("Description 2"),
+ *     "link_3" = {
+ *       "label" = @Translation("link_3"),
  *     },
- *     "call_action2" = {
- *       "label" = @Translation("Call to action 2"),
+ *     "newletter_text" = {
+ *       "label" = @Translation("Newletter text"),
  *     },
- *     "entete2" = {
- *       "label" = @Translation("entete 2"),
+ *     "newletter_form" = {
+ *       "label" = @Translation("Newletter form"),
  *     },
- *     "lyt_footer2" = {
- *       "label" = @Translation("footer2"),
+ *     "copyright" = {
+ *       "label" = @Translation("Copyright"),
  *     },
- *     "image2" = {
- *       "label" = @Translation(" Image 2 "),
+ *     "credits" = {
+ *       "label" = @Translation(" Credits "),
  *     },
  *   }
  * )
  */
 class FormatageModelsFooterGp extends FormatageModelsSection {
-
+  
   /**
    *
    * {@inheritdoc}
@@ -67,121 +68,47 @@ class FormatageModelsFooterGp extends FormatageModelsSection {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $styles_group_manager);
     $this->pluginDefinition->set('icon', $this->pathResolver->getPath('module', 'formatage_models') . "/icones/sections/formatage-models-footer-gp.png");
   }
-
+  
+  /**
+   *
+   * {@inheritdoc}
+   * @see \Drupal\formatage_models\Plugin\Layout\FormatageModels::build()
+   */
+  public function build(array $regions) {
+    // TODO Auto-generated method stub
+    $build = parent::build($regions);
+    FormatageModelsThemes::formatSettingValues($build);
+    
+    return $build;
+  }
+  
   public function defaultConfiguration() {
-    return parent::defaultConfiguration() + [
-      'css' => '',
+    return [
+      'css' => 'mb-0',
       'region_css_entete' => "col-md-6 me-auto",
       'region_css_entete2' => "col-md-6",
       'sf' => [
         'builder-form' => true,
         'info' => [
-          'title' => 'Contenu 1',
+          'title' => 'Contenu',
           'loader' => 'static'
         ],
         'fields' => [
-          'title' => [
+          'copyright' => [
             'text_html' => [
-              'label' => 'titre',
-              'value' => "Fort de plus<br>de 20 ans d'expérience"
+              'label' => 'Copyright',
+              'value' => "Copyright SITENAME. All Rights Reserved"
             ]
           ],
-          'description' => [
+          'credits' => [
             'text_html' => [
-              'label' => 'Description',
-              'value' => "WB-U intervient aussi bien dans l’industrie : Industrie Pétrolière, Chimique, Industrie agro, Industries métallurgique et aussi de la prestation de services sur les projets de constructions."
-            ]
-          ],
-          'call_action' => [
-            'text_html' => [
-              'label' => 'Call action',
-              'value' => '<div class="row">
-                                        	<div class="d-flex col-md-6">
-                                        		<div class="pr-3">
-                                        			<i class="icon-picons-umbrella"></i>
-                                        		</div>
-                                        		<div class="icon-box-cell">
-                                        			<label class="counter text-l" data-speed="5000" data-to="25" data-trigger="null">25</label>
-                                        			<p class="text-s">Années d\'expérience</p>
-                                        		</div>
-                                        	</div>
-                                        	<div class="d-flex col-md-6">
-                                        		<div class="pr-3">
-                                        			<i class="icon-picons-user"></i>
-                                        		</div>
-                                        		<div class="icon-box-cell">
-                                        			<label class="counter text-l" data-speed="5000" data-to="25" data-trigger="null">89</label>
-                                        			<p class="text-s">Collaborateurs</p>
-                                        		</div>
-                                        	</div>
-                                        </div>'
-            ]
-          ],
-          'entete' => [
-            'text_html' => [
-              'label' => 'Entete',
-              'value' => ""
-            ]
-          ],
-          'lyt_footer' => [
-            'text_html' => [
-              'label' => 'Footer',
-              'value' => ""
-            ]
-          ],
-          'image' => [
-            'img_bg' => [
-              'label' => 'Image',
-              'fids' => []
-            ]
-          ]
-        ]
-      ],
-      'sf2' => [
-        'builder-form' => true,
-        'info' => [
-          'title' => 'Contenu 2',
-          'loader' => 'static'
-        ],
-        'fields' => [
-          'title2' => [
-            'text_html' => [
-              'label' => 'titre',
-              'value' => ""
-            ]
-          ],
-          'description2' => [
-            'text_html' => [
-              'label' => 'Description',
-              'value' => ""
-            ]
-          ],
-          'call_action2' => [
-            'text_html' => [
-              'label' => 'Call action',
-              'value' => ''
-            ]
-          ],
-          'entete2' => [
-            'text_html' => [
-              'label' => 'Entete',
-              'value' => ""
-            ]
-          ],
-          'lyt_footer2' => [
-            'text_html' => [
-              'label' => 'Footer',
-              'value' => ""
-            ]
-          ],
-          'image2' => [
-            'img_bg' => [
-              'label' => 'Image',
-              'fids' => []
+              'label' => 'Credits',
+              'value' => "Provide by <a href='https://habeuk.com/' class='btn text-wbu-thirdly px-1 '> Habeuk.com </a>"
             ]
           ]
         ]
       ]
-    ];
+    ] + parent::defaultConfiguration();
   }
+  
 }

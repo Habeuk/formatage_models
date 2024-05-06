@@ -1,117 +1,72 @@
 {% if content %}
-<!-- ======= Footer ======= -->
 <footer {{ attributes.addClass('formatage-models-footer-gp') }}>
 	<div class="footer-top">
 		<div {% if settings.config_section %} class="{{ settings.config_section.type_container }} {{ settings.config_section.container_class }}" {% else %} class="container" {% endif %}>
 			<div class="row">
 				<div class="col-lg-3 col-md-6">
 					<div class="footer-info">
-						<h3>Gp<span>.</span>
-						</h3>
-						<p>
-							A108 Adam Street
-							<br/>
-							NY 535022, USA<br/><br/>
-							<strong>Phone:</strong>
-							+1 5589 55488 55<br/>
-							<strong>Email:</strong>
-							info@example.com<br/>
-						</p>
-						<div class="social-links mt-3">
-							<a href="#" class="twitter">
-								<i class="bx bxl-twitter"></i>
-							</a>
-							<a href="#" class="facebook">
-								<i class="bx bxl-facebook"></i>
-							</a>
-							<a href="#" class="instagram">
-								<i class="bx bxl-instagram"></i>
-							</a>
-							<a href="#" class="google-plus">
-								<i class="bx bxl-skype"></i>
-							</a>
-							<a href="#" class="linkedin">
-								<i class="bx bxl-linkedin"></i>
-							</a>
-						</div>
+						{% if content.logo  %}
+    						<div {{ region_attributes.logo.addClass('logo') }}>
+    							{{ content.logo }}
+    						</div>
+						{% endif %}
+						{% if content.compagny_info %}
+							<div {{ region_attributes.compagny_info.addClass('compagny_info') }}>
+    							{{ content.compagny_info }}
+    						</div>
+						{% endif %}
+						{% if content.social_links %}
+    						<div {{ region_attributes.social_links.addClass('social-links') }}>
+    							{{ content.social_links }}
+    						</div>
+						{% endif %}
 					</div>
 				</div>
-				<div class="col-lg-2 col-md-6 footer-links">
-					<h4>Useful Links</h4>
-					<ul>
-						<li>
-							<i class="bx bx-chevron-right"></i>
-							<a href="#">Home</a>
-						</li>
-						<li>
-							<i class="bx bx-chevron-right"></i>
-							<a href="#">About us</a>
-						</li>
-						<li>
-							<i class="bx bx-chevron-right"></i>
-							<a href="#">Services</a>
-						</li>
-						<li>
-							<i class="bx bx-chevron-right"></i>
-							<a href="#">Terms of service</a>
-						</li>
-						<li>
-							<i class="bx bx-chevron-right"></i>
-							<a href="#">Privacy policy</a>
-						</li>
-					</ul>
+				<div class="col-lg-3 col-md-6 footer-links">
+					{% if content.link_1 %}
+						<h4 {{ region_attributes.link_1.addClass('link_1','link-titre') }}> {{ content.link_1 }} </h4>
+					{% endif %}
+					{% if content.links_1 %}
+						<div {{ region_attributes.links_1.addClass('links_1','links') }}> {{ content.links_1 }} </div>
+					{% endif %}
 				</div>
 				<div class="col-lg-3 col-md-6 footer-links">
-					<h4>Our Services</h4>
-					<ul>
-						<li>
-							<i class="bx bx-chevron-right"></i>
-							<a href="#">Web Design</a>
-						</li>
-						<li>
-							<i class="bx bx-chevron-right"></i>
-							<a href="#">Web Development</a>
-						</li>
-						<li>
-							<i class="bx bx-chevron-right"></i>
-							<a href="#">Product Management</a>
-						</li>
-						<li>
-							<i class="bx bx-chevron-right"></i>
-							<a href="#">Marketing</a>
-						</li>
-						<li>
-							<i class="bx bx-chevron-right"></i>
-							<a href="#">Graphic Design</a>
-						</li>
-					</ul>
+					{% if content.link_2 %}
+						<h4 {{ region_attributes.link_2.addClass('link_2','link-titre') }}> {{ content.link_2 }} </h4>
+					{% endif %}
+					{% if content.links_2 %}
+						<div {{ region_attributes.links_2.addClass('links_2','links') }}> {{ content.links_2 }} </div>
+					{% endif %}
 				</div>
-				<div class="col-lg-4 col-md-6 footer-newsletter">
-					<h4>Our Newsletter</h4>
-					<p>
-						Tamen quem nulla quae legam multos aute sint culpa legam noster magna
-					</p>
-					<form action="" method="post">
-						<input type="email" name="email"/><input type="submit" value="Subscribe"/>
-					</form>
+				<div class="col-lg-3 col-md-6 footer-newsletter">
+					{% if content.link_3 %}
+						<h4 {{ region_attributes.link_3.addClass('link_3','link-titre') }}> {{ content.link_3 }} </h4>
+					{% endif %}
+					{% if content.newletter_text %}
+							<div {{ region_attributes.newletter_text.addClass('newletter_text') }}>
+    							{{ content.newletter_text }}
+    						</div>
+					{% endif %}
+					{% if content.newletter_form %}
+							<div {{ region_attributes.newletter_form.addClass('newletter_form') }}>
+    							{{ content.newletter_form }}
+    						</div>
+					{% endif %}
 				</div>
 			</div>
 		</div>
 	</div>
 	<div {% if settings.config_section %} class="{{ settings.config_section.type_container }} {{ settings.config_section.container_class }}" {% else %} class="container" {% endif %}>
-		<div class="copyright">
-			&copy; Copyright
-			<strong>
-				<span>Gp</span>
-			</strong>. All Rights Reserved
-		</div>
-		<div class="credits">
-			Designed by
-			<a href="https://bootstrapmade.com/">
-				BootstrapMade
-			</a>
-		</div>
+		{% if content.copyright %}
+    		<div {{ region_attributes.copyright.addClass('copyright') }}>
+    			{{ content.copyright }}
+    		</div>
+    	{% endif %}
+    	{% if content.credits %}
+    		<div {{ region_attributes.credits.addClass('credits') }}>
+    			{{ content.credits }}
+    		</div>
+    	{% endif %}
 	</div>
 </footer>
-<!-- End Footer -->
 {% endif %}
