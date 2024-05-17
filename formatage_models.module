@@ -61,7 +61,8 @@ function formatage_models_field_formatter_third_party_settings_form(FormatterInt
     'container' => '',
     'title' => '',
     'value' => '',
-    'item' => ''
+    'item' => '',
+    'content' => ''
   ]);
   // Pour corriger les elements manquants.
   // ( pas necessaire de corriger, car il suffit d'enregistrer à nouveau).
@@ -89,13 +90,19 @@ function formatage_models_field_formatter_third_party_settings_form(FormatterInt
   ];
   $element['classes']['value'] = [
     '#type' => 'textfield',
-    '#title' => t('Field value class'),
+    '#title' => t('Field value class (field__items)'),
     '#default_value' => $classes['value']
   ];
   $element['classes']['item'] = [
     '#type' => 'textfield',
-    '#title' => t('Class for each item'),
+    '#title' => t('Class for each item (field__item)'),
     '#default_value' => $classes['item']
+  ];
+  $element['classes']['content'] = [
+    '#type' => 'textfield',
+    '#title' => t('Class for each content'),
+    '#default_value' => $classes['content'],
+    '#description' => "Permet generalement d'appliquer les classes directement sur la balise a"
   ];
   //
   if (\Drupal::moduleHandler()->moduleExists('token')) {
@@ -122,7 +129,8 @@ function formatage_models_preprocess_field(&$variables) {
     $classContainer = $variables['element']['#third_party_settings']['formatage_models']['classes']['container'];
     $classTitle = $variables['element']['#third_party_settings']['formatage_models']['classes']['title'];
     $classValue = $variables['element']['#third_party_settings']['formatage_models']['classes']['value'];
-    $classItem = !empty($variables['element']['#third_party_settings']['formatage_models']['classes']['item']) ? $variables['element']['#third_party_settings']['formatage_models']['classes']['item'] : '';
+    $classItem = $variables['element']['#third_party_settings']['formatage_models']['classes']['item'] ?? '';
+    $classContent = $variables['element']['#third_party_settings']['formatage_models']['classes']['content'] ?? '';
     
     /** @var \Drupal\Core\Utility\Token $token */
     $token = \Drupal::service('token');
@@ -163,6 +171,15 @@ function formatage_models_preprocess_field(&$variables) {
       $classItem = explode(' ', $classItem);
       foreach ($variables['items'] as &$value) {
         $value['attributes']->addClass($classItem);
+        //
+        if (!empty($classContent) && !empty($value['content'])) {
+          if (isset($value['content']['#type']) && $value['content']['#type'] == 'link') {
+            $value['content']['#options']['attributes']['class'][] = $classContent;
+          }
+          else {
+            $value['content']['#attributes']['class'][] = $classContent;
+          }
+        }
       }
     }
     
