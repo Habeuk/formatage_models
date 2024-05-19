@@ -343,7 +343,8 @@ function formatage_models_preprocess_owlcarousel_views(&$vars) {
  * On alter le rendu des entités afin d'ajouter l'editeur via le crayon.
  *
  * @deprecated Doit etre deplacer vers contextual_more_links, en tenant compte
- *             des affichages via les vues par champs et tout autre données
+ *             des affichages via les vues par champs, des styles et tout autre
+ *             données
  *             utiles.
  *            
  * @param array $build
