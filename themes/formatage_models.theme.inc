@@ -14,14 +14,14 @@ function template_preprocess_formatage_models_fieldgalleries(&$vars, $hook) {
   $vars['field_name'] = $element['#field_name'];
   $vars['field_type'] = $element['#field_type'];
   $vars['label_display'] = $element['#label_display'];
-
+  
   $vars['label_hidden'] = ($element['#label_display'] == 'hidden');
   // Always set the field label - allow themes to decide whether to display
   // it.
   // In addition the label should be rendered but hidden to support screen
   // readers.
   $vars['label'] = $element['#title'];
-
+  
   $vars['multiple'] = $element['#is_multiple'];
   //
   $vars['items'] = $element['items'];
@@ -63,38 +63,40 @@ function template_preprocess_formatage_models_menu(&$vars) {
 }
 
 function template_preprocess_formatage_models_quickly_edit(&$vars) {
-  $conf = ConfigDrupal::config('formatage_models.configvuejsedit');
-  if (!empty($conf['active_edit_config'])) {
-    $vars['status_edit'] = true;
-    if (!empty($vars['element']['#contextual_links']['#id'])) {
-      $vars["#attached"]['library'][] = 'formatage_models/formatage-models-data-quick-edit-id';
-      if (empty($vars['attributes'])) {
-        $vars['attributes'] = new \Drupal\Core\Template\Attribute();
+  if (\Drupal::currentUser()->hasPermission("formatage_models edit with vuejs")) {
+    $conf = ConfigDrupal::config('formatage_models.configvuejsedit');
+    if (!empty($conf['active_edit_config'])) {
+      $vars['status_edit'] = true;
+      if (!empty($vars['element']['#contextual_links']['#id'])) {
+        $vars["#attached"]['library'][] = 'formatage_models/formatage-models-data-quick-edit-id';
+        if (empty($vars['attributes'])) {
+          $vars['attributes'] = new \Drupal\Core\Template\Attribute();
+        }
+        /**
+         *
+         * @var \Drupal\Core\Template\Attribute $attributes
+         */
+        $attributes = $vars['attributes'];
+        // dump($attributes);
+        $attributes->setAttribute('data-quick-edit-id', $vars['element']['#contextual_links']['#id']);
+        $attributes->addClass('formatage_models_quickly_edit');
       }
-      /**
-       *
-       * @var \Drupal\Core\Template\Attribute $attributes
-       */
-      $attributes = $vars['attributes'];
-      // dump($attributes);
-      $attributes->setAttribute('data-quick-edit-id', $vars['element']['#contextual_links']['#id']);
-      $attributes->addClass('formatage_models_quickly_edit');
-    }
-    // Ce modele provient du formatage de views_view_unformatted.
-    elseif (!empty($vars['element']['#entity'])) {
-      $vars["#attached"]['library'][] = 'formatage_models/formatage-models-data-quick-edit-id';
-      /**
-       *
-       * @var \Drupal\creation_site_virtuel\Entity\SiteTypeDatas $entity
-       */
-      $entity = $vars['element']['#entity'];
-      $attributes = new \Drupal\Core\Template\Attribute();
-      // model paragraph:paragraph=63:langcode=fr
-      $entity_type_id = $entity->getEntityTypeId();
-      $langcode = $entity->language()->getId();
-      $attributes->setAttribute('data-quick-edit-id', $entity_type_id . ':' . $entity_type_id . '=' . $entity->id() . ':langcode=' . $langcode);
-      $attributes->addClass('formatage_models_quickly_edit');
-      $vars['attributes'] = $attributes;
+      // Ce modele provient du formatage de views_view_unformatted.
+      elseif (!empty($vars['element']['#entity'])) {
+        $vars["#attached"]['library'][] = 'formatage_models/formatage-models-data-quick-edit-id';
+        /**
+         *
+         * @var \Drupal\node\Entity\Node $entity
+         */
+        $entity = $vars['element']['#entity'];
+        $attributes = new \Drupal\Core\Template\Attribute();
+        // model paragraph:paragraph=63:langcode=fr
+        $entity_type_id = $entity->getEntityTypeId();
+        $langcode = $entity->language()->getId();
+        $attributes->setAttribute('data-quick-edit-id', $entity_type_id . ':' . $entity_type_id . '=' . $entity->id() . ':langcode=' . $langcode);
+        $attributes->addClass('formatage_models_quickly_edit');
+        $vars['attributes'] = $attributes;
+      }
     }
   }
 }

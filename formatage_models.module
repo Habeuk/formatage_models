@@ -221,121 +221,138 @@ function addTextareaTreeMultipleMoreAjax(&$form, FormStateInterface $form_state)
  */
 function formatage_models_preprocess_paragraph(&$variables) {
   // dump($variables);
-  if (\Drupal::currentUser()->id()) {
-    // add class .contextual-region
-    $variables['attributes']['class'][] = 'contextual-region';
-    // Paragraph templates don't normally print the title_suffix, so add the
-    // contextual links to the content render array.
-    /**
-     * Les liens contextuels posent un probleme notament lors de la traduction.
-     */
-    // if (isset($variables['title_suffix']['contextual_links'])) {
-    /**
-     *
-     * @var \Drupal\paragraphs\Entity\Paragraph $paragraph
-     */
-    $paragraph = $variables['paragraph'];
-    $variables['content']['contextual_links'] = [
-      '#type' => 'contextual_links_placeholder',
-      '#id' => 'paragraph:paragraph=' . $paragraph->id() . ':langcode=' . $paragraph->language()->getId()
-    ];
-    $variables['content']['contextual_links']['#weight'] = -100;
-    // add special place to no-edit (doit etre configurable).
-    $routes = [
-      'vuejs_entity.model_choisie_form',
-      'buildercv.build_cv'
-    ];
-    $route_name = \Drupal::routeMatch()->getRouteName();
-    if (!in_array($route_name, $routes) && !\Drupal::service('router.admin_context')->isAdminRoute()) {
-      $variables['content']['formatage_models_quickly_edit'] = [
-        '#theme' => 'formatage_models_quickly_edit',
-        '#contextual_links' => $variables['content']['contextual_links']
-      ];
-    }
-    // }
-  }
+  // if (\Drupal::currentUser()->hasPermission("formatage_models edit with
+  // vuejs")) {
+  // // add class .contextual-region
+  // $variables['attributes']['class'][] = 'contextual-region';
+  // // Paragraph templates don't normally print the title_suffix, so add the
+  // // contextual links to the content render array.
+  // /**
+  // * Les liens contextuels posent un probleme notament lors de la traduction.
+  // */
+  // // if (isset($variables['title_suffix']['contextual_links'])) {
+  // /**
+  // *
+  // * @var \Drupal\paragraphs\Entity\Paragraph $paragraph
+  // */
+  // $paragraph = $variables['paragraph'];
+  // $variables['content']['contextual_links'] = [
+  // '#type' => 'contextual_links_placeholder',
+  // '#id' => 'paragraph:paragraph=' . $paragraph->id() . ':langcode=' .
+  // $paragraph->language()->getId()
+  // ];
+  // $variables['content']['contextual_links']['#weight'] = -100;
+  // // add special place to no-edit (doit etre configurable).
+  // $routes = [
+  // 'vuejs_entity.model_choisie_form',
+  // 'buildercv.build_cv'
+  // ];
+  // $route_name = \Drupal::routeMatch()->getRouteName();
+  // if (!in_array($route_name, $routes) &&
+  // !\Drupal::service('router.admin_context')->isAdminRoute()) {
+  // $variables['content']['formatage_models_quickly_edit'] = [
+  // '#theme' => 'formatage_models_quickly_edit',
+  // '#contextual_links' => $variables['content']['contextual_links']
+  // ];
+  // }
+  // // }
+  // }
 }
 
 /**
  */
 function formatage_models_preprocess_views_view_unformatted(&$vars) {
-  if (\Drupal::currentUser()->id()) {
-    // Liste d'entité qu'on peut editer avec le crayon.
-    // on doit rentre cette liste editable.
-    $entities = [
-      '#paragraph',
-      '#node',
-      '#blocks_contents',
-      '#block_content',
-      '#commerce_product',
-      '#site_type_datas',
-      '#site_internet_entity'
-    ];
-    if (!empty($vars['rows'])) {
-      foreach ($vars['rows'] as &$row) {
-        foreach ($entities as $keyEntity) {
-          if (!empty($row['content'][$keyEntity])) {
-            if (empty($row['attributes'])) {
-              $row['attributes'] = new \Drupal\Core\Template\Attribute();
-            }
-            /**
-             *
-             * @var \Drupal\Core\Template\Attribute $attribute
-             */
-            $attribute = $row['attributes'];
-            $attribute->addClass('contextual-region');
-            $row['content']['formatage_models_quickly_edit'] = [
-              '#theme' => 'formatage_models_quickly_edit',
-              '#entity' => $row['content'][$keyEntity]
-            ];
-            break;
-          }
-        }
-      }
-    }
-  }
+  // if (\Drupal::currentUser()->hasPermission("formatage_models edit with
+  // vuejs")) {
+  // // Liste d'entité qu'on peut editer avec le crayon.
+  // // on doit rentre cette liste editable.
+  // $entities = [
+  // '#paragraph',
+  // '#node',
+  // '#blocks_contents',
+  // '#block_content',
+  // '#commerce_product',
+  // '#site_type_datas',
+  // '#site_internet_entity'
+  // ];
+  // if (!empty($vars['rows'])) {
+  // foreach ($vars['rows'] as &$row) {
+  // foreach ($entities as $keyEntity) {
+  // if (!empty($row['content'][$keyEntity])) {
+  // if (empty($row['attributes'])) {
+  // $row['attributes'] = new \Drupal\Core\Template\Attribute();
+  // }
+  // /**
+  // *
+  // * @var \Drupal\Core\Template\Attribute $attribute
+  // */
+  // $attribute = $row['attributes'];
+  // $attribute->addClass('contextual-region');
+  // $row['content']['formatage_models_quickly_edit'] = [
+  // '#theme' => 'formatage_models_quickly_edit',
+  // '#entity' => $row['content'][$keyEntity]
+  // ];
+  // break;
+  // }
+  // }
+  // }
+  // }
+  // }
 }
 
 function formatage_models_preprocess_owlcarousel_views(&$vars) {
-  if (\Drupal::currentUser()->id()) {
-    // Liste d'entité qu'on peut editer avec e crayon.
-    $entities = [
-      '#paragraph',
-      '#node',
-      '#blocks_contents',
-      '#block_content',
-      '#commerce_product',
-      '#site_type_datas',
-      '#site_internet_entity'
-    ];
-    if (!empty($vars['rows'])) {
-      foreach ($vars['rows'] as &$row) {
-        foreach ($entities as $keyEntity) {
-          if (!empty($row[$keyEntity])) {
-            if (empty($row['attributes'])) {
-              $row['attributes'] = new \Drupal\Core\Template\Attribute();
-            }
-            /**
-             *
-             * @var \Drupal\Core\Template\Attribute $attribute
-             */
-            $attribute = $row['attributes'];
-            $attribute->addClass('contextual-region');
-            $row['formatage_models_quickly_edit'] = [
-              '#theme' => 'formatage_models_quickly_edit',
-              '#entity' => $row[$keyEntity]
-            ];
-            break;
-          }
-        }
-      }
-    }
-  }
+  // if (\Drupal::currentUser()->hasPermission("formatage_models edit with
+  // vuejs")) {
+  // // Liste d'entité qu'on peut editer avec e crayon.
+  // $entities = [
+  // '#paragraph',
+  // '#node',
+  // '#blocks_contents',
+  // '#block_content',
+  // '#commerce_product',
+  // '#site_type_datas',
+  // '#site_internet_entity'
+  // ];
+  // if (!empty($vars['rows'])) {
+  // foreach ($vars['rows'] as &$row) {
+  // foreach ($entities as $keyEntity) {
+  // if (!empty($row[$keyEntity])) {
+  // if (empty($row['attributes'])) {
+  // $row['attributes'] = new \Drupal\Core\Template\Attribute();
+  // }
+  // /**
+  // *
+  // * @var \Drupal\Core\Template\Attribute $attribute
+  // */
+  // $attribute = $row['attributes'];
+  // $attribute->addClass('contextual-region');
+  // $row['formatage_models_quickly_edit'] = [
+  // '#theme' => 'formatage_models_quickly_edit',
+  // '#entity' => $row[$keyEntity]
+  // ];
+  // break;
+  // }
+  // }
+  // }
+  // }
+  // }
 }
 
+/**
+ * implement hook_entity_view_alter.
+ * On alter le rendu des entités afin d'ajouter l'editeur via le crayon.
+ *
+ * @deprecated Doit etre deplacer vers contextual_more_links, en tenant compte
+ *             des affichages via les vues par champs et tout autre données
+ *             utiles.
+ *            
+ * @param array $build
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ * @param \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display
+ */
 function formatage_models_entity_view_alter(array &$build, \Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display) {
-  if ($build['#view_mode'] == 'full') {
-    // dump($build);
+  if (\Drupal::currentUser()->hasPermission("formatage_models edit with vuejs") && !\Drupal::service('router.admin_context')->isAdminRoute()) {
+    $conf = ConfigDrupal::config('formatage_models.configvuejsedit');
     // On charge l'outil d'edition via le custom bouton.
     $entities = [
       'commerce_product',
@@ -343,20 +360,19 @@ function formatage_models_entity_view_alter(array &$build, \Drupal\Core\Entity\E
       'blocks_contents',
       'paragraph',
       'block_content',
-      'commerce_product'
+      'commerce_product',
+      'taxonomy_term'
     ];
     //
-    if (!empty($build['#entity_type']))
-      if (in_array($build['#entity_type'], $entities)) {
-        // dump($build);
+    $EntityTypeId = $entity->getEntityTypeId();
+    if (!empty($conf['active_edit_config'])) {
+      if (in_array($EntityTypeId, $entities) && !empty($build['#' . $EntityTypeId])) {
         $build['formatage_models_quickly_edit'] = [
           '#theme' => 'formatage_models_quickly_edit',
-          '#entity' => \Drupal::routeMatch()->getParameter($build['#entity_type'])
+          '#entity' => $build['#' . $entity->getEntityTypeId()]
         ];
       }
-    // else {
-    // dump($build);
-    // }
+    }
   }
 }
 
@@ -373,7 +389,7 @@ function formatage_models_preprocess_page(&$variables) {
     $variables['page']['content']['#attached']['library'][] = 'formatage_models/formatage-models-admin-paragraph';
   }
   
-  if (!empty($variables['logged_in'])) {
+  if (\Drupal::currentUser()->hasPermission("formatage_models edit with vuejs")) {
     // Il faudra que ces liens soient configurable (settings.form).
     $routes = [
       'vuejs_entity.model_choisie_form',
@@ -381,6 +397,9 @@ function formatage_models_preprocess_page(&$variables) {
     ];
     $conf = ConfigDrupal::config('formatage_models.configvuejsedit');
     if (!empty($conf['active_edit_config']) && !in_array($route_name, $routes) && !\Drupal::service('router.admin_context')->isAdminRoute()) {
+      /**
+       * La div qui contient le point d'entre du fichier JS.
+       */
       $variables['page']['content']['entity_edit_vuejs'] = [
         '#type' => 'html_tag',
         '#tag' => 'div',
@@ -432,7 +451,7 @@ function formatage_models_plugin_filter_layout__layout_builder_alter(array &$def
 function formatage_models_preprocess_blb_section(&$vars) {
   if (!empty($vars['region_attributes'])) {
     foreach ($vars['region_attributes'] as $key => $region_attribute) {
-      $vars['region_attributes'][$key]->addClass('layout-region blb');
+      // $vars['region_attributes'][$key]->addClass('layout-region blb');
     }
   }
   // if ($vars['theme_hook_original'] == 'blb_section')

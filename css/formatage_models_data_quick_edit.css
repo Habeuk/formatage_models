@@ -22,11 +22,24 @@
 	fill: #0a4575;
 }
 
+ /**
+  * On masque les sous elements.
+  */
+.contextual-region.edit-vuejs-hbk:hover .contextual-region.edit-vuejs-hbk  .formatage_models_quickly_edit{
+	opacity: 0;	
+}  
+
 /**
  * On affiche uniquement le premier niveau, on masque les sous elements.
+ * Pour tenir compte des differents cas, il nous faudra un marker specifique au niveau de la class .contextual-region
+ * -
+ * On affiche les sous elements si on est au hover.
  */
-.contextual-region:hover>.formatage_models_quickly_edit,
-.contextual-region:hover>.node__content>.formatage_models_quickly_edit {
+.contextual-region.edit-vuejs-hbk:hover> .formatage_models_quickly_edit, 
+.contextual-region.edit-vuejs-hbk:hover> * > .formatage_models_quickly_edit,
+.contextual-region.edit-vuejs-hbk .contextual-region.edit-vuejs-hbk:hover> .formatage_models_quickly_edit,
+.contextual-region.edit-vuejs-hbk .contextual-region.edit-vuejs-hbk:hover> * > .formatage_models_quickly_edit
+ {
 	color: #4369a3;
 	background: rgb(255 255 255 / 92%);
 	z-index: 9999;
@@ -34,10 +47,17 @@
 	opacity: 1;
 	border: 1px solid rgb(239, 241, 247);
 }
+
+.contextual-region.edit-vuejs-hbk .contextual-region.edit-vuejs-hbk:hover> .formatage_models_quickly_edit,
+.contextual-region.edit-vuejs-hbk .contextual-region.edit-vuejs-hbk:hover> * > .formatage_models_quickly_edit{
+	top: 5rem;	
+	z-index: 10001;
+}
+
 /**
  * Pour les elements inclues ont decalle.
  */
- .contextual-region .contextual-region   .contextual-region:hover >.formatage_models_quickly_edit {
+.contextual-region.edit-vuejs-hbk .contextual-region.edit-vuejs-hbk:hover >.formatage_models_quickly_edit {
 	 top: 3rem;	 
 	 background:rgb(243 243 243 / 92%);
 	 z-index: 10000;
