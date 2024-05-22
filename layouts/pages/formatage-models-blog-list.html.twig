@@ -9,7 +9,7 @@
     					</div>
     				</div>				
     			{% endif %}
-    			{% if content.left or content.lefttile %}
+    			{% if content.left|has_value or content.lefttile|has_value or content.left3|has_value or content.left4|has_value %}
         			<div class="{{settings.css_left}}">
         				{% if content.lefttile|has_value or content.left|has_value %}
         				<div {{ region_attributes.left.addClass(['left']) }}>
@@ -58,7 +58,7 @@
         				{% endif %}
         			</div>
     			{% endif %}
-    			{% if content.right or content.righttile %}
+    			{% if content.right|has_value or content.righttile|has_value or content.right2|has_value or content.right3|has_value or content.right4|has_value  %}
     				<div class="{{settings.css_right}}">
     					{% if content.righttile|has_value or content.right|has_value %}
     					<div {{ region_attributes.right.addClass(['right']) }}>
