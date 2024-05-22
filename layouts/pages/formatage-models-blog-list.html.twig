@@ -11,6 +11,7 @@
     			{% endif %}
     			{% if content.left or content.lefttile %}
         			<div class="{{settings.css_left}}">
+        				{% if content.lefttile|has_value or content.left|has_value %}
         				<div {{ region_attributes.left.addClass(['left']) }}>
         					{% if content.lefttile|has_value %}
         						<{{settings.region_tag_lefttile}} {{ region_attributes.lefttile.addClass(['lefttile']) }}>
@@ -19,19 +20,91 @@
         					{% endif %}
         					{{ content.left }}       					
         				</div>
+        				{% endif %}
+        				{% if content.left2|has_value %}
+            				<div {{ region_attributes.left2.addClass(['left2']) }}>
+            					{{ content.left2 }}
+            				</div>
+        				{% endif %}
+        				{% if content.left3|has_value %}
+            				<div {{ region_attributes.left3.addClass(['left3']) }}>
+            					{{ content.left3 }}
+            				</div>
+        				{% endif %}
+        				{% if content.left4|has_value %}
+            				<div {{ region_attributes.left4.addClass(['left4']) }}>
+            					{{ content.left4 }}
+            				</div>
+        				{% endif %}
+        				{% if content.left5|has_value %}
+            				<div {{ region_attributes.left5.addClass(['left5']) }}>
+            					{{ content.left5 }}
+            				</div>
+        				{% endif %}
+        				{% if content.left6|has_value %}
+            				<div {{ region_attributes.left6.addClass(['left6']) }}>
+            					{{ content.left6 }}
+            				</div>
+        				{% endif %}
+        				{% if content.left7|has_value %}
+            				<div {{ region_attributes.left7.addClass(['left7']) }}>
+            					{{ content.left7 }}
+            				</div>
+        				{% endif %}
+        				{% if content.left8|has_value %}
+            				<div {{ region_attributes.left8.addClass(['left8']) }}>
+            					{{ content.left8 }}
+            				</div>
+        				{% endif %}
         			</div>
     			{% endif %}
     			{% if content.right or content.righttile %}
     				<div class="{{settings.css_right}}">
+    					{% if content.righttile|has_value or content.right|has_value %}
     					<div {{ region_attributes.right.addClass(['right']) }}>
         					{% if content.righttile|has_value %}
         						<{{settings.region_tag_righttile}} {{ region_attributes.righttile.addClass(['righttile']) }}>
         							{{ content.righttile }}
         						</{{settings.region_tag_righttile}}>
         					{% endif %}
-        					{{ content.right }}
-        					
+        					{{ content.right }}        					
         				</div>
+        				{% endif %}
+        				{% if content.right2|has_value %}
+            				<div {{ region_attributes.right2.addClass(['right2']) }}>
+            					{{ content.right2 }}
+            				</div>
+        				{% endif %}
+        				{% if content.right3|has_value %}
+            				<div {{ region_attributes.right3.addClass(['right3']) }}>
+            					{{ content.right3 }}
+            				</div>
+        				{% endif %}
+        				{% if content.right4|has_value %}
+            				<div {{ region_attributes.right4.addClass(['right4']) }}>
+            					{{ content.right4 }}
+            				</div>
+        				{% endif %}
+        				{% if content.right5|has_value %}
+            				<div {{ region_attributes.right5.addClass(['right5']) }}>
+            					{{ content.right5 }}
+            				</div>
+        				{% endif %}
+        				{% if content.right6|has_value %}
+            				<div {{ region_attributes.right6.addClass(['right6']) }}>
+            					{{ content.right6 }}
+            				</div>
+        				{% endif %}
+        				{% if content.right7|has_value %}
+            				<div {{ region_attributes.right7.addClass(['right7']) }}>
+            					{{ content.right7 }}
+            				</div>
+        				{% endif %}
+        				{% if content.right8|has_value %}
+            				<div {{ region_attributes.right8.addClass(['right8']) }}>
+            					{{ content.right8 }}
+            				</div>
+        				{% endif %}
     				</div>    				
     			{% endif %}
 			</div>

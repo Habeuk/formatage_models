@@ -16,20 +16,62 @@ use Drupal\Core\Form\FormStateInterface;
  *   library = "formatage_models/formatage-models-blog-list",
  *   default_region = "left",
  *   regions = {
- *     "left" = {
- *       "label" = @Translation("Left"),
- *     },
- *     "right" = {
- *       "label" = @Translation("Right"),
- *     },
  *     "top" = {
  *       "label" = @Translation("Top"),
  *     },
  *     "lefttile" = {
  *       "label" = @Translation(" Left tile "),
  *     },
+ *     "left" = {
+ *       "label" = @Translation("Content Left 1"),
+ *     },
+ *     "left2" = {
+ *       "label" = @Translation("Content Left 2"),
+ *     },
+ *     "left3" = {
+ *       "label" = @Translation("Content Left 3"),
+ *     },
+ *     "left4" = {
+ *       "label" = @Translation("Content Left 4"),
+ *     },
+ *     "left5" = {
+ *       "label" = @Translation("Content Left 5"),
+ *     },
+ *     "left6" = {
+ *       "label" = @Translation("Content Left 6"),
+ *     },
+ *     "left7" = {
+ *       "label" = @Translation("Content Left 7"),
+ *     },
+ *     "left8" = {
+ *       "label" = @Translation("Content Left 8"),
+ *     },
  *     "righttile" = {
  *       "label" = @Translation("Right tile "),
+ *     },
+ *     "right" = {
+ *       "label" = @Translation("Content Right 1"),
+ *     },
+ *     "right2" = {
+ *       "label" = @Translation("Content Right 2"),
+ *     },
+ *     "right3" = {
+ *       "label" = @Translation("Content Right 3"),
+ *     },
+ *     "right4" = {
+ *       "label" = @Translation("Content Right 4"),
+ *     },
+ *     "right5" = {
+ *       "label" = @Translation("Content Right 5"),
+ *     },
+ *     "right6" = {
+ *       "label" = @Translation("Content Right 6"),
+ *     },
+ *     "right7" = {
+ *       "label" = @Translation("Content Right 7"),
+ *     },
+ *     "right8" = {
+ *       "label" = @Translation("Content Right 8"),
  *     },
  *   }
  * )
