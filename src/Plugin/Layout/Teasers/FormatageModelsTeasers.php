@@ -38,12 +38,7 @@ class FormatageModelsTeasers extends FormatageModels implements ContainerFactory
   
   public function build(array $regions) {
     $build = parent::build($regions);
-    $layout = $this->getPluginDefinition();
-    // classes and attributes.
-    if (!isset($build['#attributes']['class'])) {
-      $build['#attributes']['class'] = [];
-    }
-    // $build['#attributes']['class'][] = 'space_bottom';
+    $build['#attributes']['class'][] = 'layout--teaser';
     $build['#attributes']['class'][] = $this->configuration['css'];
     if (!empty($this->configuration['derivate']['value'])) {
       $build['#attributes']['class'][] = $this->configuration['derivate']['value'];
@@ -178,7 +173,7 @@ class FormatageModelsTeasers extends FormatageModels implements ContainerFactory
     $style_tab = [
       'blb_style'
     ];
-    $this->configuration['container_wrapper']['bootstrap_styles'] = $this->stylesGroupManager->submitStylesFormElements($form['blb_style'], $form_state, $style_tab, $this->configuration['container_wrapper']['bootstrap_styles'], 'bootstrap_layout_builder.styles');
+    $this->configuration['container_wrapper']['bootstrap_styles'] = $this->stylesGroupManager->submitStylesFormElements($form['blb_style'], $form_state, $style_tab,
+      $this->configuration['container_wrapper']['bootstrap_styles'], 'bootstrap_layout_builder.styles');
   }
-  
 }

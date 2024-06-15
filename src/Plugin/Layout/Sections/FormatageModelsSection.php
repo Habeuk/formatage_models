@@ -44,20 +44,8 @@ class FormatageModelsSection extends FormatageModels implements ContainerFactory
    */
   public function build(array $regions) {
     $build = parent::build($regions);
-    // à mettre sur un module externe.
-    $currentDomain = null;
-    if (\Drupal::moduleHandler()->moduleExists('wbumenudomain')) {
-      $currentDomain = \Drupal\wbumenudomain\Wbumenudomain::getCurrentdomain();
-    }
-    if (!empty($this->configuration[$currentDomain])) {
-      $build['#settings'] = $this->configuration[$currentDomain];
-    }
-    // dd($this);
-    // classes and attributes.
-    if (!isset($build['#attributes']['class'])) {
-      $build['#attributes']['class'] = [];
-    }
     $build['#attributes']['class'][] = 'space_bottom';
+    $build['#attributes']['class'][] = 'layout--section';
     $build['#attributes']['class'][] = $build['#settings']['css'];
     if (!empty($this->configuration['derivate']['value'])) {
       $build['#attributes']['class'][] = $build['#settings']['derivate']['value'];
@@ -247,7 +235,7 @@ class FormatageModelsSection extends FormatageModels implements ContainerFactory
       $message = " Une erreur s'est produit lors de la derniere sauvegarde ";
       \Drupal::messenger()->addWarning($message);
     }
-    $this->configuration['container_wrapper']['bootstrap_styles'] = $this->stylesGroupManager->submitStylesFormElements($form['blb_style'], $form_state, $style_tab, $this->configuration['container_wrapper']['bootstrap_styles'], 'bootstrap_layout_builder.styles');
+    $this->configuration['container_wrapper']['bootstrap_styles'] = $this->stylesGroupManager->submitStylesFormElements($form['blb_style'], $form_state, $style_tab,
+      $this->configuration['container_wrapper']['bootstrap_styles'], 'bootstrap_layout_builder.styles');
   }
-  
 }

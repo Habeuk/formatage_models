@@ -244,22 +244,12 @@ class FormatageModels extends LayoutDefault {
     $build['#settings'] = $this->getConfiguration();
     $build['#layout'] = $this->pluginDefinition;
     $build['#theme'] = $this->pluginDefinition->getThemeHook();
-    // $library = $this->pluginDefinition->getLibrary();
-    // configuration['load_libray'] n'est plus supporter et serra supprimé
-    /**
-     *
-     * @deprecated configuration['load_libray'] and remove à 4x.
-     */
-    // if ($this->subConfiguration) {
-    // $build['#settings'] = $this->subConfiguration;
-    // if ($library && $this->subConfiguration['load_libray']) {
-    // $build['#attached']['library'][] = $library;
-    // }
-    // }
-    // elseif ($library && $this->configuration['load_libray']) {
-    // $build['#attached']['library'][] = $library;
-    // }
-    // dump($build);
+    // classes and attributes.
+    if (!isset($build['#attributes']['class'])) {
+      $build['#attributes']['class'] = [];
+    }
+    $build['#attributes']['class'][] = 'layout';
+    
     if ($this->checkModuleLayoutstyleExist()) {
       $this->StyleScssPluginManager->build($build, $this->configuration);
     }
@@ -359,5 +349,4 @@ class FormatageModels extends LayoutDefault {
     }
     return $Conf;
   }
-  
 }
