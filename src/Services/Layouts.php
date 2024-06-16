@@ -231,6 +231,7 @@ class Layouts {
         '' => 'Aucun',
         'opacity-before-092' => '0.92',
         'opacity-before-088' => '0.88',
+        'opacity-before-080' => '0.80',
         'opacity-before-07' => '0.70',
         'opacity-before-055' => '0.55',
         'opacity-before-03' => '0.30',
@@ -489,5 +490,4 @@ class Layouts {
       }
     }
   }
-  
 }

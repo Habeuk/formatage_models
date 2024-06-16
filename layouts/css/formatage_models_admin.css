@@ -19,6 +19,7 @@
 #drupal-off-canvas *:not(div),
 #drupal-off-canvas *:not(.form-submit) {
   color: #314b5a;
+  font-size: 14px !important;
 }
 
 #drupal-off-canvas summary, 
@@ -48,9 +49,10 @@
 #drupal-off-canvas .description, 
 #drupal-off-canvas .form-item .description, 
 #drupal-off-canvas .details-description{
-	font-size: 1.2rem !important;
+	font-size: 12px !important;
 	display: block !important;
 	font-style: italic !important;
+	color:#4e5577 !important;
 }
 
 #drupal-off-canvas textarea, 
