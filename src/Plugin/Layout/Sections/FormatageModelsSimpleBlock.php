@@ -20,6 +20,21 @@ use Drupal\Core\Form\FormStateInterface;
  *     "main" = {
  *       "label" = @Translation("Main"),
  *     },
+ *     "block_2" = {
+ *       "label" = @Translation("Block 2"),
+ *     },
+ *     "block_3" = {
+ *       "label" = @Translation("Block 3"),
+ *     },
+ *     "block_4" = {
+ *       "label" = @Translation("Block 4"),
+ *     },
+ *     "block_5" = {
+ *       "label" = @Translation("Block 5"),
+ *     },
+ *     "block_6" = {
+ *       "label" = @Translation("Block 6"),
+ *     },
  *     "image_bg" = {
  *       "label" = @Translation("Image bg")
  *     },
@@ -123,5 +138,4 @@ class FormatageModelsSimpleBlock extends FormatageModelsSection {
       ]
     ] + parent::defaultConfiguration();
   }
-  
 }

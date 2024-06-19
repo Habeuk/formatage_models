@@ -24,9 +24,23 @@
             		{% else %}
             		    {{ content.main }}
             		{% endif %}
-            	</div>
-            	
+            	</div>            	
             {% endif %}
+    	{% endif %}
+    	{% if content.block_2|has_value %}
+    		<div {{region_attributes.block_2.addClass('block_2')}}>{{ content.block_2 }}</div>
+    	{% endif %}
+    	{% if content.block_3|has_value %}
+    		<div {{region_attributes.block_3.addClass('block_2')}}>{{ content.block_3 }}</div>
+    	{% endif %}
+    	{% if content.block_4|has_value %}
+    		<div {{region_attributes.block_4.addClass('block_4')}}>{{ content.block_4 }}</div>
+    	{% endif %}
+    	{% if content.block_5|has_value %}
+    		<div {{region_attributes.block_5.addClass('block_5')}}>{{ content.block_5 }}</div>
+    	{% endif %}
+    	{% if content.block_6|has_value %}
+    		<div {{region_attributes.block_6.addClass('block_6')}}>{{ content.block_6 }}</div>
     	{% endif %}
     	{# content region for teaser, ce model est deja assez utilisé, on laisse la classe row pour ce cas de figure #}
     	{% if content.teasers_container %}
