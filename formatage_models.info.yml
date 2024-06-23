@@ -7,5 +7,6 @@ dependencies:
   - drupal:layout_builder
   - drupal:bootstrap_layout_builder
   - drupal:jsonapi
-  - habeuk:apivuejs
-  - habeuk:filesmanager
+  - apivuejs:apivuejs
+  - filesmanager:filesmanager
+  - layout_custom_style:layout_custom_style
