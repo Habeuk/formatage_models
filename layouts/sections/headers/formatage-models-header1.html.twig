@@ -10,27 +10,27 @@
 				</div>
 				<div class="col-lg-6 right">
 					<div class="d-flex justify-content-between justify-content-md-end justify-content-end pt-md-2 align-items-center h-100">
-					    {% if content.topheader_right %}
-						<div {{ region_attributes.topheader_right.addClass('topheader_right') }}>
-						    {{ content.topheader_right }}
-						</div>
+						{% if content.topheader_right %}
+							<div {{ region_attributes.topheader_right.addClass('topheader_right') }}>
+								{{ content.topheader_right }}
+							</div>
 						{% endif %}
 						<div class="header_search_1">
 							{% if logged_in == true %}
-							{% if content.user_compact %}
-							<div class="btn-group">
-                            	<a href="#" type="button" class="mr-4 dropdown-toggle" title="{{'Profile information'|trans}}" data-toggle="dropdown" aria-expanded="false">
-                            		<i class="fas fa-user"></i>
-                            	</a>
-                            	<div class="dropdown-menu dropdown-menu--user">
-                                    {{content.user_compact}}
-                                </div>
-                        	</div> 
-                        	{% else %}
-								<a href="/user/logout" id="header-search-button" class="d-flex align-items-baseline">
-									<i class="fas fa-sign-out-alt"></i>
-								</a>
-							{% endif %}
+								{% if content.user_compact %}
+									<div class="btn-group">
+										<a href="#" type="button" class="mr-4 dropdown-toggle" title="{{'Profile information'|trans}}" data-bs-toggle="dropdown" aria-expanded="false">
+											<i class="fas fa-user"></i>
+										</a>
+										<div class="dropdown-menu dropdown-menu--user">
+											{{content.user_compact}}
+										</div>
+									</div>
+								{% else %}
+									<a href="/user/logout" id="header-search-button" class="d-flex align-items-baseline">
+										<i class="fas fa-sign-out-alt"></i>
+									</a>
+								{% endif %}
 							{% else %}
 								<a href="/user/login" id="header-search-button" class="d-flex align-items-baseline">
 									<i class="fas fa-sign-in-alt"></i>
@@ -48,10 +48,10 @@
 				<div class="row">
 					<div class="col-4 col-lg-6 d-flex align-items-center logo-bloc flex-wrap">
 						<div class="basic-wrapper">
-                            {% if settings.logo_url %}
-							<a href="{{settings.front}}" title="Home" rel="home" class="logo">	
+							{% if settings.logo_url %}
+								<a href="{{settings.front}}" title="Home" rel="home" class="logo">
 									<img src="{{settings.logo_url}}">
-							</a>
+								</a>
 							{% endif %}
 						</div>
 						<div class="basic-wrapper-slogan">
@@ -79,9 +79,9 @@
 									</div>
 								</div>
 							</div>
-							<div class="icon icon-bloc d-none d-md-flex align-items-center icon-bloc-callaction"> 
+							<div class="icon icon-bloc d-none d-md-flex align-items-center icon-bloc-callaction">
 								<i class="fas fa-bullhorn"></i>
-								<div {{region_attributes.call_action.addClass(['content','call_action'])}}>								
+								<div {{region_attributes.call_action.addClass(['content','call_action'])}}>
 									{{content.call_action}}
 								</div>
 							</div>
