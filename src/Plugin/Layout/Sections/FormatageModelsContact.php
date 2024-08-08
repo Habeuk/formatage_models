@@ -28,8 +28,8 @@ use Drupal\bootstrap_styles\StylesGroup\StylesGroupManager;
  *   }
  * )
  */
-class FormatageModelsImageContact extends FormatageModelsSection {
-
+class FormatageModelsContact extends FormatageModelsSection {
+  
   /**
    *
    * {@inheritdoc}
@@ -40,7 +40,7 @@ class FormatageModelsImageContact extends FormatageModelsSection {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $styles_group_manager);
     $this->pluginDefinition->set('icon', $this->pathResolver->getPath('module', 'formatage_models') . "/icones/sections/formatage-models-contact.png");
   }
-
+  
   public function defaultConfiguration() {
     return parent::defaultConfiguration() + [
       'css' => 'container',
