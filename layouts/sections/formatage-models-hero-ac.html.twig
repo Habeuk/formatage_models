@@ -5,14 +5,14 @@
 				<div class="{{ settings.css_left }} content-text space-padding">
 					<div>
     					{% if content.subtitle|has_value %}
-                            <h4 {{ region_attributes.subtitle.addClass('subtitle') }}>
+                            <{{settings.region_tag_subtitle}} {{ region_attributes.subtitle.addClass('subtitle') }}>
                                 {{ content.subtitle }}
-                            </h4>
+                            </{{settings.region_tag_subtitle}}>
                         {% endif %}
                         {% if content.title|has_value %}
-                            <h1 {{ region_attributes.title.addClass('title') }}>
+                            <{{settings.region_tag_title}} {{ region_attributes.title.addClass('title') }}>
                                 {{ content.title }}
-                            </h1>
+                            </{{settings.region_tag_title}}>
                         {% endif %}
                         {% if content.description|has_value %}
                             <div {{ region_attributes.description.addClass('description') }}>
