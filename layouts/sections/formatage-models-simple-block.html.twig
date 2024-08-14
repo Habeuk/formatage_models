@@ -43,7 +43,7 @@
     		<div {{region_attributes.block_6.addClass('block_6')}}>{{ content.block_6 }}</div>
     	{% endif %}
     	{# content region for teaser, ce model est deja assez utilisé, on laisse la classe row pour ce cas de figure #}
-    	{% if content.teasers_container %}
+    	{% if content.teasers_container|has_value %}
     	<div class="row {{settings.class_row}}">
     		{% for item in content.teasers_container|array_elements(region_attributes.teasers_container.addClass('')) %}
     			{{ item }}

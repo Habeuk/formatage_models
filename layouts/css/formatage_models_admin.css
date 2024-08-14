@@ -5,22 +5,32 @@
   max-width: -webkit-fill-available;
   font-size: 1.2rem !important;
 }
-#drupal-off-canvas  details{
-	margin-bottom: 1rem;	
-}
-#drupal-off-canvas summary{
-	font-size: 1.7rem !important;	
-}
-.ui-dialog.ui-dialog-off-canvas, .layout-selection{
-	background: rgb(247, 248, 249) !important;	
-}
-
 #drupal-off-canvas *,
 #drupal-off-canvas *:not(div),
 #drupal-off-canvas *:not(.form-submit) {
   color: #314b5a;
   font-size: 14px !important;
 }
+#drupal-off-canvas details[open]{
+	background: rgb(127 125 123 / 10%);
+}
+#drupal-off-canvas .layout-builder-configure-section details {
+	margin-bottom: 1.5rem !important;	
+	padding-left: 10px !important;
+	padding-right: 10px !important;
+}
+#drupal-off-canvas .layout-builder-configure-section details summary{
+	font-size: 1.7rem !important;	
+	font-weight: bold;
+	margin-left: -10px !important;
+	margin-right: -10px !important;
+}
+
+.ui-dialog.ui-dialog-off-canvas, .layout-selection{
+	background: rgb(247, 248, 249) !important;	
+}
+
+
 
 #drupal-off-canvas summary, 
 #drupal-off-canvas summary[aria-expanded='true'], 
