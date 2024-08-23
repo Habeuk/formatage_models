@@ -93,8 +93,8 @@ var vue_multiselect_min = __webpack_require__(9014);
 var vue_multiselect_min_default = /*#__PURE__*/__webpack_require__.n(vue_multiselect_min);
 // EXTERNAL MODULE: ../drupal-vuejs/src/App/jsonApi/itemsEntity.js
 var itemsEntity = __webpack_require__(9808);
-// EXTERNAL MODULE: ../components_bootstrapvuejs/src/components/fieldsDrupal/loadField.js + 138 modules
-var loadField = __webpack_require__(667);
+// EXTERNAL MODULE: ../components_bootstrapvuejs/src/components/fieldsDrupal/loadField.js + 144 modules
+var loadField = __webpack_require__(1497);
 ;// CONCATENATED MODULE: ./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib/index.js??clonedRuleSet-82.use[1]!./node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!../components_bootstrapvuejs/src/components/Ressouces/MultiSelectEntities.vue?vue&type=script&lang=js
 
 
@@ -372,7 +372,7 @@ var component = (0,componentNormalizer/* default */.A)(
 /***/ 9808:
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
-/* harmony import */ var core_js_modules_es_array_push_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4114);
+/* harmony import */ var core_js_modules_es_array_push_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3491);
 /* harmony import */ var core_js_modules_es_array_push_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_push_js__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _utilities_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(218);
 /* harmony import */ var _Confs_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(4832);
@@ -543,7 +543,7 @@ class itemsEntity {
     for (const i in this.items.data) {
       const term = this.items.data[i];
       if (this.entity_type_id == "user") {
-        if (term.attributes.drupal_internal__uid) options.push({
+        options.push({
           text: term.attributes.name ? term.attributes.name : term.attributes.display_name,
           value: term.attributes.drupal_internal__uid
         });
