@@ -163,7 +163,7 @@ var component = (0,componentNormalizer/* default */.A)(
 /***/ 8010:
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
-/* harmony import */ var core_js_modules_es_array_push_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4114);
+/* harmony import */ var core_js_modules_es_array_push_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(9534);
 /* harmony import */ var core_js_modules_es_array_push_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_push_js__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _utilities_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7536);
 /* harmony import */ var _Confs_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(9430);
@@ -175,9 +175,9 @@ var component = (0,componentNormalizer/* default */.A)(
 class itemsEntity {
   constructor(entity_type_id, bundle = null, config = null) {
     this.entity_type_id = entity_type_id;
-    this.bundle = bundle;
+    //
     if (!bundle) {
-      this.bundle = entity_type_id;
+      bundle = entity_type_id;
     }
     this.url = _Confs_js__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .A.baseURl + "/" + this.entity_type_id + "/" + bundle;
     this.items = [];
@@ -195,34 +195,20 @@ class itemsEntity {
      * Permet de joindre les multiples filtres.
      */
     this.filterQuery = "";
-    /**
-     * Liste de champs à afficher dans le flux, si vide tous les champs seront affichés.
-     */
-    this.fields = [];
   }
   /**
    * Recupere les items en passant par le token.
    */
   get() {
-    return new Promise((resolv, reject) => {
+    return new Promise(resolv => {
       if (this.filterQuery) {
         this.filterQuery = this.url.includes("?") ? "&" + this.filterQuery : "?" + this.filterQuery;
       }
-      _utilities_js__WEBPACK_IMPORTED_MODULE_1__/* ["default"] */ .A.dGet(this.url + this.filterQuery + this.addFieldsToQuery(), _Confs_js__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .A.headers).then(resp => {
+      _utilities_js__WEBPACK_IMPORTED_MODULE_1__/* ["default"] */ .A.dGet(this.url + this.filterQuery, _Confs_js__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .A.headers).then(resp => {
         this.items = resp.data;
         resolv(resp.data);
-      }).catch(er => {
-        reject(er);
       });
     });
-  }
-  getColumnName() {
-    switch (this.entity_type_id) {
-      case "webform":
-        return "title";
-      default:
-        return "name";
-    }
   }
   /**
    * Recupere les items
@@ -230,13 +216,11 @@ class itemsEntity {
    */
   getSearch(search) {
     const filter = new _buildFilter_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .A();
-    filter.addFilter(this.getColumnName(), "CONTAINS", search);
-    return new Promise((resolv, reject) => {
+    filter.addFilter("name", "CONTAINS", search);
+    return new Promise(resolv => {
       _utilities_js__WEBPACK_IMPORTED_MODULE_1__/* ["default"] */ .A.dGet(this.url + "?" + filter.query, _Confs_js__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .A.headers).then(resp => {
         this.items = resp.data;
         resolv(resp.data);
-      }).catch(er => {
-        reject(er);
       });
     });
   }
@@ -246,13 +230,11 @@ class itemsEntity {
    */
   getValue(term) {
     const filter = new _buildFilter_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .A();
-    filter.addFilter(this.getColumnName(), "=", term);
-    return new Promise((resolv, reject) => {
+    filter.addFilter("name", "=", term);
+    return new Promise(resolv => {
       _utilities_js__WEBPACK_IMPORTED_MODULE_1__/* ["default"] */ .A.dGet(this.url + "?" + filter.query, _Confs_js__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .A.headers).then(resp => {
         this.items = resp.data;
         resolv(resp.data);
-      }).catch(er => {
-        reject(er);
       });
     });
   }
@@ -312,11 +294,7 @@ class itemsEntity {
   filter(field_name, operator, value) {
     const filter = new _buildFilter_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .A();
     filter.addFilter(field_name, operator, value);
-    if (filter.query) {
-      if (!this.filterQuery) this.filterQuery += filter.query;else {
-        this.filterQuery += "&" + filter.query;
-      }
-    }
+    if (filter.query) this.filterQuery += filter.query;
   }
   /**
    * Les entities à joindre dans la requete.
@@ -334,14 +312,9 @@ class itemsEntity {
     for (const i in this.items.data) {
       const term = this.items.data[i];
       if (this.entity_type_id == "user") {
-        if (term.attributes.drupal_internal__uid) options.push({
+        options.push({
           text: term.attributes.name ? term.attributes.name : term.attributes.display_name,
           value: term.attributes.drupal_internal__uid
-        });
-      } else if (term.attributes.title) {
-        options.push({
-          text: term.attributes.title,
-          value: term.attributes.drupal_internal__id
         });
       } else if (term.attributes.name) {
         options.push({
@@ -356,23 +329,6 @@ class itemsEntity {
       }
     }
     return options;
-  }
-  /**
-   * -- https://www.drupal.org/node/2806623#s-get-article-media-entity-reference-field-image-url-uri-by-including-references
-   */
-  addFieldsToQuery() {
-    var string = "";
-    if (this.fields.length > 0) {
-      string += "&fields[" + this.entity_type_id + "--" + this.bundle + "]";
-      string += "=" + this.fields.toString();
-    }
-    return string;
-  }
-  /**
-   * Permet d'ajouter uniquement les champs necessaires.
-   */
-  setFields(fields) {
-    this.fields = fields;
   }
   /**
    * On a deux cas interne et externe au domaine, et en function de l'environnement
