@@ -30,7 +30,9 @@
 				<div class="ourAchievments-module__container">
 					<div class="showProject"> 
 						{% if settings.text_url != '' %}
-							<div> {% trans %} {{ settings.text_url }} {% endtrans %} </div>
+							<div>{% trans %} 
+							        {{ settings.text_url }} 
+							{% endtrans %}</div>
 						{% endif %}
 					</div>
 					{% if content.listes %}
