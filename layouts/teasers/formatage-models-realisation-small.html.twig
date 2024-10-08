@@ -1,15 +1,14 @@
 {% if content %}
-	<div{{attributes.addClass('ourAchievments-module')}}>
-		{# url #}
+	<div{{attributes.addClass('ourAchievments-module')}}>	
 		{% if content.url.layout_builder_add_block  %}
 			{{ content.url }}
-		{% endif %}
-		{% if content.url %}
-			{% set RenderUrl %}{{ render_var(content.url)}}{% endset %}
-			{% if RenderUrl %}
-				{% set RenderUrl %}{{- path('entity.node.canonical', {'node': RenderUrl|striptags|trim|replace({'\"': ''})}) -}}{% endset %}
-
-			{% endif %}
+		{% else %}
+    		{% if content.url %}
+    			{% set RenderUrl %}{{ render_var(content.url)}}{% endset %}
+    			{% if RenderUrl %}
+    				{% set RenderUrl %}{{- path('entity.node.canonical', {'node': RenderUrl|striptags|trim|replace({'\"': ''})}) -}}{% endset %}
+    			{% endif %}
+    		{% endif %}
 		{% endif %}
 		{% if RenderUrl %}
 			<a href="{{- RenderUrl -}}">
