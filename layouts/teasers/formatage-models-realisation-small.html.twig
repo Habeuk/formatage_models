@@ -28,9 +28,9 @@
 			{% set RenderBgimagHtml %}{{ render_var(RenderBgimage) }}{% endset %}
 			<div class="ourAchievments-module__image" {{content.bgimage | layout_bg_img}}>
 				<div class="ourAchievments-module__container">
-					<div class="showProject">
+					<div class="showProject"> 
 						{% if settings.text_url != '' %}
-							<div>{{ settings.text_url }}</div>
+							<div> {% trans %} {{ settings.text_url }} {% endtrans %} </div>
 						{% endif %}
 					</div>
 					{% if content.listes %}
