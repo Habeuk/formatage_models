@@ -5,6 +5,7 @@ namespace Drupal\formatage_models\Plugin\Layout\headers;
 use Drupal\formatage_models\FormatageModelsThemes;
 use Drupal\formatage_models\Plugin\Layout\Sections\FormatageModelsSection;
 use Drupal\bootstrap_styles\StylesGroup\StylesGroupManager;
+use Drupal\Core\Url;
 
 /**
  * A very advanced custom layout.
@@ -44,7 +45,7 @@ use Drupal\bootstrap_styles\StylesGroup\StylesGroupManager;
  * )
  */
 class FormatageModelsHeaderThegem01 extends FormatageModelsSection {
-
+  
   /**
    *
    * {@inheritdoc}
@@ -55,7 +56,7 @@ class FormatageModelsHeaderThegem01 extends FormatageModelsSection {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $styles_group_manager);
     $this->pluginDefinition->set('icon', $this->pathResolver->getPath('module', 'formatage_models') . "/icones/headers/formatage-models-header-thegem-01.png");
   }
-
+  
   /**
    *
    * {@inheritdoc}
@@ -64,11 +65,12 @@ class FormatageModelsHeaderThegem01 extends FormatageModelsSection {
   public function build(array $regions) {
     // TODO Auto-generated method stub
     $build = parent::build($regions);
-    // dump($build);
     FormatageModelsThemes::formatSettingValues($build);
+    $user_login = Url::fromRoute("user.login");
+    $build['#link_user_login'] = $user_login->toString();
     return $build;
   }
-
+  
   function defaultConfiguration() {
     return [
       'css' => 'bg-dark text-white',

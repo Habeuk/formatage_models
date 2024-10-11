@@ -96,11 +96,11 @@
 						{% endif %}      
         {% else %}
           <li class="nav-item page-linker">
-            <a href="/user/login" class="nav-link linker"> {{ 'Registration'|trans }} </a>
+            <a href="{{content['#link_user_login']}}" class="nav-link linker"> {{ 'Registration'|trans }} </a>
           </li>
           <li class="nav-item page-linker">
             <span class="d-none d-lg-block" > | </span>
-            <a href="/user/login" class="nav-link linker"> {{ 'Login'|trans }} </a>
+            <a href="{{content['#link_user_login']}}" class="nav-link linker"> {{ 'Login'|trans }} </a>
           </li>
         {% endif %}
         {% if content.button_f2 %}
