@@ -57,6 +57,22 @@ function formatage_models_entity_operation(\Drupal\Core\Entity\EntityInterface $
  * Adds a textfield for container, label and value.
  */
 function formatage_models_field_formatter_third_party_settings_form(FormatterInterface $plugin, FieldDefinitionInterface $field_definition, $view_mode, $form, FormStateInterface $form_state) {
+  /**
+   * Gestion des balises de structurations html.
+   * Dans certaisn cas de figure, on abesoin de supprimer les balises qui
+   * encapsule le rendu des champs.
+   */
+  $remove_container_div = $plugin->getThirdPartySetting('formatage_models', 'remove_container_div', false);
+  $element['remove_container_div'] = [
+    '#type' => 'checkbox',
+    '#title' => t(' Remove container div'),
+    '#description' => t('In some cases, we need to remove the tags that encapsulate the rendering of the fields.'),
+    '#default_value' => $remove_container_div,
+    '#weight' => -29
+  ];
+  /**
+   * Gestion des classes CSS.
+   */
   $classes = $plugin->getThirdPartySetting('formatage_models', 'classes', [
     'container' => '',
     'title' => '',
@@ -65,13 +81,14 @@ function formatage_models_field_formatter_third_party_settings_form(FormatterInt
     'content' => ''
   ]);
   // Pour corriger les elements manquants.
-  // ( pas necessaire de corriger, car il suffit d'enregistrer à nouveau).
-  // $classes += [
-  // 'container' => '',
-  // 'title' => '',
-  // 'value' => '',
-  // 'item' => ''
-  // ];
+  // on pourrait mettre en place un update.
+  $classes += [
+    'container' => '',
+    'title' => '',
+    'value' => '',
+    'item' => '',
+    'content' => ''
+  ];
   $element['classes'] = [
     '#type' => 'details',
     '#title' => t('Field Formatter'),
@@ -116,6 +133,12 @@ function formatage_models_field_formatter_third_party_settings_form(FormatterInt
   return $element;
 }
 
+function formatage_models_theme_suggestions_field_alter(&$suggestions, array $variables) {
+  if (!empty($variables['element']['#third_party_settings']['formatage_models']['remove_container_div'])) {
+    $suggestions[] = 'field__formatage_models_remove_div';
+  }
+}
+
 /**
  * Implements hook_preprocess_HOOK() for field templates.
  *
@@ -123,9 +146,11 @@ function formatage_models_field_formatter_third_party_settings_form(FormatterInt
  * according to the field formatter settings.
  */
 function formatage_models_preprocess_field(&$variables) {
-  
-  // Add class for whole field.
-  if (!empty($variables['element']['#third_party_settings']['formatage_models']['classes'])) {
+  if (!empty($variables['element']['#third_party_settings']['formatage_models']['remove_container_div'])) {
+    //
+  }
+  // ne s'excute que si et seulement si remove_container_divest à false.
+  elseif (!empty($variables['element']['#third_party_settings']['formatage_models']['classes'])) {
     $classContainer = $variables['element']['#third_party_settings']['formatage_models']['classes']['container'];
     $classTitle = $variables['element']['#third_party_settings']['formatage_models']['classes']['title'];
     $classValue = $variables['element']['#third_party_settings']['formatage_models']['classes']['value'];
@@ -137,37 +162,42 @@ function formatage_models_preprocess_field(&$variables) {
     /** @var \Drupal\Core\Entity\EntityInterface $object */
     $object = $variables['element']['#object'];
     //
-    $classContainer = $token->replace($classContainer, [
-      $object->getEntityTypeId() => $object
-    ], [
-      'clear' => true
-    ]);
-    $classContainer = explode(' ', $classContainer);
-    foreach ($classContainer as $thisClass) {
-      $variables['attributes']['class'][] = Html::escape($thisClass);
+    if ($classContainer) {
+      $classContainer = $token->replace($classContainer, [
+        $object->getEntityTypeId() => $object
+      ], [
+        'clear' => true
+      ]);
+      $classContainer = explode(' ', $classContainer);
+      foreach ($classContainer as $thisClass) {
+        $variables['attributes']['class'][] = Html::escape($thisClass);
+      }
+    }
+    if ($classTitle) {
+      $classTitle = $token->replace($classTitle, [
+        $object->getEntityTypeId() => $object
+      ], [
+        'clear' => true
+      ]);
+      $classTitle = explode(' ', $classTitle);
+      foreach ($classTitle as $thisClass) {
+        $variables['title_attributes']['class'][] = Html::escape($thisClass);
+      }
     }
     //
-    $classTitle = $token->replace($classTitle, [
-      $object->getEntityTypeId() => $object
-    ], [
-      'clear' => true
-    ]);
-    $classTitle = explode(' ', $classTitle);
-    foreach ($classTitle as $thisClass) {
-      $variables['title_attributes']['class'][] = Html::escape($thisClass);
+    if ($classValue) {
+      $classValue = $token->replace($classValue, [
+        $object->getEntityTypeId() => $object
+      ], [
+        'clear' => true
+      ]);
+      $classValue = explode(' ', $classValue);
+      foreach ($classValue as $thisClass) {
+        $variables['content_attributes']['class'][] = Html::escape($thisClass);
+      }
     }
     //
-    $classValue = $token->replace($classValue, [
-      $object->getEntityTypeId() => $object
-    ], [
-      'clear' => true
-    ]);
-    $classValue = explode(' ', $classValue);
-    foreach ($classValue as $thisClass) {
-      $variables['content_attributes']['class'][] = Html::escape($thisClass);
-    }
-    //
-    if (!empty($variables['items'])) {
+    if ($classItem && !empty($variables['items'])) {
       $classItem = explode(' ', $classItem);
       foreach ($variables['items'] as &$value) {
         $value['attributes']->addClass($classItem);
@@ -182,11 +212,6 @@ function formatage_models_preprocess_field(&$variables) {
         }
       }
     }
-    
-    // if (!empty($classValue)) {
-    // // \Stephane888\Debug\debugLog::kintDebugDrupal($variables,
-    // // 'formatage_models_preprocess_field--', true);
-    // }
   }
 }
 
@@ -207,135 +232,6 @@ function addTextareaTreeMultipleMoreAjax(&$form, FormStateInterface $form_state)
   }
   $form_state->get('nombre_field');
   return $field;
-}
-
-/**
- * Implements hook_preprocess_HOOK() for paragraph.html.twig.
- * UREGENT : il faut proteger dans un environnement comme wb-horizon et tous les
- * access crayons.
- * On peut le faire via des roles specifiques aussi en function domain au niveau
- * du compte utilisateur.
- *
- * @see contextual_preprocess()
- * @see template_preprocess_paragraph()
- */
-function formatage_models_preprocess_paragraph(&$variables) {
-  // dump($variables);
-  // if (\Drupal::currentUser()->hasPermission("formatage_models edit with
-  // vuejs")) {
-  // // add class .contextual-region
-  // $variables['attributes']['class'][] = 'contextual-region';
-  // // Paragraph templates don't normally print the title_suffix, so add the
-  // // contextual links to the content render array.
-  // /**
-  // * Les liens contextuels posent un probleme notament lors de la traduction.
-  // */
-  // // if (isset($variables['title_suffix']['contextual_links'])) {
-  // /**
-  // *
-  // * @var \Drupal\paragraphs\Entity\Paragraph $paragraph
-  // */
-  // $paragraph = $variables['paragraph'];
-  // $variables['content']['contextual_links'] = [
-  // '#type' => 'contextual_links_placeholder',
-  // '#id' => 'paragraph:paragraph=' . $paragraph->id() . ':langcode=' .
-  // $paragraph->language()->getId()
-  // ];
-  // $variables['content']['contextual_links']['#weight'] = -100;
-  // // add special place to no-edit (doit etre configurable).
-  // $routes = [
-  // 'vuejs_entity.model_choisie_form',
-  // 'buildercv.build_cv'
-  // ];
-  // $route_name = \Drupal::routeMatch()->getRouteName();
-  // if (!in_array($route_name, $routes) &&
-  // !\Drupal::service('router.admin_context')->isAdminRoute()) {
-  // $variables['content']['formatage_models_quickly_edit'] = [
-  // '#theme' => 'formatage_models_quickly_edit',
-  // '#contextual_links' => $variables['content']['contextual_links']
-  // ];
-  // }
-  // // }
-  // }
-}
-
-/**
- */
-function formatage_models_preprocess_views_view_unformatted(&$vars) {
-  // if (\Drupal::currentUser()->hasPermission("formatage_models edit with
-  // vuejs")) {
-  // // Liste d'entité qu'on peut editer avec le crayon.
-  // // on doit rentre cette liste editable.
-  // $entities = [
-  // '#paragraph',
-  // '#node',
-  // '#blocks_contents',
-  // '#block_content',
-  // '#commerce_product',
-  // '#site_type_datas',
-  // '#site_internet_entity'
-  // ];
-  // if (!empty($vars['rows'])) {
-  // foreach ($vars['rows'] as &$row) {
-  // foreach ($entities as $keyEntity) {
-  // if (!empty($row['content'][$keyEntity])) {
-  // if (empty($row['attributes'])) {
-  // $row['attributes'] = new \Drupal\Core\Template\Attribute();
-  // }
-  // /**
-  // *
-  // * @var \Drupal\Core\Template\Attribute $attribute
-  // */
-  // $attribute = $row['attributes'];
-  // $attribute->addClass('contextual-region');
-  // $row['content']['formatage_models_quickly_edit'] = [
-  // '#theme' => 'formatage_models_quickly_edit',
-  // '#entity' => $row['content'][$keyEntity]
-  // ];
-  // break;
-  // }
-  // }
-  // }
-  // }
-  // }
-}
-
-function formatage_models_preprocess_owlcarousel_views(&$vars) {
-  // if (\Drupal::currentUser()->hasPermission("formatage_models edit with
-  // vuejs")) {
-  // // Liste d'entité qu'on peut editer avec e crayon.
-  // $entities = [
-  // '#paragraph',
-  // '#node',
-  // '#blocks_contents',
-  // '#block_content',
-  // '#commerce_product',
-  // '#site_type_datas',
-  // '#site_internet_entity'
-  // ];
-  // if (!empty($vars['rows'])) {
-  // foreach ($vars['rows'] as &$row) {
-  // foreach ($entities as $keyEntity) {
-  // if (!empty($row[$keyEntity])) {
-  // if (empty($row['attributes'])) {
-  // $row['attributes'] = new \Drupal\Core\Template\Attribute();
-  // }
-  // /**
-  // *
-  // * @var \Drupal\Core\Template\Attribute $attribute
-  // */
-  // $attribute = $row['attributes'];
-  // $attribute->addClass('contextual-region');
-  // $row['formatage_models_quickly_edit'] = [
-  // '#theme' => 'formatage_models_quickly_edit',
-  // '#entity' => $row[$keyEntity]
-  // ];
-  // break;
-  // }
-  // }
-  // }
-  // }
-  // }
 }
 
 /**
@@ -433,29 +329,6 @@ function formatage_models_plugin_filter_layout__layout_builder_alter(array &$def
       unset($definitions[$layout_id]);
     }
   }
-}
-
-/**
- * Implement hook__layouts
- */
-// function formatage_models_preprocess_layout(&$vars) {
-// if (!empty($vars['region_attributes'])) {
-// foreach ($vars['region_attributes'] as $key => $region_attribute) {
-// $vars['region_attributes'][$key]->addClass('layout-region lyt');
-// }
-// }
-// }
-
-/**
- * Implement hook__layouts
- */
-function formatage_models_preprocess_blb_section(&$vars) {
-  if (!empty($vars['region_attributes'])) {
-    foreach ($vars['region_attributes'] as $key => $region_attribute) {
-      // $vars['region_attributes'][$key]->addClass('layout-region blb');
-    }
-  }
-  // if ($vars['theme_hook_original'] == 'blb_section')
 }
 
 /**
@@ -598,6 +471,19 @@ function formatage_models_preprocess_views_view_render(&$vars) {
     $vars['footer']['#attributes'] = $Attribute;
   }
 }
+
+/**
+ * implement hook_field_formatter_info_alter
+ * On a parfois besoin de reduire la quantité de balise autout d'un champs.
+ *
+ * @param array $info
+ */
+function formatage_models_field_formatter_info_alter(array &$info) {
+  // Let a new field type re-use an existing formatter.
+  // $info['text_default']['field_types'][] = 'my_field_type';
+}
+
+
 
 
 

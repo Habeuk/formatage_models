@@ -17,6 +17,9 @@ class FormatageModelsThemes {
   
   /**
    * Returns the theme hook definition information.
+   *
+   * @deprecated car contient des rendus pas necessaire, il faudra nettoyer tout
+   *             cela pour la version 5x.
    */
   public static function getThemeHooks() {
     $hooks['formatage_models__clean_field'] = [
@@ -510,5 +513,4 @@ class FormatageModelsThemes {
    */
   public static function formatage_models_menu01(array &$vars) {
   }
-  
 }
