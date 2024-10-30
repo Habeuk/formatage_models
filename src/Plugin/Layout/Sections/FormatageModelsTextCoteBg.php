@@ -60,7 +60,7 @@ use Drupal\formatage_models\FormatageModelsThemes;
  * )
  */
 class FormatageModelsTextCoteBg extends FormatageModelsSection {
-
+  
   /**
    *
    * {@inheritdoc}
@@ -71,7 +71,7 @@ class FormatageModelsTextCoteBg extends FormatageModelsSection {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $styles_group_manager);
     $this->pluginDefinition->set('icon', $this->pathResolver->getPath('module', 'formatage_models') . "/icones/formatage-models-textcotebg.png");
   }
-
+  
   /**
    *
    * {@inheritdoc}
@@ -83,12 +83,14 @@ class FormatageModelsTextCoteBg extends FormatageModelsSection {
     FormatageModelsThemes::formatSettingValues($build);
     return $build;
   }
-
+  
   public function defaultConfiguration() {
     return parent::defaultConfiguration() + [
       'css' => '',
       'region_css_entete' => "col-md-6 me-auto",
       'region_css_entete2' => "col-md-6",
+      'region_tag_title' => 'h2',
+      'region_tag_title2' => 'h2',
       'sf' => [
         'builder-form' => true,
         'info' => [

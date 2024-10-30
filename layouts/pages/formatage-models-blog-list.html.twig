@@ -1,7 +1,7 @@
 {% if content %}
 	<div {{ attributes.addClass(['home-blog']) }}>
-		<div class="{{settings.css_row}}">
-			<div class="row">
+		<div {% if settings.config_section %} class="{{ settings.config_section.type_container }} {{ settings.config_section.container_class }}" {% else %} class="container" {% endif %}>
+			<div class="{{settings.css_row}}">
 				{% if content.top|has_value %}
     				<div class="{{settings.css_top}}">
     					<div {{ region_attributes.top.addClass(['top']) }}>

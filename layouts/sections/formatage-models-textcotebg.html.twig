@@ -9,24 +9,28 @@
 		<div {% if settings.config_section %} class="{{ settings.config_section.type_container }} {{ settings.config_section.container_class }}" {% else %} class="container" {% endif %}>
 			<div class="row">
 				<div{{region_attributes.entete.addClass('entete')}}>
-					{%if content.entete %}
-						{{content.entete}}
-					{%endif %}
-					{% if settings.region_tag_title != '' %}
-						<{{settings.region_tag_title}} {{region_attributes.title.addClass('title')}}>
-							{{ content.title|layout_value }}
-						</{{settings.region_tag_title}}>
-					{% else %}
-						<h2{{region_attributes.title.addClass('title')}}>
-							{{content.title}}
-						</h2>
+					{{content.entete}}
+					{% if content.title|has_value %}
+    					{% if settings.region_tag_title != '' %}
+    						<{{settings.region_tag_title}} {{region_attributes.title.addClass('title')}}>
+    							{{ content.title }}
+    						</{{settings.region_tag_title}}>
+    					{% else %}
+    						<h2{{region_attributes.title.addClass('title')}}>
+    							{{content.title}}
+    						</h2>
+    					{% endif %}
 					{% endif %}
-					<div{{region_attributes.description.addClass('description')}}>
-						{{content.description}}
-					</div>
+					{% if content.description %}
+    					<div{{region_attributes.description.addClass('description')}}>
+    						{{content.description}}
+    					</div>
+					{% endif %}
+					{% if content.call_action %}
 					<div{{region_attributes.call_action.addClass('call_action')}}>
 						{{content.call_action}}
 					</div>
+					{% endif %}
 					{%if content.lyt_footer %}
 						<div{{region_attributes.lyt_footer.addClass('lyt_footer')}}>
 							{{content.lyt_footer}}
@@ -40,18 +44,28 @@
 				</div>
 				{%if content.entete2 %}
 					<div{{region_attributes.entete2.addClass('entete2')}}>
-						{%if content.entete2 %}
-							{{content.entete2}}
-						{%endif %}
-						<h2{{region_attributes.title2.addClass('title2')}}>
-							{{content.title2}}
-						</h2>
-						<div{{region_attributes.description2.addClass('description2')}}>
-							{{content.description2}}
-						</div>
-						<div{{region_attributes.call_action2.addClass('call_action2')}}>
-							{{content.call_action2}}
-						</div>
+						{{content.entete2}}
+						{% if content.title2 %}
+    						{% if settings.region_tag_title2 != '' %}
+    							<{{settings.region_tag_title2}} {{region_attributes.title2.addClass('title2')}}>
+        							{{ content.title }}
+        						</{{settings.region_tag_title2}}>
+    						{% else %}
+        						<h2{{region_attributes.title2.addClass('title2')}}>
+        							{{content.title2}}
+        						</h2>
+    						{% endif %}
+						{% endif %}
+						{% if content.description2 %}
+    						<div{{region_attributes.description2.addClass('description2')}}>
+    							{{content.description2}}
+    						</div>
+						{% endif %}
+						{% if content.call_action2 %}
+    						<div{{region_attributes.call_action2.addClass('call_action2')}}>
+    							{{content.call_action2}}
+    						</div>
+						{% endif %}
 						{%if content.lyt_footer2 %}
 							<div{{region_attributes.lyt_footer2.addClass('lyt_footer2')}}>
 								{{content.lyt_footer2}}

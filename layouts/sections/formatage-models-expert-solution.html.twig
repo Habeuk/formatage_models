@@ -1,6 +1,6 @@
 {% if content %}
-	<section class="expert-solution">
-		<div {{ attributes }}>
+	<section {{attributes.addClass('expert-solution')}}>
+		<div {% if settings.config_section %} class="{{ settings.config_section.type_container }} {{ settings.config_section.container_class }}" {% else %} class="container" {% endif %}>
 			{% if content.profile_image or content.title %}
 				<div class="profile">
 					<div {{ region_attributes.profile_image.addClass('profile_image') }}>

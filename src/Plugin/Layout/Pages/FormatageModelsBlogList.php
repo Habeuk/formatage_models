@@ -87,7 +87,7 @@ class FormatageModelsBlogList extends FormatageModelsPages {
       'css_left' => 'col-lg-8',
       'css_right' => 'col-lg-4',
       'css_top' => 'col-lg-12',
-      'css_row' => 'container mx-auto',
+      'css_row' => 'row',
       'region_tag_lefttile' => 'h2',
       'region_tag_righttile' => 'h2'
     ] + parent::defaultConfiguration();
@@ -133,5 +133,4 @@ class FormatageModelsBlogList extends FormatageModelsPages {
     $this->configuration['css_top'] = $form_state->getValue('css_top');
     $this->configuration['css_row'] = $form_state->getValue('css_row');
   }
-  
 }
