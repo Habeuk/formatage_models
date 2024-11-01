@@ -197,12 +197,12 @@ function formatage_models_preprocess_field(&$variables) {
       }
     }
     //
-    if ($classItem && !empty($variables['items'])) {
+    if (($classItem || $classContent) && !empty($variables['items'])) {
       $classItem = explode(' ', $classItem);
       foreach ($variables['items'] as &$value) {
         $value['attributes']->addClass($classItem);
         //
-        if (!empty($classContent) && !empty($value['content'])) {
+        if ($classContent && !empty($value['content'])) {
           if (isset($value['content']['#type']) && $value['content']['#type'] == 'link') {
             $value['content']['#options']['attributes']['class'][] = $classContent;
           }
