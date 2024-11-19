@@ -30,35 +30,37 @@
 					</div>
 				{% endif %}
 			</div>
-			<div class="item">
-				{% if content.title1 %}
-					<h3 {{region_attributes.title1.addClass('title')}}>
-						{{content.title1}}
-					</h3>
-				{% endif %}
-				<div class="price d-flex justify-content-center align-items-center">
-					{% if content.montant1 %}
-						<div {{region_attributes.montant1.addClass('price-montant')}}>
-							{{content.montant1}}
-						</div>
-					{% endif %}
-					{% if content.currency1 %}
-						<div {{region_attributes.currency1.addClass('price-currency')}}>
-							{{content.currency1}}
-						</div>
-					{% endif %}
-				</div>
-				{% if content.description1 %}
-					<div {{region_attributes.description1.addClass('header')}}>
-						{{content.description1}}
-					</div>
-				{% endif %}
-				{% if content.list_options1 %}
-					<div {{region_attributes.list_options1.addClass('contain-options')}}>
-						{{content.list_options1}}
-					</div>
-				{% endif %}
-			</div>
+			{% if content.title1.has_value or content.montant1.has_value or content.description1.has_value  %}			
+    			<div class="item">
+    				{% if content.title1 %}
+    					<h3 {{region_attributes.title1.addClass('title')}}>
+    						{{content.title1}}
+    					</h3>
+    				{% endif %}
+    				<div class="price d-flex justify-content-center align-items-center">
+    					{% if content.montant1 %}
+    						<div {{region_attributes.montant1.addClass('price-montant')}}>
+    							{{content.montant1}}
+    						</div>
+    					{% endif %}
+    					{% if content.currency1 %}
+    						<div {{region_attributes.currency1.addClass('price-currency')}}>
+    							{{content.currency1}}
+    						</div>
+    					{% endif %}
+    				</div>
+    				{% if content.description1 %}
+    					<div {{region_attributes.description1.addClass('header')}}>
+    						{{content.description1}}
+    					</div>
+    				{% endif %}
+    				{% if content.list_options1 %}
+    					<div {{region_attributes.list_options1.addClass('contain-options')}}>
+    						{{content.list_options1}}
+    					</div>
+    				{% endif %}
+    			</div>
+			{% endif %}
 		</div>
 	</div>
 {% endif %}
