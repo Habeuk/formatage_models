@@ -91,8 +91,8 @@ var vue_multiselect_min = __webpack_require__(9759);
 var vue_multiselect_min_default = /*#__PURE__*/__webpack_require__.n(vue_multiselect_min);
 // EXTERNAL MODULE: ../drupal-vuejs/src/App/jsonApi/itemsEntity.js
 var itemsEntity = __webpack_require__(8010);
-// EXTERNAL MODULE: ../components_bootstrapvuejs/src/components/fieldsDrupal/loadField.js + 138 modules
-var loadField = __webpack_require__(7181);
+// EXTERNAL MODULE: ../components_bootstrapvuejs/src/components/fieldsDrupal/loadField.js + 144 modules
+var loadField = __webpack_require__(8977);
 ;// CONCATENATED MODULE: ./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib/index.js??clonedRuleSet-40.use[1]!./node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!../components_bootstrapvuejs/src/components/Ressouces/MultiSelectEntities.vue?vue&type=script&lang=js
 
 
@@ -370,7 +370,7 @@ var component = (0,componentNormalizer/* default */.A)(
 /***/ 8010:
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
-/* harmony import */ var core_js_modules_es_array_push_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4114);
+/* harmony import */ var core_js_modules_es_array_push_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3491);
 /* harmony import */ var core_js_modules_es_array_push_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_push_js__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _utilities_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7536);
 /* harmony import */ var _Confs_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(9430);
@@ -522,6 +522,16 @@ class itemsEntity {
     if (filter.query) {
       if (!this.filterQuery) this.filterQuery += filter.query;else {
         this.filterQuery += "&" + filter.query;
+      }
+    }
+  }
+  pagination(pagination) {
+    if (pagination.limit) {
+      if (!this.filterQuery) this.filterQuery += "page[limit]=" + pagination.limit;else {
+        this.filterQuery += "&" + "page[limit]=" + pagination.limit;
+      }
+      if (pagination.offset) {
+        this.filterQuery += "&" + "page[offset]=" + pagination.offset;
       }
     }
   }
