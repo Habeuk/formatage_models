@@ -41,7 +41,7 @@ settings for the label. * * * @see template_preprocess_field() */ #}
         <div {{ attributes.addClass(classes, 'field__items') }}>
         	{{ items }}
         </div>
-        {% else %}
+    {% else %}
         <div {{ attributes.addClass(classes, 'field__item') }}>
         	{{ items }}
         </div>
@@ -51,12 +51,14 @@ settings for the label. * * * @see template_preprocess_field() */ #}
     	<div {{ title_attributes.addClass(title_classes) }}>
     		{{ label }}
     	</div>
-    	{% if multiple %}
-    	<div class='field__items'>
-    		{% endif %}
-    		{{ items }}
-    		{% if multiple %}
-    	</div>
-    	{% endif %}
+     {% if multiple %}
+        <div {{ attributes.addClass(classes, 'field__items') }}>
+        	{{ items }}
+        </div>
+     {% else %}
+        <div {{ attributes.addClass(classes, 'field__item') }}>
+        	{{ items }}
+        </div>
+     {% endif %}
     </div>
 {% endif %}
