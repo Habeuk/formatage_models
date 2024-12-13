@@ -44,7 +44,7 @@ class SwiperjsImageFormatter extends ImageFormatter {
    *
    * {@inheritdoc}
    */
-  public function settingsForm($form, $form_state) {
+  public function settingsForm(array $form, FormStateInterface $form_state) {
     $element = parent::settingsForm($form, $form_state);
     $element['layoutgenentitystyles_view'] = [
       '#type' => 'hidden',
@@ -109,5 +109,4 @@ class SwiperjsImageFormatter extends ImageFormatter {
     
     return $elements;
   }
-  
 }
