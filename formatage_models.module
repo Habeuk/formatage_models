@@ -260,6 +260,10 @@ function formatage_models_entity_view_alter(array &$build, \Drupal\Core\Entity\E
       'commerce_product',
       'taxonomy_term'
     ];
+    if (!empty($conf['entities_use_vuejs_edit']))
+      $entities = array_filter($conf['entities_use_vuejs_edit'], function ($value) {
+        return $value ? true : false;
+      });
     //
     $EntityTypeId = $entity->getEntityTypeId();
     if (!empty($conf['active_edit_config'])) {

@@ -1,2 +1,9 @@
 langcode: 'en'
 active_edit_config: false
+entities_use_vuejs_edit:
+  block_content: block_content
+  blocks_contents: blocks_contents
+  commerce_product: commerce_product
+  node: node
+  taxonomy_term: taxonomy_term
+  paragraph: paragraph
