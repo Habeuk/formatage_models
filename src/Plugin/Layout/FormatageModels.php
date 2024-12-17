@@ -249,6 +249,8 @@ class FormatageModels extends LayoutDefault {
       $build['#attributes']['class'] = [];
     }
     $build['#attributes']['class'][] = 'layout';
+    if (\Drupal::languageManager()->getCurrentLanguage()->getDirection() == \Drupal\Core\Language\LanguageInterface::DIRECTION_RTL)
+      $build['#attributes']['class'][] = 'rtl';
     
     if ($this->checkModuleLayoutstyleExist()) {
       $this->StyleScssPluginManager->build($build, $this->configuration);
