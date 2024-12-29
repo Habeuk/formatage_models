@@ -156,6 +156,10 @@
 	-webkit-text-fill-color: #333 !important;
 	-webkit-text-stroke: 0;
 }
+.layout-builder__link{
+	position: relative;
+	z-index: 999;
+}
 
 .layout-builder__link--add:hover .visually-hidden {
   width: auto;
