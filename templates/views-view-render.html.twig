@@ -52,7 +52,7 @@
   {{ exposed }}
   {{ attachment_before }}
 
-  {% if rows -%}
+  {% if rows|without('attributes') -%}
   <div {{ rows.attributes }}>
     {{ rows|without('attributes') }}
   </div>
