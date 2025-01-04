@@ -149,7 +149,8 @@ class FormatageModelsSection extends FormatageModels implements ContainerFactory
       'id' => '',
       'config_section' => [
         'type_container' => 'container',
-        'container_class' => ''
+        'container_class' => '',
+        'id' => ''
       ],
       'cover_section' => [
         'active' => '',
@@ -193,23 +194,18 @@ class FormatageModelsSection extends FormatageModels implements ContainerFactory
       '#title' => 'Classe pour le conteneur',
       '#default_value' => $this->configuration['config_section']['container_class']
     ];
-    $form['config_section']['id'] = [
-      '#type' => 'textfield',
-      '#title' => 'Identifiant du layout',
-      '#default_value' => $this->configuration['id']
-    ];
+    
     //
     $form['blb_style'] = [
       '#type' => 'details',
       '#title' => 'Style',
       '#open' => false
     ];
-    // vise à corriger les erreurs.
+    // Vise à corriger les erreurs.
     if (empty($this->configuration['container_wrapper']['bootstrap_styles']))
       $this->configuration['container_wrapper']['bootstrap_styles'] = [];
     
     $this->stylesGroupManager->buildStylesFormElements($form['blb_style'], $form_state, $this->configuration['container_wrapper']['bootstrap_styles'], 'bootstrap_layout_builder.styles');
-    
     return $form;
   }
   
@@ -237,5 +233,6 @@ class FormatageModelsSection extends FormatageModels implements ContainerFactory
     }
     $this->configuration['container_wrapper']['bootstrap_styles'] = $this->stylesGroupManager->submitStylesFormElements($form['blb_style'], $form_state, $style_tab,
       $this->configuration['container_wrapper']['bootstrap_styles'], 'bootstrap_layout_builder.styles');
+    //
   }
 }

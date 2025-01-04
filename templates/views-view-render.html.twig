@@ -56,8 +56,8 @@
   <div {{ rows.attributes }}>
     {{ rows|without('attributes') }}
   </div>
-  {% elseif empty -%}
-    {{ empty }}
+  {% elseif empty|without('#attributes') -%}  
+   	<div {{ empty['#attributes'].addClass('view--empty') }}> {{ empty }} </div>
   {% endif %}
   {{ pager }}
 

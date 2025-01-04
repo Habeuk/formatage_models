@@ -255,6 +255,7 @@ class FormatageModels extends LayoutDefault {
     if ($this->checkModuleLayoutstyleExist()) {
       $this->StyleScssPluginManager->build($build, $this->configuration);
     }
+    
     return $build;
   }
   
@@ -283,6 +284,15 @@ class FormatageModels extends LayoutDefault {
     if ($this->checkModuleLayoutstyleExist()) {
       $this->StyleScssPluginManager->buildConfiguration($form, $form_state, $this->configuration);
     }
+    $form['id'] = [
+      '#type' => 'textfield',
+      '#title' => 'CSS Class of the layout (Leave blank)',
+      '#default_value' => $this->configuration['id'],
+      '#weight' => 30,
+      '#description' => '<p>This identifier is used for saving styles.</p>
+<p> Leave blank, so that the system generates a unique identifier. If you are on an overloaded display, your custom key must contain: "---{id}"</p>
+'
+    ];
     return $form;
   }
   
@@ -325,14 +335,12 @@ class FormatageModels extends LayoutDefault {
       $this->configuration[$this->currentDomain] = $this->removeAnotherDomainId($this->configuration);
       // $this->configuration[$this->currentDomain] = $this->configuration;
     }
-    // $db['end $globalConfiguration'] = $this->globalConfiguration;
-    // $db['end $configuration'] = $this->configuration;
-    // dump($db);
-    //
+    $this->configuration['id'] = $form_state->getValue('id');
     // On sauvegarde la valeur du style.
     if ($this->checkModuleLayoutstyleExist()) {
       $this->StyleScssPluginManager->submitConfigurationForm($form, $form_state, $this->configuration);
     }
+    \Drupal::messenger()->addStatus($this->configuration['id']);
   }
   
   /**

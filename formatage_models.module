@@ -418,6 +418,14 @@ function formatage_models_preprocess_views_view_render_page(&$vars) {
     $Attribute->addClass($css);
     $vars['footer']['#attributes'] = $Attribute;
   }
+  // emty message
+  $css = $view->display_handler->getOption('view_empty_css');
+  if ($css) {
+    $Attribute = new Attribute();
+    $css = explode(" ", $css);
+    $Attribute->addClass($css);
+    $vars['empty']['#attributes'] = $Attribute;
+  }
 }
 
 /**
@@ -473,6 +481,14 @@ function formatage_models_preprocess_views_view_render(&$vars) {
     $css = explode(" ", $css);
     $Attribute->addClass($css);
     $vars['footer']['#attributes'] = $Attribute;
+  }
+  // emty message
+  $css = $view->display_handler->getOption('view_empty_css');
+  if ($css) {
+    $Attribute = new Attribute();
+    $css = explode(" ", $css);
+    $Attribute->addClass($css);
+    $vars['empty']['#attributes'] = $Attribute;
   }
 }
 

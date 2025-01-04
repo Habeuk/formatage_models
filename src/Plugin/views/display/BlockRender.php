@@ -47,7 +47,9 @@ class BlockRender extends Block {
     $options['view_footer_css'] = [
       'default' => ''
     ];
-    
+    $options['view_empty_css'] = [
+      'default' => ''
+    ];
     return $options;
   }
   
@@ -126,6 +128,17 @@ class BlockRender extends Block {
       'title' => $this->t(' View footter css '),
       'value' => $css
     ];
+    //
+    $key = 'view_empty_css';
+    $css = trim($this->getOption($key));
+    if (!$css) {
+      $css = $this->t('None');
+    }
+    $options[$key] = [
+      'category' => 'other',
+      'title' => $this->t(' View empty message css '),
+      'value' => $css
+    ];
   }
   
   /**
@@ -169,6 +182,15 @@ class BlockRender extends Block {
           '#default_value' => $this->getOption('view_footer_css')
         ];
         break;
+      //
+      case 'view_empty_css':
+        $form['#title'] .= $this->t(' Empty message ');
+        $form['view_empty_css'] = [
+          '#title' => $this->t(' Empty message '),
+          '#type' => 'textfield',
+          '#default_value' => $this->getOption('view_empty_css')
+        ];
+        break;
     }
   }
   
@@ -185,9 +207,9 @@ class BlockRender extends Block {
       case 'view_header_css':
       case 'view_form_css':
       case 'view_footer_css':
+      case 'view_empty_css':
         $this->setOption($section, $form_state->getValue($section));
         break;
     }
   }
-  
 }
