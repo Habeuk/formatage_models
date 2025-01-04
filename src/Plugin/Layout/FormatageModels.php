@@ -340,7 +340,6 @@ class FormatageModels extends LayoutDefault {
     if ($this->checkModuleLayoutstyleExist()) {
       $this->StyleScssPluginManager->submitConfigurationForm($form, $form_state, $this->configuration);
     }
-    \Drupal::messenger()->addStatus($this->configuration['id']);
   }
   
   /**
