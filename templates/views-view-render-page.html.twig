@@ -38,15 +38,13 @@
   ]
 %}
 
-<div{{ attributes.addClass(classes) }}>
+<section{{ attributes.addClass(classes) }}>
   {{ title_prefix }}
   {{ title }}
   {{ title_suffix }}
 	
-  {% if header %}
-    <header {{ header['#attributes'] }}>
-      {{ header }}
-    </header>
+  {% if header|without('attributes') %}
+    <header {{ header['#attributes'] }}>{{ header }}</header>
   {% endif %}
 
   {{ exposed }}
@@ -64,11 +62,8 @@
   {{ attachment_after }}
   {{ more }}
 
-  {% if footer %}
-    <footer>
-      {{ footer }}
-    </footer>
+  {% if footer|without('#attributes') %}
+    <footer  {{ footer['#attributes'].addClass('footer') }}>  {{ footer }} </footer>
   {% endif %}
-
   {{ feed_icons }}
-</div>
+</section>
