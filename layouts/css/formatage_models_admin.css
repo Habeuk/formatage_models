@@ -147,6 +147,16 @@
 	 white-space: nowrap !important;
 	 overflow: visible;
 }
+.layout-builder__add-block a{
+	padding-left: 20px !important;
+	background-size: 12px;
+}
+.layout-builder-block .contextual{
+	z-index: 1002;
+}
+.layout-builder-block svg{
+	overflow: hidden;
+}
 .layout-builder__layout{
 	overflow: visible !important;	
 }
