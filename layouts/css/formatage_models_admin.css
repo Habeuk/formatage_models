@@ -147,6 +147,12 @@
 	 white-space: nowrap !important;
 	 overflow: visible;
 }
+.layout-builder-block .default-content{
+	max-width: 800px;
+    overflow: hidden;
+    max-height: 500px;
+    white-space: break-spaces !important;
+}
 .layout-builder__add-block a{
 	padding-left: 20px !important;
 	background-size: 12px;

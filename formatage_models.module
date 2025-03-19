@@ -58,19 +58,6 @@ function formatage_models_entity_operation(\Drupal\Core\Entity\EntityInterface $
  */
 function formatage_models_field_formatter_third_party_settings_form(FormatterInterface $plugin, FieldDefinitionInterface $field_definition, $view_mode, $form, FormStateInterface $form_state) {
   /**
-   * Gestion des balises de structurations html.
-   * Dans certaisn cas de figure, on abesoin de supprimer les balises qui
-   * encapsule le rendu des champs.
-   */
-  $remove_container_div = $plugin->getThirdPartySetting('formatage_models', 'remove_container_div', false);
-  $element['remove_container_div'] = [
-    '#type' => 'checkbox',
-    '#title' => t(' Remove container div'),
-    '#description' => t('In some cases, we need to remove the tags that encapsulate the rendering of the fields.'),
-    '#default_value' => $remove_container_div,
-    '#weight' => -29
-  ];
-  /**
    * Gestion des classes CSS.
    */
   $classes = $plugin->getThirdPartySetting('formatage_models', 'classes', [
@@ -92,8 +79,9 @@ function formatage_models_field_formatter_third_party_settings_form(FormatterInt
   $element['classes'] = [
     '#type' => 'details',
     '#title' => t('Field Formatter'),
+    '#description' => t("Add classes to field wrappers if really necessary, favor classes defined in regions. (By adding classes in the wrappers this increases the html)"),
     '#open' => false,
-    '#weight' => -30
+    '#weight' => -23
   ];
   $element['classes']['container'] = [
     '#type' => 'textfield',
@@ -121,6 +109,32 @@ function formatage_models_field_formatter_third_party_settings_form(FormatterInt
     '#default_value' => $classes['content'],
     '#description' => "Permet generalement d'appliquer les classes directement sur la balise a"
   ];
+  $val_remove = empty($classes['container']) && empty($classes['title']) && empty($classes['value']) && empty($classes['item']) ? true : false;
+  /**
+   * Gestion des balises de structurations html.
+   * Dans certaisn cas de figure, on abesoin de supprimer les balises qui
+   * encapsule le rendu des champs.
+   */
+  $remove_container_div = $plugin->getThirdPartySetting('formatage_models', 'remove_container_div', $val_remove);
+  $element['remove_container_div'] = [
+    '#type' => 'checkbox',
+    '#title' => t(' Remove container div'),
+    '#description' => t('In some cases, we need to remove the tags that encapsulate the rendering of the fields.'),
+    '#default_value' => $remove_container_div,
+    '#weight' => -25
+  ];
+  /**
+   * On retire la div en relation avec le block
+   */
+  $remove_block_div = $plugin->getThirdPartySetting('formatage_models', 'remove_block_div', true);
+  $element['remove_block_div'] = [
+    '#type' => 'checkbox',
+    '#title' => t(' Remove block div'),
+    '#description' => t('In some cases, we need to remove the tags that encapsulate the rendering of the block.'),
+    '#default_value' => $remove_block_div,
+    '#weight' => -24
+  ];
+  
   //
   if (\Drupal::moduleHandler()->moduleExists('token')) {
     $element['token_help'] = [
@@ -133,9 +147,73 @@ function formatage_models_field_formatter_third_party_settings_form(FormatterInt
   return $element;
 }
 
+/**
+ * On supprime les div non necessaire dans le rendu du champs.
+ *
+ * @param array $suggestions
+ * @param array $variables
+ */
 function formatage_models_theme_suggestions_field_alter(&$suggestions, array $variables) {
+  // L'utilisateur demande la suppression.
   if (!empty($variables['element']['#third_party_settings']['formatage_models']['remove_container_div'])) {
-    $suggestions[] = 'field__formatage_models_remove_div';
+    if ($variables['element']['#field_type'] == 'text_long') {
+      $suggestions[] = 'field__formatage_models_remove_text_long';
+    }
+    else
+      $suggestions[] = 'field__formatage_models_remove_div';
+  }
+  else {
+    // Aucune class custom n'est definie.
+    if (!empty($variables['element']['#third_party_settings']['formatage_models']['classes'])) {
+      $classContainer = $variables['element']['#third_party_settings']['formatage_models']['classes']['container'];
+      $classTitle = $variables['element']['#third_party_settings']['formatage_models']['classes']['title'];
+      $classValue = $variables['element']['#third_party_settings']['formatage_models']['classes']['value'];
+      $classItem = $variables['element']['#third_party_settings']['formatage_models']['classes']['item'] ?? '';
+      $classContent = $variables['element']['#third_party_settings']['formatage_models']['classes']['content'] ?? '';
+      if (empty($classContainer) && empty($classTitle) && empty($classValue) && empty($classItem) && empty($classContent)) {
+        //
+        if ($variables['element']['#field_type'] == 'text_long') {
+          $suggestions[] = 'field__formatage_models_remove_text_long';
+        }
+        else
+          $suggestions[] = 'field__formatage_models_remove_div';
+      }
+    }
+    // Pour tout reste on utilise le template nettoyer.
+    else {
+      $suggestions[] = 'field__formatage_models_remove_div';
+    }
+  }
+}
+
+function formatage_models_theme_suggestions_block_alter(&$suggestions, array $variables) {
+  if (!empty($variables['elements']['#configuration']['formatter']['third_party_settings']['formatage_models']['remove_container_div']) || !empty(
+    $variables['elements']['#configuration']['formatter']['third_party_settings']['formatage_models']['remove_block_div'])) {
+    $suggestions[] = 'block__clear';
+    $suggestions[] = 'block__clear_remove';
+    
+    // if (str_contains($variables['elements']['#plugin_id'],
+    // "field_block:commerce_product:sacs_prestige:")) {
+    // dump($variables['elements']['#configuration']);
+    // }
+  }
+  else {
+    // Aucune class custom n'est definie.
+    if (!empty($variables['elements']['#configuration']['formatter']['third_party_settings']['formatage_models']['classes'])) {
+      $classContainer = $variables['elements']['#configuration']['formatter']['third_party_settings']['formatage_models']['classes']['container'];
+      $classTitle = $variables['elements']['#configuration']['formatter']['third_party_settings']['formatage_models']['classes']['title'];
+      $classValue = $variables['elements']['#configuration']['formatter']['third_party_settings']['formatage_models']['classes']['value'];
+      $classItem = $variables['elements']['#configuration']['formatter']['third_party_settings']['formatage_models']['classes']['item'] ?? '';
+      $classContent = $variables['elements']['#configuration']['formatter']['third_party_settings']['formatage_models']['classes']['content'] ?? '';
+      
+      if (empty($classContainer) && empty($classTitle) && empty($classValue) && empty($classItem) && empty($classContent)) {
+        $suggestions[] = 'block__clear';
+        $suggestions[] = 'block__clear_no_class';
+      }
+    }
+  }
+  if (str_contains($variables['elements']['#plugin_id'], "field_block:paragraph:")) {
+    // dump($variables);
   }
 }
 
@@ -146,11 +224,7 @@ function formatage_models_theme_suggestions_field_alter(&$suggestions, array $va
  * according to the field formatter settings.
  */
 function formatage_models_preprocess_field(&$variables) {
-  if (!empty($variables['element']['#third_party_settings']['formatage_models']['remove_container_div'])) {
-    //
-  }
-  // ne s'excute que si et seulement si remove_container_divest à false.
-  elseif (!empty($variables['element']['#third_party_settings']['formatage_models']['classes'])) {
+  if (empty($variables['element']['#third_party_settings']['formatage_models']['remove_container_div']) && !empty($variables['element']['#third_party_settings']['formatage_models']['classes'])) {
     $classContainer = $variables['element']['#third_party_settings']['formatage_models']['classes']['container'];
     $classTitle = $variables['element']['#third_party_settings']['formatage_models']['classes']['title'];
     $classValue = $variables['element']['#third_party_settings']['formatage_models']['classes']['value'];
@@ -222,17 +296,18 @@ function formatage_models_preprocess_field(&$variables) {
  * @param FormStateInterface $form_state
  * @return array
  */
-function addTextareaTreeMultipleMoreAjax(&$form, FormStateInterface $form_state) {
-  $parents = $form_state->getTriggeringElement()['#parents'];
-  $nbre = count($parents);
-  $field = $form;
-  for ($i = 0; $i < ($nbre - 2); $i++) {
-    if (!empty($parents[$i]) && !empty($field[$parents[$i]]))
-      $field = $field[$parents[$i]];
-  }
-  $form_state->get('nombre_field');
-  return $field;
-}
+// function addTextareaTreeMultipleMoreAjax(&$form, FormStateInterface
+// $form_state) {
+// $parents = $form_state->getTriggeringElement()['#parents'];
+// $nbre = count($parents);
+// $field = $form;
+// for ($i = 0; $i < ($nbre - 2); $i++) {
+// if (!empty($parents[$i]) && !empty($field[$parents[$i]]))
+// $field = $field[$parents[$i]];
+// }
+// $form_state->get('nombre_field');
+// return $field;
+// }
 
 /**
  * implement hook_entity_view_alter.
@@ -336,6 +411,20 @@ function formatage_models_plugin_filter_layout__layout_builder_alter(array &$def
 }
 
 /**
+ * Implement hook__layouts.
+ */
+function formatage_models_preprocess_layout(&$vars) {
+  $reoute_name = \Drupal::routeMatch()->getRouteName();
+  if (str_contains($reoute_name, "layout_builder."))
+    if (!empty($vars['region_attributes'])) {
+      // dump($vars);
+      foreach ($vars['region_attributes'] as $key => $region_attribute) {
+        $vars['region_attributes'][$key]->addClass('lyt');
+      }
+    }
+}
+
+/**
  * Implements hook_theme().
  */
 function formatage_models_theme($existing, $type, $theme, $path) {
@@ -359,6 +448,9 @@ function formatage_models_theme($existing, $type, $theme, $path) {
       'template_preprocess_formatage_models_search_input_submit'
     ],
     'file' => 'themes/formatage_models.theme.inc'
+  ];
+  $hooks['formatage_models_block_admin'] = [
+    'render element' => 'element'
   ];
   return $hooks;
 }
@@ -492,16 +584,7 @@ function formatage_models_preprocess_views_view_render(&$vars) {
   }
 }
 
-/**
- * implement hook_field_formatter_info_alter
- * On a parfois besoin de reduire la quantité de balise autout d'un champs.
- *
- * @param array $info
- */
-function formatage_models_field_formatter_info_alter(array &$info) {
-  // Let a new field type re-use an existing formatter.
-  // $info['text_default']['field_types'][] = 'my_field_type';
-}
+
 
 
 

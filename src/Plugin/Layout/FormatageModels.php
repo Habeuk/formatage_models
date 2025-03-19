@@ -228,22 +228,27 @@ class FormatageModels extends LayoutDefault {
   
   /**
    * On ne doit pas importer les librairies de maniere brute.
-   * ( de ce fait on masque parent::build($regions)).
+   * ( On retire $build['#attached'] ).
    *
    * {@inheritdoc}
    */
   public function build(array $regions) {
     // Ensure $build only contains defined regions and in the order defined.
-    // $build = parent::build($regions);
-    $build = [];
-    foreach ($this->getPluginDefinition()->getRegionNames() as $region_name) {
-      if (array_key_exists($region_name, $regions)) {
-        $build[$region_name] = $regions[$region_name];
-      }
+    $build = parent::build($regions);
+    if (!empty($build['#attached'])) {
+      unset($build['#attached']);
     }
-    $build['#settings'] = $this->getConfiguration();
-    $build['#layout'] = $this->pluginDefinition;
-    $build['#theme'] = $this->pluginDefinition->getThemeHook();
+    
+    // Cest plus necessaire, construit par le parent.
+    // foreach ($this->getPluginDefinition()->getRegionNames() as $region_name)
+    // {
+    // if (array_key_exists($region_name, $regions)) {
+    // $build[$region_name] = $regions[$region_name];
+    // }
+    // }
+    // $build['#settings'] = $this->getConfiguration();
+    // $build['#layout'] = $this->pluginDefinition;
+    // $build['#theme'] = $this->pluginDefinition->getThemeHook();
     // classes and attributes.
     if (!isset($build['#attributes']['class'])) {
       $build['#attributes']['class'] = [];
@@ -255,7 +260,22 @@ class FormatageModels extends LayoutDefault {
     if ($this->checkModuleLayoutstyleExist()) {
       $this->StyleScssPluginManager->build($build, $this->configuration);
     }
-    
+    /**
+     * On a opté de reduire les balises (notament, ceux de block et fields),
+     * cela provoque des problemes lors de l'edition.
+     * // on opte pour retirer le bloc ou remplacer.
+     */
+    if ($this->inPreview) {
+      foreach ($this->getPluginDefinition()->getRegionNames() as $region_name) {
+        if (!empty($build[$region_name])) {
+          foreach ($build[$region_name] as $key => $region) {
+            if (!empty($region['#theme']) && $region['#theme'] == 'block') {
+              $build[$region_name][$key]['#theme'] = 'formatage_models_block_admin';
+            }
+          }
+        }
+      }
+    }
     return $build;
   }
   

@@ -1,0 +1,11 @@
+
+<div{{ attributes.addClass(['block', 'block--admin']) }}>
+  {{ title_prefix }}
+  {% if label %}
+    <div class="block-title"> <h3 {{ title_attributes }}>{{ label }}</h3> </div>
+  {% endif %}
+  {{ title_suffix }}
+      {% block content %}
+        <div class="default-content"> {{ element.content|render|striptags|trim }} </div>
+      {% endblock %}
+</div>
