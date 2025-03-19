@@ -191,11 +191,6 @@ function formatage_models_theme_suggestions_block_alter(&$suggestions, array $va
     $variables['elements']['#configuration']['formatter']['third_party_settings']['formatage_models']['remove_block_div'])) {
     $suggestions[] = 'block__clear';
     $suggestions[] = 'block__clear_remove';
-    
-    // if (str_contains($variables['elements']['#plugin_id'],
-    // "field_block:commerce_product:sacs_prestige:")) {
-    // dump($variables['elements']['#configuration']);
-    // }
   }
   else {
     // Aucune class custom n'est definie.
@@ -211,9 +206,6 @@ function formatage_models_theme_suggestions_block_alter(&$suggestions, array $va
         $suggestions[] = 'block__clear_no_class';
       }
     }
-  }
-  if (str_contains($variables['elements']['#plugin_id'], "field_block:paragraph:")) {
-    // dump($variables);
   }
 }
 
