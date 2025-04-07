@@ -36,7 +36,7 @@ use Drupal\formatage_models\FormatageModelsThemes;
  * )
  */
 class FormatageModelsAboutAC extends FormatageModelsSection {
-
+  
   /**
    *
    * {@inheritdoc}
@@ -47,7 +47,7 @@ class FormatageModelsAboutAC extends FormatageModelsSection {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $styles_group_manager);
     $this->pluginDefinition->set('icon', $this->pathResolver->getPath('module', 'formatage_models') . "/icones/sections/formatage-models-about-ac.png");
   }
-
+  
   /**
    *
    * {@inheritdoc}
@@ -59,7 +59,7 @@ class FormatageModelsAboutAC extends FormatageModelsSection {
     FormatageModelsThemes::formatSettingValues($build);
     return $build;
   }
-
+  
   /**
    *
    * {@inheritdoc}
