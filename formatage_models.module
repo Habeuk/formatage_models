@@ -156,7 +156,7 @@ function formatage_models_field_formatter_third_party_settings_form(FormatterInt
 function formatage_models_theme_suggestions_field_alter(&$suggestions, array $variables) {
   // L'utilisateur demande la suppression.
   if (!empty($variables['element']['#third_party_settings']['formatage_models']['remove_container_div'])) {
-    if ($variables['element']['#field_type'] == 'text_long') {
+    if ($variables['element']['#field_type'] == 'text_long' || $variables['element']['#field_type'] == 'text_with_summary') {
       $suggestions[] = 'field__formatage_models_remove_text_long';
     }
     else
