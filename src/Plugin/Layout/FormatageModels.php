@@ -129,9 +129,8 @@ class FormatageModels extends LayoutDefault {
     if ($this->checkModuleLayoutstyleExist()) {
       /**
        * Il ya beaucoup de service qui implemente cette class( Pour mettre à
-       * jour
-       * l'icone), donc injecte un nouveau service cela va exigé qu'on modifie
-       * beaucoup de session.
+       * jour l'icone), donc injecte un nouveau service cela va exigé qu'on
+       * modifie beaucoup de session.
        * il faut une fonction dans la class parente qui permet de mettre à jour
        * l'image et qui appelle le construct parent. cette fonction devrait
        * avoir un alert pour les layouts ne disposant pas d'image.
@@ -311,6 +310,14 @@ class FormatageModels extends LayoutDefault {
       '#weight' => 30,
       '#description' => '<p>This identifier is used for saving styles.</p>
 <p> Leave blank, so that the system generates a unique identifier. If you are on an overloaded display, your custom key must contain: "---{id}"</p>
+'
+    ];
+    $form['id_html'] = [
+      '#type' => 'textfield',
+      '#title' => '#id html of the layout (Leave blank)',
+      '#default_value' => $this->configuration['id_html'],
+      '#weight' => 30,
+      '#description' => '<p> Leave blank, so that the system generates a unique identifier.</p>
 '
     ];
     return $form;
