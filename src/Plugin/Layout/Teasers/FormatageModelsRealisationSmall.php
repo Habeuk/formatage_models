@@ -53,6 +53,20 @@ class FormatageModelsRealisationSmall extends FormatageModels {
   /**
    *
    * {@inheritdoc}
+   * @see \Drupal\formatage_models\Plugin\Layout\FormatageModels::build()
+   */
+  public function build(array $regions) {
+    // TODO Auto-generated method stub
+    $build = parent::build($regions);
+    if (!empty($build['#settings']['text_url'])) {
+      $build['#settings']['text_url'] = $this->t($build['#settings']['text_url']);
+    }
+    return $build;
+  }
+  
+  /**
+   *
+   * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildConfigurationForm($form, $form_state);
