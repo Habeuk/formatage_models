@@ -50,13 +50,13 @@ vuejs_dev:
 # Custom module library for general purposes.
 edit_entity:
   js:
-    edit-entity-in-modal/files/EditEntity.umd.min.js: {weight: -1}
+    edit-entity-in-modal/files/EditEntity.umd.min.js: {weight: -1, preprocess: false}
   css:
     component:
-      edit-entity-in-modal/files/EditEntity.css: {weight: -1}
+      edit-entity-in-modal/files/EditEntity.css: {weight: -1, preprocess: false}
   dependencies:
     - core/drupalSettings
-    - formatage_models/vuejs_dev
+    - formatage_models/vuejs_prod
 
 formatage-models-admin:
   js:
@@ -74,8 +74,8 @@ formatage-models-admin-paragraph:
       
 formatage-models-data-quick-edit-id:
   js:
-    js/formatage_models_data_quick_edit.js: {}
+    js/formatage_models_data_quick_edit.js: {preprocess: false}
   css:
     theme:
-      css/formatage_models_data_quick_edit.css: { weight: 10 }
+      css/formatage_models_data_quick_edit.css: { weight: 10, preprocess: false}
 

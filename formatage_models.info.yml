@@ -10,9 +10,3 @@ dependencies:
   - apivuejs:apivuejs
   - filesmanager:filesmanager
   - layout_custom_style:layout_custom_style
-
-
-# Information added by Drupal.org packaging script on 2024-12-17
-version: '4.1.48'
-project: 'formatage_models'
-datestamp: 1734449388
