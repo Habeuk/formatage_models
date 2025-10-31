@@ -1,14 +1,14 @@
 {% if content %}
-	<div{{attributes.addClass('ourAchievments-module')}}>	
+	<div{{attributes.addClass('ourAchievments-module')}}>
 		{% if content.url.layout_builder_add_block  %}
 			{{ content.url }}
 		{% else %}
-    		{% if content.url %}
-    			{% set RenderUrl %}{{ render_var(content.url)}}{% endset %}
-    			{% if RenderUrl %}
-    				{% set RenderUrl %}{{- path('entity.node.canonical', {'node': RenderUrl|striptags|trim|replace({'\"': ''})}) -}}{% endset %}
-    			{% endif %}
-    		{% endif %}
+			{% if content.url %}
+				{% set RenderUrl %}{{ render_var(content.url)}}{% endset %}
+				{% if RenderUrl %}
+					{% set RenderUrl %}{{- path('entity.node.canonical', {'node': RenderUrl|striptags|trim|replace({'\"': ''})}) -}}{% endset %}
+				{% endif %}
+			{% endif %}
 		{% endif %}
 		{% if RenderUrl %}
 			<a href="{{- RenderUrl -}}">
@@ -26,33 +26,40 @@
         }
               %}
 			{% set RenderBgimagHtml %}{{ render_var(RenderBgimage) }}{% endset %}
-			<div class="ourAchievments-module__image" {{content.bgimage | layout_bg_img}}>
+			<div class="ourAchievments-module__image" {{ content.bgimage | layout_bg_img }}>
 				<div class="ourAchievments-module__container">
+
 					{% if settings.text_url != '' %}
 						<div class="showProject">{{ settings.text_url }}</div>
 					{% endif %}
+
 					{% if content.listes %}
-						<ul{{region_attributes.listes.addClass('listes')}}>
+						<ul {{ region_attributes.listes.addClass('listes') }}>
 							{% if content.listes.layout_builder_add_block %}
-								{{content.listes|layout_value}}
+								{{ content.listes | layout_value }}
 							{% else %}
 								{% for block in content.listes %}
 									{% if (block['#theme'] or block['#items']) %}
-										<button class="btn-radius">
-											{{block}}
-										</button>
+										<li>
+											<button class="btn-radius">
+												{{ block }}
+											</button>
+										</li>
 									{% endif %}
 								{% endfor %}
 							{% endif %}
 						</ul>
 					{% endif %}
+
 					{% if content.description %}
-						<div {{region_attributes.description.addClass('description')}}>
-							{{content.description}}
+						<div {{ region_attributes.description.addClass('description') }}>
+							{{ content.description }}
 						</div>
 					{% endif %}
+
 				</div>
 			</div>
+
 			<h2 class="ourAchievments-module__title">
 				{{ content.titre|layout_value }}
 			</h2>
