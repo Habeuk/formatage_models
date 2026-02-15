@@ -17,57 +17,8 @@ class FormatageModelsThemes {
   
   /**
    * Returns the theme hook definition information.
-   *
-   * @deprecated car contient des rendus pas necessaire, il faudra nettoyer tout
-   *             cela pour la version 5x.
    */
   public static function getThemeHooks() {
-    $hooks['formatage_models__clean_field'] = [
-      'preprocess functions' => [
-        'template_preprocess_formatage_models__clean_field'
-      ],
-      // 'render element' => 'element',
-      'variables' => [
-        'content_all' => [],
-        'tag_fields' => null,
-        'tag_fields_attibutes' => [],
-        'tag_field' => null,
-        'tag_field_attibutes' => []
-      ],
-      'file' => 'themes/formatage_models__clean_field.theme.inc'
-    ];
-    $hooks['formatage_models__img_url'] = [
-      'preprocess functions' => [
-        'template_preprocess_formatage_models__img_url'
-      ],
-      // 'render element' => 'element',
-      'variables' => [
-        'content_all' => [],
-        'first' => true,
-        'attibutes' => []
-      ],
-      'file' => 'themes/formatage_models__img_url.theme.inc'
-    ];
-    
-    // theme de base pour les menus. layoutmenu--fast-models-fn-first-menu
-    $hooks['formatage_models_menu'] = [
-      'preprocess functions' => [
-        'template_preprocess_formatage_models_menu'
-      ],
-      'render element' => 'element',
-      'file' => 'themes/formatage_models.theme.inc'
-    ];
-    
-    // theme de base pour les menus. layoutmenu--fast-models-fn-first-menu
-    $hooks['layoutmenu_formatage_models_menu1'] = [
-      'preprocess functions' => [
-        'template_preprocess_layoutmenu_formatage_models_menu1'
-      ],
-      'render element' => 'element',
-      'file' => 'themes/formatage_models.theme.inc'
-    ];
-    
-    //
     // theme de base pour les menus. layoutmenu--fast-models-fn-first-menu
     $hooks['formatage_models_fieldgalleries'] = [
       'preprocess functions' => [
@@ -91,7 +42,29 @@ class FormatageModelsThemes {
         'swipper_attributes_buttons_prev' => null
       ]
     ];
-    
+    // Template to edit quickly paragraphe.
+    $hooks['formatage_models_quickly_edit'] = [
+      'preprocess functions' => [
+        'template_preprocess_formatage_models_quickly_edit'
+      ],
+      'render element' => 'element',
+      'file' => 'themes/formatage_models.theme.inc'
+    ];
+    $hooks['formatage_models_search_with_icon'] = [
+      'variables' => [
+        'content' => NULL
+      ]
+    ];
+    $hooks['formatage_models_search_input_submit'] = [
+      'render element' => 'element',
+      'preprocess functions' => [
+        'template_preprocess_formatage_models_search_input_submit'
+      ],
+      'file' => 'themes/formatage_models.theme.inc'
+    ];
+    $hooks['formatage_models_block_admin'] = [
+      'render element' => 'element'
+    ];
     return $hooks;
   }
   
@@ -104,7 +77,6 @@ class FormatageModelsThemes {
     
     $options = $view->style_plugin->options;
     $regions = $options['view_layouts_options'];
-
     if (!empty($options['view_layouts_options']) & $view->style_plugin->usesFields()) {
       foreach ($vars['rows'] as $row_index => $row) {
         if (!empty($row['#view'])) {
@@ -192,113 +164,6 @@ class FormatageModelsThemes {
   }
   
   /**
-   * Ajoute le contenu definit dans fields[][] dans le rendu de la region,
-   * ( pour eviter d'avoir une double sortie avec les données statiques et
-   * dynamiques ).
-   *
-   * @deprecated
-   * @param array $variables
-   */
-  public static function mergeContentAttributes(array &$variables) {
-    if (!empty($variables['settings'])) {
-      /**
-       *
-       * @var \Drupal\Core\Layout\LayoutDefinition $layout
-       */
-      $layout = $variables['layout'];
-      $regions = $layout->getRegionNames();
-      
-      foreach ($variables['settings'] as $vals) {
-        
-        if (!empty($vals["builder-form"]) && !empty($vals["fields"]) && !empty($vals["info"]['loader']) && $vals["info"]['loader'] == "static") {
-          foreach ($vals["fields"] as $regionName => $fields) {
-            if (in_array($regionName, $regions)) {
-              foreach ($fields as $key => $field) {
-                if (!is_array($field))
-                  throw new \Exception("Le champs " . $key . " doit avoir un rendu en array value and label");
-                if (isset($field['value']) && ($field['value'] !== null && $field['value'] !== ""))
-                  switch ($key) {
-                    case 'text':
-                      $variables['content'][$regionName][] = [
-                        '#type' => 'inline_template',
-                        '#template' => $field['value']
-                        // '#context' => []
-                      ];
-                      break;
-                    case 'text_html':
-                      $variables['content'][$regionName][] = [
-                        '#type' => 'inline_template',
-                        '#template' => $field['value']
-                      ];
-                      break;
-                    case 'url':
-                      /**
-                       *
-                       * @var \Drupal\Core\Render\Element\Link
-                       * @deprecated
-                       */
-                      if (!empty($field['value']['text'])) {
-                        $options = [];
-                        $typeLink = 'internal:';
-                        if (!(strpos($field['value']['link'], 'http') === false)) {
-                          $typeLink = '';
-                          $options['absolute'] = true;
-                          $options['external'] = true;
-                          $options['attributes']['target'] = 'blank';
-                        }
-                        $variables['content'][$regionName][] = [
-                          '#type' => 'link',
-                          '#title' => [
-                            '#type' => 'inline_template',
-                            '#template' => $field['value']['text']
-                          ],
-                          '#url' => \Drupal\Core\Url::fromUri($typeLink . $field['value']['link'], $options),
-                          '#attributes' => [
-                            'class' => explode(" ", $field['value']['class'])
-                          ]
-                        ];
-                      }
-                      
-                      break;
-                    default:
-                      throw new \Exception("Le champs " . $key . " n'a pas de rendu ");
-                      break;
-                  }
-                elseif (!empty($field['fids'])) {
-                  // le tableau filds peut avoir des doublons.
-                  $file = File::load($field['fids'][0]);
-                  $image_style = $field['style'];
-                  if ($file) {
-                    if (!empty($image_style) && ImageStyle::load($image_style)) {
-                      $uri = $file->getFileUri();
-                    }
-                    else {
-                      $uri = $file->getFileUri();
-                    }
-                    $variables['content'][$regionName][] = [
-                      '#theme' => 'image_style',
-                      // '#width' => $variables['width'],
-                      // '#height' => $variables['height'],
-                      '#attributes' => [
-                        'class' => [
-                          !empty($field['class']) ? $field['class'] : ''
-                        ]
-                      ],
-                      '#style_name' => $image_style,
-                      '#uri' => $uri
-                    ];
-                  }
-                }
-              }
-              // $variables['content'][$regionName][]=
-            }
-          }
-        }
-      }
-    }
-  }
-  
-  /**
    * Permet de recuperer la valeur des champs dynamique et de les inserres dans
    * la region adéquate.
    *
@@ -344,7 +209,7 @@ class FormatageModelsThemes {
                     ];
                     break;
                   case 'text_html_nx':
-                    foreach ($field['value'] as $k => $val) {
+                    foreach ($field['value'] as $val) {
                       if (!empty($val['value']))
                         $build[$regionName][] = [
                           '#type' => 'inline_template',
@@ -353,7 +218,6 @@ class FormatageModelsThemes {
                     }
                     break;
                   case 'icon-f':
-                    // dump($field);
                     $build[$regionName][] = [
                       '#type' => 'html_tag',
                       '#tag' => 'a',
@@ -376,20 +240,6 @@ class FormatageModelsThemes {
                     ];
                     break;
                   case 'url':
-                    /**
-                     *
-                     * @var \Drupal\Core\Render\Element\Link
-                     */
-                    // if (!empty($field['value']['text']))
-                    // $build[$regionName][] = [
-                    // '#type' => 'link',
-                    // '#title' => $field['value']['text'],
-                    // '#url' =>
-                    // \Drupal\Core\Url::fromUserInput($field['value']['link']),
-                    // '#attributes' => [
-                    // 'class' => explode(" ", $field['value']['class'])
-                    // ]
-                    // ];
                     if (!empty($field['value']['text'])) {
                       $options = [];
                       $typeLink = 'internal:';
@@ -506,11 +356,4 @@ class FormatageModelsThemes {
     return $items->getValue();
   }
   
-  /**
-   * Verifie le contenu de la
-   *
-   * @param array $vars
-   */
-  public static function formatage_models_menu01(array &$vars) {
-  }
 }

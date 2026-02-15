@@ -1,4 +1,10 @@
 {% if content %}
+	{% if content.image_bg.layout_builder_add_block %}
+	    {{ content.image_bg }}
+	{% endif %}
+	{% if content.image_bg|layout_bg_img %}
+	    {% set attributes=attributes.merge(content.image_bg|layout_bg_img) %}
+    {% endif %}
 	<div {{ attributes.addClass(['home-blog']) }}>
 		<div {% if settings.config_section %} class="{{ settings.config_section.type_container }} {{ settings.config_section.container_class }}" {% else %} class="container" {% endif %}>
 			<div class="{{settings.css_row}}">
@@ -22,14 +28,26 @@
         				</div>
         				{% endif %}
         				{% if content.left2|has_value %}
-            				<div {{ region_attributes.left2.addClass(['left2']) }}>
-            					{{ content.left2 }}
-            				</div>
+        					{% if settings.region_tag_left2 %}
+        						<{{settings.region_tag_left2}} {{ region_attributes.left2.addClass(['left2']) }}>
+	            					{{ content.left2 }}
+	            				</{{settings.region_tag_left2}}>
+        					{% else %}        					
+	            				<div {{ region_attributes.left2.addClass(['left2']) }}>
+	            					{{ content.left2 }}
+	            				</div>
+            				{% endif %}
         				{% endif %}
         				{% if content.left3|has_value %}
-            				<div {{ region_attributes.left3.addClass(['left3']) }}>
-            					{{ content.left3 }}
-            				</div>
+        					{% if settings.region_tag_left3 %}
+        						<{{settings.region_tag_left3}} {{ region_attributes.left3.addClass(['left3']) }}>
+	            					{{ content.left3 }}
+	            				</{{settings.region_tag_left3}}>
+        					{% else %} 
+	            				<div {{ region_attributes.left3.addClass(['left3']) }}>
+	            					{{ content.left3 }}
+	            				</div>
+            				{% endif %}
         				{% endif %}
         				{% if content.left4|has_value %}
             				<div {{ region_attributes.left4.addClass(['left4']) }}>
@@ -71,14 +89,26 @@
         				</div>
         				{% endif %}
         				{% if content.right2|has_value %}
-            				<div {{ region_attributes.right2.addClass(['right2']) }}>
-            					{{ content.right2 }}
-            				</div>
+        					{% if settings.region_tag_right2 %}
+        						<{{settings.region_tag_right2}} {{ region_attributes.right2.addClass(['right2']) }}>
+	            					{{ content.right2 }}
+	            				</{{settings.region_tag_right2}}>        					
+        					{% else %} 
+	            				<div {{ region_attributes.right2.addClass(['right2']) }}>
+	            					{{ content.right2 }}
+	            				</div>
+            				{% endif %}
         				{% endif %}
         				{% if content.right3|has_value %}
-            				<div {{ region_attributes.right3.addClass(['right3']) }}>
-            					{{ content.right3 }}
-            				</div>
+        					{% if settings.region_tag_right3 %}
+        						<{{settings.region_tag_right3}} {{ region_attributes.right3.addClass(['right3']) }}>
+	            					{{ content.right3 }}
+	            				</{{settings.region_tag_right3}}>
+        					{% else %}
+	            				<div {{ region_attributes.right3.addClass(['right3']) }}>
+	            					{{ content.right3 }}
+	            				</div>
+            				{% endif %}
         				{% endif %}
         				{% if content.right4|has_value %}
             				<div {{ region_attributes.right4.addClass(['right4']) }}>

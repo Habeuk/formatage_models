@@ -58,7 +58,6 @@ trait FormatageModelsTwigBgImage {
     if (empty($elements)) {
       return NULL;
     }
-    
     $Attribute = new Attribute();
     foreach ($elements as $delta) {
       if (!empty($build[$delta]["#markup"])) {
@@ -72,7 +71,8 @@ trait FormatageModelsTwigBgImage {
         return $Attribute->setAttribute('style', 'background-image:url(' . $build[$delta][0]["#markup"] . ');');
       }
       else {
-        \Drupal::messenger()->addWarning(" Le type de formatage doit etre image_url (" . ($build[0]['#entity_type'] ?? '') . ',' . ($build[0]['#bundle'] ?? '') . ',' . ($build[0]['#field_name'] ?? '') . ')');
+        \Drupal::messenger()->addWarning(
+          " Le type de formatage doit etre image_url (" . ($build[0]['#entity_type'] ?? '') . ', ' . ($build[0]['#bundle'] ?? '') . ', ' . ($build[0]['#field_name'] ?? '') . ')');
       }
     }
     return null;
@@ -139,5 +139,4 @@ trait FormatageModelsTwigBgImage {
     else
       \Drupal::messenger()->addWarning(" responsive_image_style_id not definie ");
   }
-  
 }

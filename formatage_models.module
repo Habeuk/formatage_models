@@ -282,26 +282,6 @@ function formatage_models_preprocess_field(&$variables) {
 }
 
 /**
- * à quoi sert cette function.
- *
- * @param array $form
- * @param FormStateInterface $form_state
- * @return array
- */
-// function addTextareaTreeMultipleMoreAjax(&$form, FormStateInterface
-// $form_state) {
-// $parents = $form_state->getTriggeringElement()['#parents'];
-// $nbre = count($parents);
-// $field = $form;
-// for ($i = 0; $i < ($nbre - 2); $i++) {
-// if (!empty($parents[$i]) && !empty($field[$parents[$i]]))
-// $field = $field[$parents[$i]];
-// }
-// $form_state->get('nombre_field');
-// return $field;
-// }
-
-/**
  * implement hook_entity_view_alter.
  * On alter le rendu des entités afin d'ajouter l'editeur via le crayon.
  *
@@ -349,7 +329,6 @@ function formatage_models_entity_view_alter(array &$build, \Drupal\Core\Entity\E
  */
 function formatage_models_preprocess_page(&$variables) {
   $route_name = \Drupal::routeMatch()->getRouteName();
-  
   if ($route_name === 'layout_builder.overrides.node.view' || str_contains($route_name, 'layout_builder.')) {
     $variables['page']['content']['#attached']['library'][] = 'formatage_models/formatage-models-admin';
   }
@@ -403,47 +382,10 @@ function formatage_models_plugin_filter_layout__layout_builder_alter(array &$def
 }
 
 /**
- * Implement hook__layouts.
- */
-function formatage_models_preprocess_layout(&$vars) {
-  $reoute_name = \Drupal::routeMatch()->getRouteName();
-  if (str_contains($reoute_name, "layout_builder."))
-    if (!empty($vars['region_attributes'])) {
-      // dump($vars);
-      foreach ($vars['region_attributes'] as $key => $region_attribute) {
-        $vars['region_attributes'][$key]->addClass('lyt');
-      }
-    }
-}
-
-/**
  * Implements hook_theme().
  */
 function formatage_models_theme($existing, $type, $theme, $path) {
   $hooks = FormatageModelsThemes::getThemeHooks();
-  // Template to edit quickly paragraphe.
-  $hooks['formatage_models_quickly_edit'] = [
-    'preprocess functions' => [
-      'template_preprocess_formatage_models_quickly_edit'
-    ],
-    'render element' => 'element',
-    'file' => 'themes/formatage_models.theme.inc'
-  ];
-  $hooks['formatage_models_search_with_icon'] = [
-    'variables' => [
-      'content' => NULL
-    ]
-  ];
-  $hooks['formatage_models_search_input_submit'] = [
-    'render element' => 'element',
-    'preprocess functions' => [
-      'template_preprocess_formatage_models_search_input_submit'
-    ],
-    'file' => 'themes/formatage_models.theme.inc'
-  ];
-  $hooks['formatage_models_block_admin'] = [
-    'render element' => 'element'
-  ];
   return $hooks;
 }
 
@@ -575,12 +517,3 @@ function formatage_models_preprocess_views_view_render(&$vars) {
     $vars['empty']['#attributes'] = $Attribute;
   }
 }
-
-
-
-
-
-
-
-
-

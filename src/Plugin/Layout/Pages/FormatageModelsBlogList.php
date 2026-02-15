@@ -73,6 +73,9 @@ use Drupal\Core\Form\FormStateInterface;
  *     "right8" = {
  *       "label" = @Translation("Content Right 8"),
  *     },
+ *     "image_bg" = {
+ *       "label" = @Translation("Image bg")
+ *     },
  *   }
  * )
  */
@@ -89,7 +92,11 @@ class FormatageModelsBlogList extends FormatageModelsPages {
       'css_top' => 'col-lg-12',
       'css_row' => 'row',
       'region_tag_lefttile' => 'h2',
-      'region_tag_righttile' => 'h2'
+      'region_tag_left2' => 'div',
+      'region_tag_left3' => 'div',
+      'region_tag_righttile' => 'h2',
+      'region_tag_right2' => 'div',
+      'region_tag_right3' => 'div'
     ] + parent::defaultConfiguration();
   }
   
